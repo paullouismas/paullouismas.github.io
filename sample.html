@@ -1,2 +1,156 @@
-<html>
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Paul-Louis Mas">
+    <link rel="icon" type="image/png" href="favicon.png">
+
+    <title>Paul-Louis Mas</title>
+    
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Bungee" rel="stylesheet">
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="navbar-fixed-top.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style>
+      a {
+        color: black;
+      }
+    </style>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-89934703-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+  </head>
+
+  <body>
+   
+    <div style="display: hidden; color: white;" id="home">[TOP]</div>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="">Paul-Louis</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="#home">Accueil</a></li>
+            <li><a href="#about">A propos</a></li>
+            <li><a href="#contact">Contactez-moi</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Projets <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li class="dropdown-header">En cours</li>
+                <li><a href="#photoandvideo">Photographie et vidéo</a></li>
+                <li><a href="#prgrm">Programmation</a></li>
+                <li><a href="#panart">Studio PanArt</a></li>
+                <li role="separator" class="divider"></li>
+                <li class="dropdown-header">Futurs</li>
+                <li><a href="#vlogs">Vlogs</a></li>
+                <li><a href="#ytb">Chaîne Youtube</a></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a target="_blank" href="https://www.facebook.com/paullouismas">Facebook</a></li>
+            <li><a target="_blank" href="https://www.instagram.com/paullouis.mas/">Instagram</a></li>
+            <li><a target="_blank" href="https://www.youtube.com/channel/UC2WUkzLrPKkyuWeUbnAzpVg">Youtube</a></li>
+            <li><a target="_blank" href="https://twitter.com/paullouismas">Twitter</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        <h1>
+          <center>
+            <a style="font-family: 'Bungee', cursive;">
+              Paul-Louis Mas
+            </a>
+          </center>
+        </h1>
+        <div id="parts">
+          
+        </div>
+      </div>
+
+    </div> <!-- /container -->
+
+    <script>
+      $(document).ready(function() {
+        window.setInterval(tick, 1000);
+        tick();
+      });
+      function tick() {
+        var birth = new Date(2000, 0, 11, 12, 0, 0, 0);
+        var currentAge = {
+          year: 0,
+          decimals: 0
+        };
+        var now = new Date();
+        currentAge.year = now.getFullYear() - birth.getFullYear();
+        currentAge.decimals = 0;
+        document.getElementById("age").innerHTML = currentAge.year;
+      }
+      function map(n, start1, stop1, start2, stop2) {
+        return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
+      }
+    </script>
+
+    <script>
+      $(function() {
+        $('a[href*="#"]:not([href="#"])').click(function() {
+          if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+            var target = $(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+            if (target.length) {
+              $('html, body').animate({
+                scrollTop: target.offset().top
+            }, 1000);
+            return false;
+          }
+        }
+      });
+    });
+    </script>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="js/ie10-viewport-bug-workaround.js"></script>
+  </body>
 </html>
