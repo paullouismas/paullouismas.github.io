@@ -108,27 +108,6 @@
     </div> <!-- /container -->
 
     <script>
-      $(document).ready(function() {
-        window.setInterval(tick, 1000);
-        tick();
-      });
-      function tick() {
-        var birth = new Date(2000, 0, 11, 12, 0, 0, 0);
-        var currentAge = {
-          year: 0,
-          decimals: 0
-        };
-        var now = new Date();
-        currentAge.year = now.getFullYear() - birth.getFullYear();
-        currentAge.decimals = 0;
-        document.getElementById("age").innerHTML = currentAge.year;
-      }
-      function map(n, start1, stop1, start2, stop2) {
-        return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
-      }
-    </script>
-
-    <script>
       $(function() {
         $('a[href*="#"]:not([href="#"])').click(function() {
           if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
