@@ -1,0 +1,16 @@
+<script type="text/javascript">
+
+    window.onload = function () {
+        setInterval(function(){
+        	var text = "";
+ 			var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			for (var i = 0; i < 64; i++) {
+				text += possible.charAt(Math.floor(Math.random() * possible.length));
+			}
+			document.getElementById("keyGen").innerHTML = text;
+        }, 1000);
+    };
+</script>
+<body>
+	<div id="keyGen"></div>
+</body>
