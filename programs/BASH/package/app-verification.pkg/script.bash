@@ -7,7 +7,10 @@
 
 # Script current version
 # format : bigDeploy.versionDeploy.buildDeploy
-currentVersion='"0.2.0"'
+read -r -d '' currentVersion<<EOF
+"0.2.0"
+EOF
+echo $currentVersion
 argument=$1
 
 # Functions
@@ -26,7 +29,7 @@ function help {
 }
 
 # On startup : search for possible update
-latestVersion=$(curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/package/app-verification.pkg/latestVersion" | grep "version" | awk '{ print $2 }')
+latestVersion=$(curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/package/app-verification.pkg/script.bash" | grep "currentVersion=" | awk '{ print $2 }')
 if [[ $currentVersion != $latestVersion ]] # if current version ≠ latest version : update
 then
 	update;
