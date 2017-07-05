@@ -8,7 +8,7 @@
 # Script current version
 # format : bigDeploy.versionDeploy.buildDeploy
 read -r -d '' currentVersion<<EOF
-LVINFO "0.2.0" # The version of the script
+LVINFO "0.2.0"
 EOF
 currentVersion=$(echo $currentVersion | awk '{print $2}')
 argument=$1
