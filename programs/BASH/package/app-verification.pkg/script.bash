@@ -7,7 +7,7 @@
 
 # Script current version
 # format : bigDeploy.versionDeploy.buildDeploy
-currentVersion='"0.1.1"'
+currentVersion='"0.1.2"'
 
 # On startup : search for possible update
 latestVersion=$(curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/package/app-verification.pkg/latestVersion" | grep "version" | awk '{ print $2 }')
@@ -16,7 +16,7 @@ then
 	echo "Current version: $currentVersion, latest version: $latestVersion"
 	echo "New version of the script available, updating..."
 	curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/package/app-verification.pkg/script.bash" > /usr/local/bin/localCrypt
-	echo "Script updated, exiting"
+	echo "Script updated to version $latestVersion, exiting."
 	exit 1
 else # if current version = latest version : execute task
 	# Begin parsing data into variables
