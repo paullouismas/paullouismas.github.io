@@ -6,7 +6,7 @@
 #
 
 # Script current version
-currentVersion="1.0.0"
+currentVersion='"1.0.0"'
 
 # On startup : search for possible update
 latestVersion=$(curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/package/app-verification.pkg/latestVersion" | grep "version" | awk '{ print $2 }')
