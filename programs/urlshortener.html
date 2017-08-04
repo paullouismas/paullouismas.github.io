@@ -3,5 +3,7 @@
   url=url.split("?");
   url.shift();
   url.join("?");
-  window.location.assign(url);
+  if(url!="") {
+    window.location.assign(url);
+  }
 </script>
