@@ -1,9 +1,11 @@
 <script>
   var url = window.location.href;
-  url=url.split("?");
+  url=url.split("?url=");
   url.shift();
-  url.join("?");
+  url.join("?url=");
   if(url!="") {
     window.location.assign(url);
+  } else {
+    document.write("Enter URL to shorten: <input type=text id=urltosht>");
   }
 </script>
