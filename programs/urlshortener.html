@@ -7,7 +7,7 @@
   url.shift();
   url.join("?url=");
   if(url!="") {
-    window.location.assign(url);
+    window.location.assign("http://"+url);
   } else {
     document.write("Enter URL to shorten: <input type=text id=uts><button onclick=\"func();\">Shorten</button>");
   }
