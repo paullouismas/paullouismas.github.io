@@ -7,7 +7,12 @@
   url.shift();
   url.join("?url=");
   if(url!="") {
-    window.location.assign(atob(url));
+    var url = atob(url);
+    var iframe = "<iframe width='100%' height='100%' src='" + url + "'></iframe>"
+    var x = window.open();
+    x.document.open();
+    x.document.write(iframe);
+    x.document.close();
   } else {
     document.write("Enter URL to shorten: <input type=text id=uts><button onclick=\"func();\">Shorten</button>");
   }
