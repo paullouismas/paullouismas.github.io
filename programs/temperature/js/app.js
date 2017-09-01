@@ -1,6 +1,8 @@
 function changeValue() {
 	var celsius = document.getElementById("celsius").value;
+	if (celsius == "") celsius = 0;
 	var farenheit = document.getElementById("farenheit").value;
+	if (farenheit == "") farenheit = 0;
 	var change = document.getElementById("change").checked;
 	console.log(change);
 	if (change) {
