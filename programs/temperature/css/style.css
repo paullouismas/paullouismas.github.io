@@ -30,6 +30,7 @@ div.parent {
 .buttonC {
 	color: black;
 	border: 2px solid #e7e7e7;
+	background-color: #e7e7e7;
 }
 .buttonC:hover {
 	background-color: transparent;
