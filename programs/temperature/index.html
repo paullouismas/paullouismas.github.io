@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Convertisseur de Temp&eacute;rature</title>
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body bgcolor="#225588">
+	<script type="text/javascript" src="js/app.js"></script>
+	<br><br>
+	<div class="parent">
+	<div id="title">
+		<center>
+			<h1>
+				Convertisseur de Temp&eacute;rature
+			</h1>
+		</center>
+	</div>
+	<div id="panel">
+		<p>
+			<center>
+				<input type="number" name="celsius" id="celsius" value="" placeholder="Temp&eacute;rature"> Celsius
+				<input type="hidden" name="blankSpace" value=" ">&nbsp;&nbsp;|&nbsp;&nbsp;<input type="hidden" name="blankSpace" value=" ">
+				<input type="number" name="farenheit" id="farenheit" balue="" placeholder="Temp&eacute;rature"> Farenheit
+			</center>
+		</p>
+		<p>
+			<center>
+				<input type="radio" name="change" id="change" value="ctf" checked> Celsius to Farenheit
+				<input type="radio" name="change" id="change" value="ftc"> Farenheit to Celsius
+			</center>
+		</p>
+		<p>
+			<center>
+				<input type="button" name="changeValue" onclick="changeValue();" value="Convertire">
+			</center>
+		</p>
+	</div>
+	</div>
+</body>
+</html>
