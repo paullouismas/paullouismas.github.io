@@ -1,0 +1,14 @@
+body {
+	font-family: 'Roboto', sans-serif;
+}
+h1 {
+	font-weight: bold;
+	color: #FF0000;
+}
+input {
+	background: transparent;
+	border: none;
+}
+div.parent {
+	border: 5px solid;
+}
