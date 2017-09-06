@@ -1,0 +1,38 @@
+<script>
+  function brainfuck(str) {
+   var initialString = str;
+   var jsCode = "var u = [];var pointer = 0;for(var i = 0; i < 30000; i++) {u[i]=0;};";
+   str.split("");
+   for(var i = 0; i < str.length; i++) {
+     switch(str[i]) {
+       case "." :
+	       jsCode+="document.write(String.fromCharCode(u[pointer]));";
+	       break;
+	     case "," :
+	       jsCode+="u[pointer]=prompt('');";
+	       break;
+	     case "+" :
+	       jsCode+="u[pointer]++;";
+	       break;
+	     case "-" :
+	       jsCode+="u[pointer]--;";
+	       break;
+	     case "<" :
+	       jsCode+="pointer--;";
+	       break;
+	     case ">" :
+	       jsCode+="pointer++;";
+	       break;
+	     case "[" :
+	       jsCode+="while(u[pointer]!==0) {";
+	       break;
+	     case "]" :
+	       jsCode+="};";
+	       break;
+	     default :
+	       break;
+	   }
+	 }
+	 eval(jsCode);
+}
+</script>
