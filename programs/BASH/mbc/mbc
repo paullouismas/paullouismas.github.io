@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#
+#	Copyright Paul-Louis Mas 2017
+#
+
+# No redistributions are authorized, ask the author
+
 # Minimum supported base: 2
 ac=({0..9} {A..Z} {a..z})
 supportedBases=($(eval "echo {2..${#ac[@]}}"))
