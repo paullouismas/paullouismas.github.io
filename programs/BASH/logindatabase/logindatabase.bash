@@ -23,7 +23,7 @@ case ${cmd} in
 			rm "${dbf}"
 		fi
 		touch "${dbf}"
-		echo "[DATABASE] $(basename \"${dbf}\")" > "${dbf}"
+		echo "[DATABASE] $(basename \"${dbf}\") $(basename \"${dbf}\" | base64)" > "${dbf}"
 		;;
 	edit)
 		;;
