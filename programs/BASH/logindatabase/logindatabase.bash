@@ -46,6 +46,14 @@ case ${cmd} in
 		fi
 		;;
 	removeuser)
+		if [[ "$3" ]]; then
+			username="$3"
+			username="${username// /}"
+			tmp="$(grep -F \"${username}\" | awk '{print $2}')"
+			if [[ "${tmp}" == "true" ]]; then
+				
+			fi
+		fi
 		;;
 	*)
 		;;
