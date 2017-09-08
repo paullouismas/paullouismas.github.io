@@ -1,5 +1,17 @@
 #!/bin/bash
 
+read -r -d '' u<<EOF
+Usage:	$(basename "$0")	<command>	<databasefile>
+				create		<databasefile>
+				adduser		<databasefile>	<username>	<password>
+				removeuser	<databsefile>	<username>
+EOF
+
+if [[ $# -eq 0 ]]; then
+	echo "${u}"
+	exit 0
+fi
+
 if [[ "$2" && $# != 2 ]]; then
 	cmd="$1"
 	dbf="$2"
@@ -25,7 +37,15 @@ case ${cmd} in
 		touch "${dbf}"
 		echo "[DATABASE] $(basename \"${dbf}\") $(basename \"${dbf}\" | base64)" > "${dbf}"
 		;;
-	edit)
+	adduser)
+		if [[ "$3" && "$4" ]]; then
+			username="$3"
+			username="${username// /}"
+			password="$(echo -n \"$4\" | shasum -a 256)"
+			echo "${username} true ${password}" >> "${dbf}"
+		fi
+		;;
+	removeuser)
 		;;
 	*)
 		;;
