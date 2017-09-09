@@ -1,13 +1,18 @@
 <script type="text/javascript">
-window.onload = function () {
-kg();
-};
 function kg() {
 var text = "";
 var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 for (var i = 0; i < 64; i++) {
 text += possible.charAt(Math.floor(Math.random() * possible.length));
 }
-document.write(text);
+document.getElementById("key").innerHTML = text;
 }
 </script>
+<body>
+<a href="live/">Use live version</a>
+<br>
+<input type=button onclick="kg();" value="Generate key live">
+<br>
+<div id="key">
+</div>
+</body>
