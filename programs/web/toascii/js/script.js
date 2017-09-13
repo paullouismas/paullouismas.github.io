@@ -16,6 +16,7 @@ function atc() {
     text2[i] = String.fromCharCode(text3[i]);
   }
   var text1 = text2.join("");
+  document.getElementById("text1").innerHTML = text1;
 }
 function convert() {
   var change = document.getElementById("change").checked;
