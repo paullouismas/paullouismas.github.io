@@ -9,8 +9,7 @@
   url.join("?url=");
   if(url!="") {
     var url = atob(url);
-    //window.location.href = url;
-    document.write(url);
+    window.location.href = url;
   } else {
     document.write("Enter URL to shorten: <input type=text id=uts><button onclick=\"func();\">Shorten</button>");
   }
