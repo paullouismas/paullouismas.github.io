@@ -1,4 +1,4 @@
-function convert() {
+function cta() {
   var text1 = document.getElementById("text1").value;
   var text2 = text1.split("");
   var text3 = [];
@@ -7,4 +7,13 @@ function convert() {
   }
   var text4 = text3.join(" ");
   document.getElementById("text4").innerHTML = text4;
+}
+function atc() {
+  var text4 = document.getElementById("text4").value
+  var text3 = text1.split(" ");
+  var text2 = []
+  for (var i = 0; i < text3.length; i++ ) {
+    text2[i] = String.fromCharCode(text3[i]);
+  }
+  var text1 = text2.join("");
 }
