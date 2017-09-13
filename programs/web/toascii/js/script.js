@@ -10,7 +10,7 @@ function cta() {
 }
 function atc() {
   var text4 = document.getElementById("text4").value
-  var text3 = text1.split(" ");
+  var text3 = text4.split(" ");
   var text2 = []
   for (var i = 0; i < text3.length; i++ ) {
     text2[i] = String.fromCharCode(text3[i]);
