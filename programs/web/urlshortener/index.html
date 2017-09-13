@@ -1,6 +1,7 @@
 <script>
   function func() {
-    document.write(window.location.protocol + "//" + window.location.hostname + window.location.pathname + "?url=" + btoa(document.getElementById("uts").value));
+    txt=window.location.protocol + "//" + window.location.hostname + window.location.pathname + "?url=" + btoa(document.getElementById("uts").value)
+    document.write("<a href='" + txt + "'>" + txt + "</a>");
   }
   var url = window.location.href;
   url=url.split("?url=");
