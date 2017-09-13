@@ -9,11 +9,7 @@
   url.join("?url=");
   if(url!="") {
     var url = atob(url);
-    var iframe = "<iframe width='100%' height='100%' src='" + url + "'></iframe>"
-    var x = window.open();
-    x.document.open();
-    x.document.write(iframe);
-    x.document.close();
+    window.location.assign = url;
   } else {
     document.write("Enter URL to shorten: <input type=text id=uts><button onclick=\"func();\">Shorten</button>");
   }
