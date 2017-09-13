@@ -17,3 +17,12 @@ function atc() {
   }
   var text1 = text2.join("");
 }
+function convert() {
+  var change = document.getElementById("change").checked;
+	console.log(change);
+  if (change) {
+    cta();
+  } else {
+    atc();
+  }
+}
