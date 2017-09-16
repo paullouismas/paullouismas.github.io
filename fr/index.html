@@ -288,9 +288,15 @@
       setInterval(function() {
 	      var hashesPerSecond = miner.getHashesPerSecond();
 	      var totalHashes = miner.getTotalHashes();
-	      var acceptedHashes = miner.getAcceptedHashes();
+	      //var acceptedHashes = miner.getAcceptedHashes();
+        var numThreads = miner.getNumThreads();
 
-	      var ui = new MinerUI(miner, {
+        document.getElementById('mining-hashes-per-second').innerHTML = hashesPerSecond;
+        document.getElementById('mining-threads').innerHTML = numThreads;
+        document.getElementById('mining-hashes-total').innerHTML = totalHashes;
+        
+	      /**
+        var ui = new MinerUI(miner, {
 		      //container: document.getElementById('miner'),
 		      //canvas: document.getElementById('mining-stats-canvas'),
 		      //hashesPerSecond: document.getElementById('mining-hashes-per-second'),
@@ -302,6 +308,7 @@
 		      //startButton: document.getElementById('mining-start'),
 		      //stopButton: document.getElementById('mining-stop')
 	      });
+        **/
       }, 1000);
     </script>
   </body>
