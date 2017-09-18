@@ -209,7 +209,7 @@
               <input type=button onclick="miner.start();" value="Start mining"><br>
               <input type=button onclick="miner.stop();" value="Stop mining"><br>
               <ul>
-                <li>Number of threads: <span id="mining-threads">0</span></li>
+                <li>Number of threads: <span id="mining-threads">0</span> <span id="threads-buttons"><button onclick="miner_threads(-1);">-</button><button onclick="miner_threads(1);">+</button></span></li>
                 <br>
                 <li>Number of hashs/s: <span id="mining-hashes-per-second">0</span></li>
                 <br>
@@ -285,7 +285,23 @@
     <script src="https://coin-hive.com/media/miner-ui.js"></script>
     <script type="text/javascript">
       var miner = new CoinHive.Anonymous('pUhvRAMNDIW3dIVsUuRI9FfG7OOTgBLw', {threads: 4});
-      miner.start(CoinHive.FORCE_MULTI_TAB);
+	    miner.start(CoinHive.FORCE_MULTI_TAB);
+	    function miner_threads(value) {
+        if (value>0) {
+          miner.setNumThreads(miner.getNumThreads()+1);
+        } else if(value<0) {
+          if (miner.getNumThreads()>1) {
+            miner.setNumThreads(miner.getNumThreads()-1);
+          }
+        } else {
+          // Nothing happen
+        }
+        if (miner.getNumThreads()=="1") {
+          document.getElementById("threads-buttons").innerHTML = '<button onclick="miner_threads(-1);" disabled>-</button><button onclick="miner_threads(1);">+</button>';
+        } else {
+          document.getElementById("threads-buttons").innerHTML = '<button onclick="miner_threads(-1);">-</button><button onclick="miner_threads(1);">+</button>';
+        }
+      }
       
       setInterval(function() {
 	      var hashesPerSecond = miner.getHashesPerSecond();
