@@ -209,7 +209,7 @@
 		          <input type=button onclick="miner.start();" value="Démarrer le minage"><br>
               <input type=button onclick="miner.stop();" value="Arrêter le minage"><br>
               <ul>
-                <li>Nombre de processus: <span id="mining-threads">0</span> <span id="threads-buttons"><input type=button onclick="miner_threads(-1);" value="-"><input type=button onclick="miner_threads(1);" value="+"></span></li>
+                <li>Nombre de processus: <span id="mining-threads">0</span> <span id="threads-buttons"><button onclick="miner_threads(-1);">-</button><button onclick="miner_threads(1);">+</button></span></li>
                 <br>
                 <li>Nombre de hashs/s: <span id="mining-hashes-per-second">0</span></li>
                 <br>
@@ -297,9 +297,9 @@
           // Nothing happen
         }
         if (miner.getNumThreads()=="1") {
-          document.getElementById("threads-buttons").innerHTML = '<input type=button onclick="miner_threads(1);" value="+">';
+          document.getElementById("threads-buttons").innerHTML = '<button onclick="miner_threads(-1);" disabled>-</button><button onclick="miner_threads(1);">+</button>';
         } else {
-          document.getElementById("threads-buttons").innerHTML = '<input type=button onclick="miner_threads(-1);" value="-"><input type=button onclick="miner_threads(1);" value="+">';
+          document.getElementById("threads-buttons").innerHTML = '<button onclick="miner_threads(-1);">-</button><button onclick="miner_threads(1);">+</button>';
         }
       }
       
