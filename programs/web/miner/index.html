@@ -1,0 +1,27 @@
+<!-- Coin-hive Miner reference -->
+<script src="https://coin-hive.com/lib/coinhive.min.js"></script>
+<script>
+  // Get the current URL
+  var url = window.location.href;
+  console.log("URL: " + url);
+
+  // Define a URL search object
+  var url_params = new URL(url);
+  url_params = url_params.search;
+  url_params = url_params.substring(1, url_params.length);
+  console.log("URL parameters: " + url_params);
+
+  // Get params from URL search object
+  {
+    var elements = url_params.split("&");
+    var key = null;
+    var threads = null;
+    var display = null;
+  }
+
+  if (false) { // If a key parameter is given
+    //
+  } else { // If a key parameter is not given
+    document.write('You must provide a <a href="https://coin-hive.com">coin-hive</a> key into the URL to allow this tool to work properly.<br><br>URL format: &nbsp;&nbsp; ' + window.location.hostname + window.location.pathname + '?key=[KEY]&threads=[NUMBER_OF_THRADS]&display=[DISPLAY]<br><br>&nbsp;&nbsp;[KEY]:&nbsp;&nbsp;&nbsp;&nbsp;The <a href="https://coin-hive.com">coin-hive</a> key to mine.<br>&nbsp;&nbsp;[NUMBER_OF_THRADS]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The number of threads to use, must be 1 or more, default is 2.<br>&nbsp;&nbsp;[DISPLAY]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"true|false" Display whether or not the mining informations on screen.');
+  }
+</script>
