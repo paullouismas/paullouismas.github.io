@@ -207,6 +207,7 @@
             <p>
               This website use the <a target="_blank" href="https://coin-hive.com">Coin hive</a> ressource in order to generate crypto-currencies, he uses your computer ressources in order to execute the generating algorithm, this may potentially reduce your browser performances. <br><br>
               This session use the following caracteristics: <br>
+		    <!--
               <input type=button onclick="miner.start();" value="Start mining">
               <input type=button onclick="miner.stop();" value="Stop mining"><br>
               <ul>
@@ -216,6 +217,21 @@
                 <br>
                 <li>Number of total hashes: <span id="mining-hashes-total">0</span></li>
               </ul>
+		-->
+		    <script src="https://coinhive.com/lib/miner.min.js" async></script>
+			<div class="coinhive-miner" 
+				style="width: 256px; height: 310px"
+				data-key="pUhvRAMNDIW3dIVsUuRI9FfG7OOTgBLw"
+				data-autostart="true"
+				data-whitelabel="true"
+				data-background="#eeeeee"
+				data-text="#000000"
+				data-action="#000000"
+				data-graph="#000000"
+				data-threads="4"
+				data-start="Start mining">
+				<em>Please deactivate Adblock!</em>
+			</div>
               <br>
               
             </p>
