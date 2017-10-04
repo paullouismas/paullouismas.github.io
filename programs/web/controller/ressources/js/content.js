@@ -1,6 +1,6 @@
 function getData(){
   var id = btoa(btoa(document.getElementById("user").value)+btoa(document.getElementById("pass").value));
-  if(id=="YldGemNEY3pNREV3TURBNGVISmxkSEJvTkhvPQ=="){
+  if(id==""){
     console.log("Login success with id : "+id);
   }else{
     alert("LOGIN REFUSED");
