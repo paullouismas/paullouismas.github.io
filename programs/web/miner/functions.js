@@ -1,43 +1,30 @@
-function generate(length, possible) {
-	// var possible = "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN";
-	var text = "";
-	for (var i = 0; i < length; i++) {
-		text+=possible.charAt(Math.floor(Math.random()*possible.length));
+const generate = (l, p) => {
+	let t = "";
+	for (let i = 0; i < l; i++) t += p.charAt(Math.floor(Math.random()*p.length));
+	return t || console.log(t);
+}
+
+const interst = (v, p) => {
+	let [l, t] = [v.length, ""];
+	for (let i = 0; i < l; i++) {
+		t += v.charAt(i)
+		if (Math.random() > p) t += generate(1, ",?;.:/");
 	}
-	return text || console.log(text);
+	return t || console.log(t);
 }
 
-function interst(value, probability) {
-	var length = value.length;
-	var text = "";
-	for (var i = 0; i < length; i++) {
-		text+=value.charAt(i)
-		if (Math.random()>probability) {
-			text+=generate(1, ",?;.:/");
-		}
-	}
-	return text || console.log(text);
+const reverse = (v) => {
+	let t = "";
+	for (let i = 0; i < v.length; i++) t = v.charAt(i) + t;
+	return t || console.log(t);
 }
 
-function reverse(value) {
-	var text = "";
-	var length = value.length;
-	for (var i = 0; i < length; i++) {
-		text=value.charAt(i)+text;
-	}
-	return text || console.log(text);
+const encoding = (v) => {
+	v = interst(reverse(btoa(v)), 0.1);
+	return v || console.log(v);
 }
 
-function encoding(value) {
-	var input = btoa(value);
-	input = reverse(input);
-	input = interst(input,0.1);
-	return input || console.log(input);
-}
-
-function decoding(value) {
-	var input = value.replace(/[\,\?\;\.\:\/]/g,'');
-	input = reverse(input);
-	input = atob(input);
-	return input || console.log(input);
+const decoding = (v) => {
+	v = atob(reverse(v.replace(/[\,\?\;\.\:\/]/g, "")));
+	return v || console.log(v);
 }
