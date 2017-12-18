@@ -1,7 +1,4 @@
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
-jQuery.getJSON("https://freegeoip.net/json/", function(data){
-var json = data;
-document.write("<br><br><br><center><br>Your IP address: " + json["ip"] + "<br>Your location: " + json["city"] + ", " + json["region_name"] + ", " + json["country_name"] + "<br>Your coordinates: " + json["latitude"] + "," + json["longitude"] + "" + "</center>");
-});
+	jQuery.getJSON("https://freegeoip.net/json/", d => document.write("<br><br><br><center><br>Your IP address: " + d["ip"] + "<br>Your location: " + d["city"] + ", " + d["region_name"] + ", " + d["country_name"] + "<br>Your coordinates: " + d["latitude"] + "," + d["longitude"] + "" + "</center>"));
 </script>
