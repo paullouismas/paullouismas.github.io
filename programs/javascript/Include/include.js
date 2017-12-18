@@ -1,4 +1,4 @@
-const include = (u) => {
+const include = u => {
 	if (typeof u == "string") {
 		try {
 			const x = new XMLHttpRequest();
