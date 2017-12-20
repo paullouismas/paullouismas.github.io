@@ -1,0 +1,35 @@
+<html>
+    <head>
+        <title>Bookmarklets</title>
+        <style type="text/css">
+            .indent { padding-left: 25px; }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <p>
+                <h1>What is a bookmarklet?</h1>
+                <div class="desc indent">
+                    A bookmarklet is a bookmark stored in a web browser that contains JavaScript commands that add new features to the browser. (<a href="https://en.wikipedia.org/wiki/Bookmarklet">Wikipedia</a>)
+                </div>
+            </p>
+            <p>
+                <h1>How to install a bookmarklet?</h1>
+                <div class="indent">
+                    You can drag and drop the link that contain the bookmarklet onto your bookmark bar, or alternatively, copy the code of the bookmarklet as the URL of a new bookmarklet.
+                </div>
+            </p>
+            <p>
+                <h1>Text inspector</h1>
+                <div class="indent">
+                    <a href="javascript:(()=>alert(((t,i)=>i+\"characters: \"+t.split(\"\").length+i+\"words: \"+t.split(\" \").filter(e=>e!=\"\").length+i+\"paragraphs: \"+t.split(/[\n]|[\r\n]/g).length)(prompt(\"Text to analyse\"),\"\nAmount of \")))()">Text inspector</a><br />
+                    <code lang="text/javascript">
+                        <pre>
+                            javascript:(()=>alert(((t,i)=>i+"characters: "+t.split("").length+i+"words: "+t.split(" ").filter(e=>e!="").length+i+"paragraphs: "+t.split(/[\n]|[\r\n]/g).length)(prompt("Text to analyse"),"\nAmount of ")))()
+                        </pre>
+                    </code>
+                </div>
+            </p>
+        </div>
+    </body>
+</html>
