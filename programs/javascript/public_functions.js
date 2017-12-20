@@ -9,3 +9,6 @@
 
 // Extended length method: allows to provide numbers
 const length = e => ((typeof(e)=="number")?e.toString():e).length;
+
+// Extended typeof method: allows to differentiate arrays from objects
+//const typeofx = d => ((typeof(d)!="object")?typeof(d):);
