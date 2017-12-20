@@ -23,9 +23,11 @@
                 <h1>Text inspector</h1>
                 <div class="indent">
                     <a href="javascript:(()=>alert(((t,i)=>i+\"characters: \"+t.split(\"\").length+i+\"words: \"+t.split(\" \").filter(e=\>e!=\"\").length+i+\"paragraphs: \"+t.split(/[\n]|[\r\n]/g).length)(prompt(\"Text to analyse\"),\"\nAmount of \")))()">Text inspector</a><br />
-                    <code lang="text/javascript">
-                    	javascript:(()=>alert(((t,i)=>i+"characters: "+t.split("").length+i+"words: "+t.split(" ").filter(e=>e!="").length+i+"paragraphs: "+t.split(/[\n]|[\r\n]/g).length)(prompt("Text to analyse"),"\nAmount of ")))()
-                    </code>
+                    <textarea>
+                        <code lang="text/javascript">
+                         	javascript:(()=>alert(((t,i)=>i+"characters: "+t.split("").length+i+"words: "+t.split(" ").filter(e=>e!="").length+i+"paragraphs: "+t.split(/[\n]|[\r\n]/g).length)(prompt("Text to analyse"),"\nAmount of ")))()
+                        </code>
+                    </textarea>
                 </div>
             </p>
             <p>
