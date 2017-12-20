@@ -8,7 +8,7 @@
  */
 
 // Extended length method: allows to provide numbers
-const length = e => ((typeof(e)=="number")?e.toString():e).length;
+const length = e => ((typeof(e) == "number") ? e.toString() : e).length;
 
 // Extended typeof method: allows to differentiate arrays, undefined, and null from objects
-const typeofx = l => (typeof(l)!="object")?typeof(l):((l==null)?"null":((l.length==undefined)?"object":"array"));
+const typeofx = l => (typeof(l) != "object") ? typeof(l) : ((l == null) ? "null" : ((l.length == undefined) ? "object" : "array"));
