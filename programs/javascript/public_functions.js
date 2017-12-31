@@ -3,7 +3,13 @@
  *  Require ES6 (ES 2015)
  *
  *
- *  Copyright Paul-Louis Mas 2017
+ *  Copyright  Paul-Louis Mas 2017
+ *
+ */
+
+/*
+ *
+ * Comment: some functions require others implemented in this file to work properly and so, a total implementation of the file is required.
  *
  */
 
