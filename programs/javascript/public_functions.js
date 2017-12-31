@@ -9,6 +9,8 @@
 
 /*
  *
+ * Description: This file contain some customs-made functions that I often use, you can use them freely but you need to contact me before if it requires any commercial use.
+ *
  * Comment: some functions require others implemented in this file to work properly and so, a total implementation of the file is required.
  *
  */
