@@ -21,7 +21,7 @@ const length = e => ((typeof(e) == "number") ? e.toString() : e).length;
 // Extended typeof method: allows to differentiate arrays from objects
 const typeofx = l => (l).constructor.toString().replace(/(\{[\w\s\[\]]*\})|(function)|([^\w])/g, "").toLowerCase();
 
-// Extended reverse method: allows to provide strings
+// Extended reverse method: allows to provide strings and booleans
 const reverse = e => (typeof(e) == "object") ? e.reverse() : ((typeof(e) == "string") ? e.split("").reverse().join("") : ((typeof(e) == "boolean") ? !e : null));
 
 // Basic implementation of a shuffle method: allows to shuffle characters in string and elements in array
