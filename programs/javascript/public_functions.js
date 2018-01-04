@@ -30,3 +30,15 @@ const shuffle = e => {
 	while (a.length < s.length) (i => ((s[i] != undefined) ? (a.push(s[i]), s[i] = undefined) : null))(Math.floor((Math.random() * s.length)));
 	return ((typeofx(e) == "string") ? a.join("") : a);
 };
+
+// Extented minimum of array elements implementation
+const min = a => Math.min(...a);
+
+// Extented maximum of array elements implementation
+const max = a => Math.max(...a);
+
+// Basic implementation of the sum of array elements
+const sum = a => a.reduce((b,c) => b + c, 0);
+
+// Basic implementation of the average value of array elements
+const average = a => a.reduce((b,c) => b + c, 0) / a.length;
