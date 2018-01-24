@@ -44,4 +44,26 @@ const sum = a => a.reduce((b,c) => b + c, 0);
 const average = a => a.reduce((b,c) => b + c, 0) / a.length;
 
 // Function to convert JSON formated CSS into HTML formated CSS
-const JCSS2HCSS = a => a.map(b => Object.keys(b).map(e => e + ' {\n' + b[e].map(c => Object.keys(c).map(d => d + ': ' + c[d] + ';')).join('\n') + '\n}')).join('\n')
+/*
+	The JSON formated CSS must be in the following format:
+	[
+		{
+			'element1': [
+				{ 'props1': 'value1' }, 
+				{ 'props2': 'value2' }, 
+				..., 
+				{ 'propsN': 'valueN' }
+			]
+		}, 
+		{
+			'element2': [
+				{ 'props1': 'value1' }, 
+				{ 'props2': 'value2' }, 
+				..., 
+				{ 'propsN': 'valueN' }
+			]
+		}, 
+		...
+	]
+*/
+const JSONformatedCSStoHTMLformatedCSS = a => a.map(b => Object.keys(b).map(e => e + ' {\n' + b[e].map(c => Object.keys(c).map(d => d + ': ' + c[d] + ';')).join('\n') + '\n}')).join('\n')
