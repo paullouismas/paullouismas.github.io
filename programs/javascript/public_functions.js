@@ -80,4 +80,4 @@ const average = a => a.reduce((b, c) => b + c, 0) / a.length;
 			propsN: valueN;
 		}
 */
-const JSONformatedCSStoHTMLformatedCSS = a => a.map(b => Object.keys(b).map(e => e + ' {\n' + b[e].map(c => Object.keys(c).map(d => d + ': ' + c[d] + ';')).join('\n') + '\n}')).join('\n')
+const JSONformatedCSStoHTMLformatedCSS = a => a.map(b => Object.keys(b).map(e => e + ' {\n' + b[e].map(c => Object.keys(c).map(d => d + ': ' + c[d] + ';')).join('\n') + '\n}').join('\n')).join('\n')
