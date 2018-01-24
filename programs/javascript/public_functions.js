@@ -22,7 +22,7 @@ const length = e => ((typeof(e) == "number") ? e.toString() : e).length;
 const typeofx = l => (l).constructor.toString().replace(/(\{[\w\s\[\]]*\})|(function)|([^\w])/g, "").toLowerCase();
 
 // Extended reverse method: allows to provide strings and booleans
-const reverse = e => (typeof(e) == "object") ? e.reverse() : ((typeof(e) == "string") ? e.split("").reverse().join("") : ((typeof(e) == "boolean") ? !e : null));
+const reverse = e => (typeofx(e) == "object") ? e.reverse() : ((typeofx(e) == "string") ? e.split("").reverse().join("") : ((typeofx(e) == "boolean") ? !e : null));
 
 // Basic implementation of a shuffle method: allows to shuffle characters in string and elements in array
 const shuffle = e => {
@@ -38,10 +38,10 @@ const min = a => Math.min(...a);
 const max = a => Math.max(...a);
 
 // Basic implementation of the sum of array elements
-const sum = a => a.reduce((b,c) => b + c, 0);
+const sum = a => a.reduce((b, c) => b + c, 0);
 
 // Basic implementation of the average value of array elements
-const average = a => a.reduce((b,c) => b + c, 0) / a.length;
+const average = a => a.reduce((b, c) => b + c, 0) / a.length;
 
 // Function to convert JSON formated CSS into HTML formated CSS
 /*
@@ -65,5 +65,21 @@ const average = a => a.reduce((b,c) => b + c, 0) / a.length;
 		}, 
 		...
 	]
+	
+	The HTML formated CSS will be in this format:
+	<style type="text/css">
+		element1 {
+			props1: value1;
+			props2: value2;
+			...
+			propsN: valueN;
+		}
+		element2 {
+			props1: value1;
+			props2: value2;
+			...
+			propsN: valueN;
+		}
+	</style>
 */
 const JSONformatedCSStoHTMLformatedCSS = a => a.map(b => Object.keys(b).map(e => e + ' {\n' + b[e].map(c => Object.keys(c).map(d => d + ': ' + c[d] + ';')).join('\n') + '\n}')).join('\n')
