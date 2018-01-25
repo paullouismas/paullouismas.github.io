@@ -31,10 +31,10 @@ const shuffle = e => {
 	return ((typeofx(e) == "string") ? a.join("") : a);
 };
 
-// Extented minimum of array elements implementation
+// Extended minimum of array elements implementation
 const min = a => Math.min(...a);
 
-// Extented maximum of array elements implementation
+// Extended maximum of array elements implementation
 const max = a => Math.max(...a);
 
 // Basic implementation of the sum of array elements
