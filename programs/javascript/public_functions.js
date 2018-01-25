@@ -22,7 +22,7 @@ const length = e => ((typeof(e) == "number") ? e.toString() : e).length;
 const typeofx = l => (l).constructor.toString().replace(/(\{[\w\s\[\]]*\})|(function)|([^\w])/g, "").toLowerCase();
 
 // Extended reverse method: allows to provide strings and booleans
-const reverse = e => (typeofx(e) == "object") ? e.reverse() : ((typeofx(e) == "string") ? e.split("").reverse().join("") : ((typeofx(e) == "boolean") ? !e : null));
+const reverse = e => (typeofx(e) == "array") ? e.reverse() : ((typeofx(e) == "string") ? e.split("").reverse().join("") : ((typeofx(e) == "boolean") ? !e : null));
 
 // Basic implementation of a shuffle method: allows to shuffle characters in string and elements in array
 const shuffle = e => {
