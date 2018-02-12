@@ -92,14 +92,18 @@ const parseHTML = (a = '') => (typeof a == 'object' ? (a == undefined ? '' : (a.
 const parseHTMLobject = (a = '') => (typeof a == 'object' ? (a == undefined ? '' : (a.map(b => typeof b == 'object' ? Object.keys(b).map(c => '<' + c + (a => a.map(b => Object.keys(b).map(c => ' ' + c + '="' + b[c] + '"').join('')).join(''))(b[c].attributes || []) + '>\n' + (typeof b[c].innerHTML == 'object' ? parseHTMLobject(b[c].innerHTML) : b[c].innerHTML) + '\n</' + c + '>').join('') : b).join('\n'))) : a);
 
 // Function to parse raw data to ascii encoded data
-const Alt = {
-	compile: a => a
-		.replace(/[^0-9\&\#\;]/g, '')
-		.split(/[\&\#\;]/g)
-		.map(e => String.fromCharCode(new Number(e)))
-		.join(''),
-	decompile: s => s
-		.split('')
-		.map(e => '&#' + e.charCodeAt(0).toString() + ';')
-		.join('')
+class Alt {
+	static compile(a) {
+		return a
+			.replace(/[^0-9\&\#\;]/g, '')
+			.split(/[\&\#\;]/g)
+			.map(e => String.fromCharCode(new Number(e)))
+			.join('');
+	};
+	static decompile(s) {
+		return s
+			.split('')
+			.map(e => '&#' + e.charCodeAt(0).toString() + ';')
+			.join('');
+	};
 }
