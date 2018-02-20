@@ -1,6 +1,6 @@
 <script>
 	const brainfuck = s => {
-		let jsCode = "let u=[],pointer=0,i;for(i=0;i<30000;i++)u[i]=0;", i;
+		let jsCode = "let u=new Array(30000).fill(0),pointer=0;", i;
 		s = s.split();
 		for (i = 0; i < s.length; i++) {
 			switch(s[i]) {
@@ -30,6 +30,7 @@
 					break;
 			}
 		}
+		s.split("").forEach(e => jsCode += (e == "." ? "document.write(String.formCharCode(u[pointer]));" : (e == "," ? "u[pointer]=prompt('');" : (e == "+" ? "u[pointer]++;" : ))))
 		console.log(jsCode);
 		eval(jsCode);
 	}
