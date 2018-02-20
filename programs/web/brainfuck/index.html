@@ -1,39 +1,5 @@
 <script>
-	const brainfuck = s => {
-		let jsCode = "let u=new Array(30000).fill(0),pointer=0;", i;
-		s = s.split();
-		for (i = 0; i < s.length; i++) {
-			switch(s[i]) {
-				case "." :
-					jsCode+="document.write(String.fromCharCode(u[pointer]));";
-					break;
-				case "," :
-					jsCode+="u[pointer]=prompt('');";
-					break;
-				case "+" :
-					jsCode+="u[pointer]++;";
-					break;
-				case "-" :
-					jsCode+="u[pointer]--;";
-					break;
-				case "<" :
-					jsCode+="pointer--;";
-					break;
-				case ">" :
-					jsCode+="pointer++;";
-					break;
-				case "[" :
-					jsCode+="while(u[pointer]!==0) {";
-					break;
-				case "]" :
-					jsCode+="};";
-					break;
-			}
-		}
-		s.split("").forEach(e => jsCode += (e == "." ? "document.write(String.formCharCode(u[pointer]));" : (e == "," ? "u[pointer]=prompt('');" : (e == "+" ? "u[pointer]++;" : ))))
-		console.log(jsCode);
-		eval(jsCode);
-	}
+	const brainfuck = s => (a => [console.log, eval].forEach(e => e(a)))(["let u=new Array(30000).fill(0),p=0;", ...(s.split("").filter(e => /[\.\,\+\-\<\>\[\]]/g.test(e)).map(e => (e == "." ? "document.write(String.fromCharCode(u[p]));" : (e == "," ? "u[p]=prompt();" : (e == "+" ? "u[p]++;" : (e == "-" ? "u[p]--;" : (e == "<" ? "p--;" : (e == ">" ? "p++;" : (e == "[" ? "while(u[p]!==0){" : "};")))))))))]);
 </script>
 <body>
 	<center>
