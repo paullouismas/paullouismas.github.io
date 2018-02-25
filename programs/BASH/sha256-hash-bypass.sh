@@ -22,6 +22,9 @@ var_int_findex=();
 var_int_place=0;
 var_int_max=0;
 var_int_somme_findex=0;
+var_int_start_time=0;
+var_int_stop_time=0;
+var_int_duration=0;
 
 # Initialisation des fonctions
 function_void_usage() { # Affichage de l'usage
@@ -72,6 +75,14 @@ function_void_update_progress_bar() { # Affichage d'un barre de progrès
 		var_string_empty=" ${var_string_empty}";
 	done
 	echo -n -e " Progress:\t[${var_string_full}${var_string_empty}] ${var_int_percent}%\t\r";
+}
+function_string_parse_time() {
+	local var_int_duration="${1}";
+	local var_int_seconds="$((${var_int_duration} % 60))";
+	local var_int_minutes="$(((${var_int_duration} / 60) % 60))";
+	local var_int_hours="$(((${var_int_duration} / 3600) % 24))";
+	local var_int_days="$((${var_int_duration} / 86400))";
+	echo "${var_int_days}d ${var_int_hours}h ${var_int_minutes}m ${var_int_seconds}s";
 }
 
 # Affichage de l'aide si aucuns arguments ne sont passés
@@ -171,6 +182,9 @@ var_int_findex=($(function_string_generate_array "${var_int_processing_length}")
 
 echo "Press ^C at any time to stop execution.";
 echo "Generating random strings...";
+
+var_int_start_time="$(date +"%s")";
+
 while [[ "$(wc -c "${var_string_output_file}" | awk '{ print $1 }')" -lt 10000000000 ]]; do
 	var_int_index="$((${var_int_index} + 1))";
 	var_int_somme_findex=0;
@@ -195,6 +209,10 @@ while [[ "$(wc -c "${var_string_output_file}" | awk '{ print $1 }')" -lt 1000000
 	[[ "${var_int_index}" -eq "${var_int_max}" ]] && break;
 done
 
+var_int_stop_time="$(date +"%s")";
+var_int_duration="$((${var_int_stop_time} - ${var_int_start_time}))";
+
 echo "";
+[[ "${var_bool_verbose}" = true ]] && echo -e "Total processing time:\t$(function_string_parse_time "${var_int_duration}")";
 
 exit 0;
