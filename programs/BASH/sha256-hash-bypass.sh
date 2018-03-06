@@ -97,7 +97,7 @@ function_void_upgrade() { # Gestion de mise à jour du script
 		return;
 	fi;
 
-	var_string_data="$(curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/sha256-hash-bypass.sh" | sed -e 's/var_string_version=\"\";/var_string_version=\"${var_string_sha}\";/g')";
+	var_string_data="$(curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/sha256-hash-bypass.sh" | sed -e 's/var_string_version=\".*\";/var_string_version=\"${var_string_sha}\";/g')";
 	echo "${var_string_data}";
 }
 
