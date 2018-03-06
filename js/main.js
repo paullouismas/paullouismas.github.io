@@ -1,1 +1,3 @@
-document.querySelectorAll('.js-current-year').forEach(function(e) { e.innerHTML = new Date().getFullYear(); });
+(function(w, d) {
+	document.querySelectorAll('.js-current-year').forEach(function(e) { e.innerHTML = new Date().getFullYear(); });
+})(window, document);
