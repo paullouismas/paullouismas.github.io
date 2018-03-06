@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Version du script
-var_string_version=""; #@curl-update:version
+var_string_version="";
 
 # Initialisation des variables
 var_string_error_msg="/!\\ ERROR /!\\";
@@ -19,7 +19,7 @@ var_bool_verbose=false;
 var_int_times=0;
 var_int_index=0;
 var_string_temp="";
-var_string_sleep_duration="0";
+var_int_sleep_duration=0;
 var_string_verbose="";
 var_int_findex=();
 var_int_place=0;
@@ -28,6 +28,7 @@ var_int_somme_findex=0;
 var_int_start_time=0;
 var_int_stop_time=0;
 var_int_duration=0;
+var_bool_specified_option_u=false;
 
 # Initialisation des fonctions
 function_void_usage() { # Affichage de l'usage
@@ -36,7 +37,6 @@ function_void_usage() { # Affichage de l'usage
 Usage: $(basename ${0}) [-h] [-p] -s <STR> -o <PATH> -i <STR>
 
 This utility is a small tool to generate a wordlist with random strings preceded by their hash. 
-The wordlist can then be called with a pipe followed by the grep command to bypass hashing. 
 
 Options:
 	-h		Display this help and exit
@@ -47,6 +47,7 @@ Options:
 			Default ones are: [a-zA-Z0-9_]
 	-s	<S>	String containing the amount of characters that should be processed
 			/!\\WARNING/!\\: The more characters you process, the longer it will take to finish processing
+	-u		Upgrade script to latest available version
 	-v		Verbose mode
 
 EOF
@@ -61,7 +62,7 @@ function_string_generate_array() { # Généraion d'une array de taille précisé
 	done;
 	echo "${var_string_return}";
 }
-function_void_update_progress_bar() { # Affichage d'un barre de progrès
+function_void_update_progress_bar() { # Affichage d'une barre de progrès
 	local var_int_start="${1}";
 	local var_int_current="${2}";
 	local var_int_stop="${3}";
@@ -77,9 +78,9 @@ function_void_update_progress_bar() { # Affichage d'un barre de progrès
 	for ((var_int_i = 0; var_int_i < "100 - ${var_int_percent}"; var_int_i++)); do
 		var_string_empty=" ${var_string_empty}";
 	done
-	echo -n -e " Progress:\t[${var_string_full}${var_string_empty}] ${var_int_percent}%\t\r";
+	echo -n -e " Progress:\t[${var_string_full}${var_string_empty}] ${var_int_percent}%\t${var_int_current}/${var_int_stop}\r";
 }
-function_string_parse_time() {
+function_string_parse_time() { # Affichage du temps
 	local var_int_duration="${1}";
 	local var_int_seconds="$((${var_int_duration} % 60))";
 	local var_int_minutes="$(((${var_int_duration} / 60) % 60))";
@@ -87,15 +88,27 @@ function_string_parse_time() {
 	local var_int_days="$((${var_int_duration} / 86400))";
 	echo "${var_int_days}d ${var_int_hours}h ${var_int_minutes}m ${var_int_seconds}s";
 }
+function_void_upgrade() { # Gestion de mise à jour du script
+	local var_string_data="";
+	local var_string_sha="$(curl -s "https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
+	
+	if [[ "${var_string_version}" == "${var_string_sha}" ]]; then
+		echo "Script is already the latest version";
+		return;
+	fi;
+
+	var_string_data="$(curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/sha256-hash-bypass.sh" | sed -e 's/var_string_version=\"\";/var_string_version=\"${var_string_sha}\";/g')";
+	echo "${var_string_data}";
+}
 
 # Affichage de l'aide si aucuns arguments ne sont passés
 [[ "${#@}" -eq 0 ]] && function_void_usage && exit 0;
 
 # Analyse des arguments passés
-while getopts ":l:ho:pi:s:v" o; do
+while getopts ":l:ho:pi:s:uv" o; do
 	case "${o}" in
 		l)
-			var_string_sleep_duration="${OPTARG}";
+			var_int_sleep_duration="${OPTARG}";
 			var_bool_specified_option_l=true;
 			;;
 		h)
@@ -129,6 +142,9 @@ while getopts ":l:ho:pi:s:v" o; do
 				var_bool_specified_option_s=false;
 			fi;
 			;;
+		u)
+			var_bool_specified_option_u=true;
+			;;
 		v)
 			var_bool_verbose=true;
 			;;
@@ -138,6 +154,12 @@ while getopts ":l:ho:pi:s:v" o; do
 			;;
 	esac;
 done;
+
+# Système de mise à jour
+if [[ "${var_bool_specified_option_u}" = true ]]; then
+	function_void_upgrade;
+	exit 0;
+fi;
 
 # Filtrage des erreurs
 if [[ "${var_bool_specified_option_o}" = false ]]; then
@@ -169,7 +191,7 @@ fi;
 
 if [[ "${var_bool_verbose}" = true ]]; then
 	clear;
-	read -r -d '' var_string_verbose <<EOVERBOSE
+	read -r -d '' var_string_dummy <<EOVERBOSE
 /!\\ VERBOSE MODE /!\\
 	Output file:		$([[ "${var_string_output_file:0:1}" != "/" ]] && echo "$(pwd)/" || echo "")${var_string_output_file}
 	Processing length:	${var_int_processing_length}
@@ -177,7 +199,7 @@ if [[ "${var_bool_verbose}" = true ]]; then
 	Total calculations:	$((${#var_string_possible_chars} ** ${var_int_processing_length}))
 /!\\ VERBOSE MODE /!\\
 EOVERBOSE
-	echo -e "${var_string_verbose}";
+	echo -e "${var_string_dummy}";
 fi
 
 var_int_max="$((${#var_string_possible_chars} ** ${var_int_processing_length}))";
@@ -208,7 +230,7 @@ while [[ "$(wc -c "${var_string_output_file}" | awk '{ print $1 }')" -lt 1000000
 			[[ "${var_int_place}" -gt 0 ]] && var_int_findex["$((${var_int_place} - 1))"]="$((${var_int_findex["$((${var_int_place} - 1))"]} + 1))";
 		fi;
 	done;
-	sleep "${var_string_sleep_duration}";
+	sleep "${var_int_sleep_duration}";
 	[[ "${var_int_index}" -eq "${var_int_max}" ]] && break;
 done
 
