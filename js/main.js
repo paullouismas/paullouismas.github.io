@@ -1,3 +1,5 @@
 window.onload = function() {
-	document.querySelectorAll('.js-current-year').map(e => e.innerHTML = new Date().getFullYear());
+	document.querySelectorAll('.js-current-year').forEach(function(e) {
+		e.innerHTML = new Date().getFullYear();
+	});
 };
