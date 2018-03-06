@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Version du script
+var_string_version=""; #@curl-update:version
+
 # Initialisation des variables
 var_string_error_msg="/!\\ ERROR /!\\";
 var_bool_specified_option_l=false;
