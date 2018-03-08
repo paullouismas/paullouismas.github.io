@@ -1,5 +1,6 @@
 (function(w, d) {
 	document.querySelectorAll('exec').forEach(function(e) {
+		e.attributes.encoding = e.attributes.encoding || { value: 'plain' };
 		e.attributes.encoding.value = e.attributes.encoding.value || 'plain';
 		try {
 			e.innerHTML = eval(
