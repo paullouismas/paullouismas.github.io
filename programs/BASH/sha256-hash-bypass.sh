@@ -35,7 +35,7 @@ var_string_update_file_path="/tmp/sha256-hash-bypass.sh.update-file";
 function_void_usage() { # Affichage de l'usage
 	local var_string_usage;
 	read -r -d '' var_string_usage <<EOF
-Usage: $(basename ${0}) [-h] [-p] -s <STR> -o <PATH> -i <STR> -u
+Usage: $(basename ${0}) [-h] [-p] -s <STR> -o <PATH> -i <STR> [-u] [-w <TYPE>]
 
 This utility is a small tool to generate a wordlist with random strings preceded by their hash. 
 
@@ -51,6 +51,7 @@ Options:
 			/!\\WARNING/!\\: The more characters you process, the longer it will take to finish processing
 	-u		Upgrade script to latest available version
 	-v		Verbose mode
+	-w	<T>	Print version between the current installed one and the latest available one
 
 EOF
 	echo "${var_string_usage}"
@@ -133,7 +134,7 @@ function_void_finish_upgrade() { # Nettoyage des fichiers d'nstallation de la mi
 [[ "${#@}" -eq 0 ]] && function_void_usage && exit 0;
 
 # Analyse des arguments passés
-while getopts ":cl:ho:pi:s:uv" o; do
+while getopts ":cl:ho:pi:s:uvw:" o; do
 	case "${o}" in
 		c)
 			function_void_finish_upgrade;
@@ -180,6 +181,17 @@ while getopts ":cl:ho:pi:s:uv" o; do
 			;;
 		v)
 			var_bool_verbose=true;
+			;;
+		w)
+			if [[ "${OPTARG}" == "current" ]]; then
+				echo "${var_string_version}";
+			elif [[ "${OPTARG}" == "latest" ]]; then
+				echo "$(curl -s "https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
+			else
+				echo "Option ${OPTARG} unknown";
+				exit 1;
+			fi;
+			exit 0;
 			;;
 		*)
 			echo "${var_string_error_msg} Argument \"${OPTARG}\" unknown.";
