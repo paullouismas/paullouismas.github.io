@@ -36,7 +36,7 @@ var_string_script_path="${0}";
 function_void_usage() { # Affichage de l'usage
 	local var_string_usage;
 	read -r -d '' var_string_usage <<EOF
-Usage: $(basename ${0}) [-h] [-p] -s <STR> -o <PATH> -i <STR> [-u] [-w <TYPE>]
+Usage: $(basename ${0}) [-h] [-p] -s <STR> -o <PATH> -i <STR> [-u] [-w]
 
 This utility is a small tool to generate a wordlist with random strings preceded by their hash. 
 
@@ -51,7 +51,7 @@ Options:
 			/!\\WARNING/!\\: The more characters you process, the longer it will take to finish processing
 	-u		Upgrade script to latest available version
 	-v		Verbose mode
-	-w	<T>	Print version between the current installed one and the latest available one
+	-w		Print version between the current installed one and the latest available one
 
 EOF
 	echo "${var_string_usage}"
@@ -176,15 +176,8 @@ while getopts ":l:ho:pi:s:uvw" o; do
 			var_bool_verbose=true;
 			;;
 		w)
-			if [[ "${OPTARG}" == "current" ]]; then
-				echo "${var_string_version}";
-			elif [[ "${OPTARG}" == "latest" ]]; then
-				echo "$(curl -s "https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
-			else
-				echo "Current:\t${var_string_version}";
-				echo "Latest:\t$(curl -s "https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
-				exit 1;
-			fi;
+			echo -e "Current:\t${var_string_version}";
+			echo -e "Latest:\t$(curl -s "https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
 			exit 0;
 			;;
 		*)
