@@ -223,10 +223,7 @@ fi;
 
 if [[ -f "${var_string_output_file}" ]]; then
 	read -p "The output file already exist, processing will overwrite the file, do you want to continue? (y/n) " var_string_dummy;
-	if [[ "${var_string_dummy}" != "y" && "${var_string_dummy}" != "Y" ]]; then
-		echo "Quiting.";
-		exit 0;
-	fi
+	[[ "${var_string_dummy}" != [Yy] ]] && echo "Quiting." && exit 0;
 	echo -n "" > "${var_string_output_file}";
 	echo "File overwriten.";
 else
