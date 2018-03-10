@@ -4,35 +4,41 @@
 var_string_version="";
 
 # Initialisation des variables
-var_string_error_msg="/!\\ ERROR /!\\";
-var_bool_specified_option_l=false;
-var_bool_specified_option_o=false;
-var_bool_specified_option_p=false;
-var_bool_specified_option_s=false;
-var_bool_specified_option_i=false;
-var_string_output_file="";
-var_int_processing_length=0;
-var_string_possible_chars="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
-var_string_dummy="";
-var_string_string="";
-var_bool_verbose=false;
-var_int_times=0;
-var_int_index=0;
-var_string_temp="";
-var_int_sleep_duration=0;
-var_string_verbose="";
-var_int_findex=();
-var_int_place=0;
-var_int_max=0;
-var_int_somme_findex=0;
-var_int_start_time=0;
-var_int_stop_time=0;
-var_int_duration=0;
-var_bool_specified_option_u=false;
-var_string_update_file_path="/tmp/sha256-hash-bypass.sh.update-file";
-var_string_script_path="${0}";
-var_string_sha_url="https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass/app.sh";
-var_string_data_url="https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/sha256-hash-bypass/app.sh";
+{ # Initialisation des booléens
+	var_bool_specified_option_l=false;
+	var_bool_specified_option_o=false;
+	var_bool_specified_option_p=false;
+	var_bool_specified_option_s=false;
+	var_bool_specified_option_i=false;
+	var_bool_verbose=false;
+	var_bool_specified_option_u=false;
+}
+{ # Initialisation des chaînes de caractères
+	var_string_error_msg="/!\\ ERROR /!\\";
+	var_string_output_file="";
+	var_string_possible_chars="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_";
+	var_string_dummy="";
+	var_string_string="";
+	var_string_temp="";var_string_verbose="";
+	var_string_update_file_path="/tmp/sha256-hash-bypass.sh.update-file";
+	var_string_script_path="${0}";
+	var_string_sha_url="https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass/app.sh";
+	var_string_data_url="https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/sha256-hash-bypass/app.sh";
+
+}
+{ # Initialisation des entiers
+	var_int_processing_length=0;
+	var_int_times=0;
+	var_int_index=0;
+	var_int_sleep_duration=0;
+	var_int_findex=();
+	var_int_place=0;
+	var_int_max=0;
+	var_int_somme_findex=0;
+	var_int_start_time=0;
+	var_int_stop_time=0;
+	var_int_duration=0;
+}
 
 # Initialisation des fonctions
 function_void_usage() { # Affichage de l'usage
@@ -228,9 +234,9 @@ else
 	echo "Output file (${var_string_output_file}) created.";
 fi;
 
-##################################
-##	Exécution du 'Main' script	##
-##################################
+################################
+## Exécution du 'Main' script ##
+################################
 
 if [[ "${var_bool_verbose}" = true ]]; then
 	clear;
