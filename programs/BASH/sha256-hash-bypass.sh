@@ -131,7 +131,7 @@ EOF
 [[ "${#@}" -eq 0 ]] && function_void_usage && exit 0;
 
 # Analyse des arguments passés
-while getopts ":l:ho:pi:s:uvw:" o; do
+while getopts ":l:ho:pi:s:uvw" o; do
 	case "${o}" in
 		l)
 			var_int_sleep_duration="${OPTARG}";
@@ -181,7 +181,8 @@ while getopts ":l:ho:pi:s:uvw:" o; do
 			elif [[ "${OPTARG}" == "latest" ]]; then
 				echo "$(curl -s "https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
 			else
-				echo "Option ${OPTARG} unknown";
+				echo "Current:\t${var_string_version}";
+				echo "Latest:\t$(curl -s "https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
 				exit 1;
 			fi;
 			exit 0;
