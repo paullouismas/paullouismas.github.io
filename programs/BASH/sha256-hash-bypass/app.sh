@@ -31,8 +31,8 @@ var_int_duration=0;
 var_bool_specified_option_u=false;
 var_string_update_file_path="/tmp/sha256-hash-bypass.sh.update-file";
 var_string_script_path="${0}";
-var_string_sha_url="https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh";
-var_string_data_url="https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/sha256-hash-bypass.sh";
+var_string_sha_url="https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass/app.sh";
+var_string_data_url="https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/sha256-hash-bypass/app.sh";
 
 # Initialisation des fonctions
 function_void_usage() { # Affichage de l'usage
