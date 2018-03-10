@@ -129,7 +129,7 @@ EOF
 	exit 0;
 }
 function_void_finish_upgrade() { # Nettoyage des fichiers d'nstallation de la mise à jour
-	[[ -f "${var_string_update_file_path}" ]] && rm "${var_string_update_file_path}";
+	[[ -f -e "${var_string_update_file_path}" ]] && rm "${var_string_update_file_path}";
 }
 
 # Nettoyage des précédents fichiers d'installation / de mise à jour
