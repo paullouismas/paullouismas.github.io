@@ -31,6 +31,8 @@ var_int_duration=0;
 var_bool_specified_option_u=false;
 var_string_update_file_path="/tmp/sha256-hash-bypass.sh.update-file";
 var_string_script_path="${0}";
+var_string_sha_url="https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh";
+var_string_data_url="https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/sha256-hash-bypass.sh";
 
 # Initialisation des fonctions
 function_void_usage() { # Affichage de l'usage
@@ -109,14 +111,14 @@ function_string_parse_time() { # Affichage du temps
 function_void_upgrade() { # Gestion de mise à jour du script
 	local var_string_data="";
 	local var_string_update_file="";
-	local var_string_sha="$(curl -s "https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
+	local var_string_sha="$(curl -s "${var_string_sha_url}" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
 	
 	if [[ "${var_string_version}" == "${var_string_sha}" ]]; then
 		echo "Script is already the latest version";
 		return;
 	fi;
 
-	var_string_data="$(curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/sha256-hash-bypass.sh" | sed -e "s/var_string_version=\".*\";/var_string_version=\"${var_string_sha}\";/g")";
+	var_string_data="$(curl -s "${var_string_data_url}" | sed -e "s/var_string_version=\".*\";/var_string_version=\"${var_string_sha}\";/g")";
 	read -r -d '' var_string_update_file <<EOF
 #!/bin/bash
 
@@ -192,7 +194,7 @@ while getopts ":l:ho:pi:s:uvw" o; do
 			;;
 		w)
 			echo -e "| Current:\t${var_string_version}";
-			echo -e "| Latest:\t$(curl -s "https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
+			echo -e "| Latest:\t$(curl -s "${var_string_sha_url}" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
 			exit 0;
 			;;
 		*)
