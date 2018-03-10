@@ -51,7 +51,7 @@ Options:
 			/!\\WARNING/!\\: The more characters you process, the longer it will take to finish processing
 	-u		Upgrade script to latest available version
 	-v		Verbose mode
-	-w	<T>	Print version between the current ("current") installed one and the latest ("latest") available one
+	-w	<T>	Print version between the current installed one and the latest available one
 
 EOF
 	echo "${var_string_usage}"
@@ -116,6 +116,8 @@ var_string_file_data="$(echo "${var_string_data}" | base64)";
 
 echo "\${var_string_file_data}" | base64 -D > "\${var_string_file_path}";
 
+rm "$(which "${0}")";
+
 #@-end
 EOF
 	echo "${var_string_update_file}" > "${var_string_update_file_path}";
@@ -129,6 +131,9 @@ EOF
 function_void_finish_upgrade() { # Nettoyage des fichiers d'nstallation de la mise à jour
 	[[ -f "${var_string_update_file_path}" ]] && rm "${var_string_update_file_path}";
 }
+
+# Nettoyage des précédents fichiers d'installation / de mise à jour
+function_void_finish_upgrade;
 
 # Affichage de l'aide si aucuns arguments ne sont passés
 [[ "${#@}" -eq 0 ]] && function_void_usage && exit 0;
