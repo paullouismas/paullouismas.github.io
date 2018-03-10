@@ -115,11 +115,9 @@ var_string_file_data="$(echo "${var_string_data}" | base64)";
 
 echo "\${var_string_file_data}" | base64 -D > "\${var_string_file_path}";
 
-rm "$(which "\${0}")";
-
 #@-end
 EOF
-	echo "${var_string_update_file}" > "${var_string_update_file_path}";
+	echo -e "${var_string_update_file}" > "${var_string_update_file_path}";
 	chmod +x "${var_string_update_file_path}" || {
 		echo "The update program might need root privileges";
 		sudo chmod +x "${var_string_update_file_path}";
