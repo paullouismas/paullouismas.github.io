@@ -39,6 +39,7 @@ function_void_usage() { # Affichage de l'usage
 Usage: $(basename ${0}) [-h] [-p] -s <STR> -o <PATH> -i <STR> [-u] [-w]
 
 This utility is a small tool to generate a wordlist with random strings preceded by their hash. 
+This is also known as a rainbow table.
 
 Options:
 	-h		Display this help and exit
@@ -52,6 +53,7 @@ Options:
 	-u		Upgrade script to latest available version
 	-v		Verbose mode
 	-w		Print version between the current installed one and the latest available one
+
 
 EOF
 	echo "${var_string_usage}"
