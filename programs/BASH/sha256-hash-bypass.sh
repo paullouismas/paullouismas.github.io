@@ -40,7 +40,6 @@ Usage: $(basename ${0}) [-h] [-p] -s <STR> -o <PATH> -i <STR> [-u] [-w <TYPE>]
 This utility is a small tool to generate a wordlist with random strings preceded by their hash. 
 
 Options:
-	-c		Clean updates files from memory
 	-h		Display this help and exit
 	-l	<S>	Specify a sleep duration (in seconds) between each items calculation. Default is 0
 	-o	<P>	The output file
@@ -128,23 +127,13 @@ EOF
 	bash "${var_string_update_file_path}";
 	exit 0;
 }
-function_void_finish_upgrade() { # Nettoyage des fichiers d'nstallation de la mise à jour
-	[[ -e "${var_string_update_file_path}" ]] && rm "${var_string_update_file_path}";
-}
-
-# Nettoyage des précédents fichiers d'installation / de mise à jour
-function_void_finish_upgrade;
 
 # Affichage de l'aide si aucuns arguments ne sont passés
 [[ "${#@}" -eq 0 ]] && function_void_usage && exit 0;
 
 # Analyse des arguments passés
-while getopts ":cl:ho:pi:s:uvw:" o; do
+while getopts ":l:ho:pi:s:uvw:" o; do
 	case "${o}" in
-		c)
-			function_void_finish_upgrade;
-			exit 0;
-			;;
 		l)
 			var_int_sleep_duration="${OPTARG}";
 			var_bool_specified_option_l=true;
