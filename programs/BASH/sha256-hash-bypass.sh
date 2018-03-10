@@ -29,16 +29,18 @@ var_int_start_time=0;
 var_int_stop_time=0;
 var_int_duration=0;
 var_bool_specified_option_u=false;
+var_string_update_file_path="/tmp/sha256-hash-bypass.sh.update-file";
 
 # Initialisation des fonctions
 function_void_usage() { # Affichage de l'usage
 	local var_string_usage;
 	read -r -d '' var_string_usage <<EOF
-Usage: $(basename ${0}) [-h] [-p] -s <STR> -o <PATH> -i <STR>
+Usage: $(basename ${0}) [-h] [-p] -s <STR> -o <PATH> -i <STR> -u
 
 This utility is a small tool to generate a wordlist with random strings preceded by their hash. 
 
 Options:
+	-c		Clean updates files from memory
 	-h		Display this help and exit
 	-l	<S>	Specify a sleep duration (in seconds) between each items calculation. Default is 0
 	-o	<P>	The output file
@@ -90,6 +92,7 @@ function_string_parse_time() { # Affichage du temps
 }
 function_void_upgrade() { # Gestion de mise à jour du script
 	local var_string_data="";
+	local var_string_update_file="";
 	local var_string_sha="$(curl -s "https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
 	
 	if [[ "${var_string_version}" == "${var_string_sha}" ]]; then
@@ -98,15 +101,44 @@ function_void_upgrade() { # Gestion de mise à jour du script
 	fi;
 
 	var_string_data="$(curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/sha256-hash-bypass.sh" | sed -e "s/var_string_version=\".*\";/var_string_version=\"${var_string_sha}\";/g")";
-	echo "${var_string_data}";
+	read -r -d '' var_string_update_file <<EOF
+#!/bin/bash
+
+#######################################################################################
+##### This is a tempporary update file and by so, should not be executed manually #####
+#######################################################################################
+
+#@-beginning
+
+var_string_file_path="$(which "${0}")";
+var_string_file_data="$(echo "${var_string_data}" | base64)";
+
+echo "\${var_string_file_data}" | base64 -D > "\${var_string_file_path}";
+
+#@-end
+EOF
+	echo "${var_string_update_file}" > "${var_string_update_file_path}";
+	chmod +x "${var_string_update_file_path}" || {
+		echo "The update program might need root privileges";
+		sudo chmod +x "${var_string_update_file_path}";
+	}
+	bash "${var_string_update_file_path}";
+	exit 0;
+}
+function_void_finish_upgrade() { # Nettoyage des fichiers d'nstallation de la mise à jour
+	[[ -f "${var_string_update_file_path}" ]] && rm "${var_string_update_file_path}";
 }
 
 # Affichage de l'aide si aucuns arguments ne sont passés
 [[ "${#@}" -eq 0 ]] && function_void_usage && exit 0;
 
 # Analyse des arguments passés
-while getopts ":l:ho:pi:s:uv" o; do
+while getopts ":cl:ho:pi:s:uv" o; do
 	case "${o}" in
+		c)
+			function_void_finish_upgrade;
+			exit 0;
+			;;
 		l)
 			var_int_sleep_duration="${OPTARG}";
 			var_bool_specified_option_l=true;
@@ -143,7 +175,8 @@ while getopts ":l:ho:pi:s:uv" o; do
 			fi;
 			;;
 		u)
-			var_bool_specified_option_u=true;
+			function_void_upgrade;
+			exit 0;
 			;;
 		v)
 			var_bool_verbose=true;
@@ -154,12 +187,6 @@ while getopts ":l:ho:pi:s:uv" o; do
 			;;
 	esac;
 done;
-
-# Système de mise à jour
-if [[ "${var_bool_specified_option_u}" = true ]]; then
-	function_void_upgrade;
-	exit 0;
-fi;
 
 # Filtrage des erreurs
 if [[ "${var_bool_specified_option_o}" = false ]]; then
