@@ -51,7 +51,7 @@ Options:
 			/!\\WARNING/!\\: The more characters you process, the longer it will take to finish processing
 	-u		Upgrade script to latest available version
 	-v		Verbose mode
-	-w	<T>	Print version between the current installed one and the latest available one
+	-w	<T>	Print version between the current ("current") installed one and the latest ("latest") available one
 
 EOF
 	echo "${var_string_usage}"
