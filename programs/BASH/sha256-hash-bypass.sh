@@ -30,7 +30,7 @@ var_int_stop_time=0;
 var_int_duration=0;
 var_bool_specified_option_u=false;
 var_string_update_file_path="/tmp/sha256-hash-bypass.sh.update-file";
-var_string_script_path="$(which "${0}")";
+var_string_script_path="${0}";
 
 # Initialisation des fonctions
 function_void_usage() { # Affichage de l'usage
