@@ -30,6 +30,7 @@ var_int_stop_time=0;
 var_int_duration=0;
 var_bool_specified_option_u=false;
 var_string_update_file_path="/tmp/sha256-hash-bypass.sh.update-file";
+var_string_script_path="$(which "${0}")";
 
 # Initialisation des fonctions
 function_void_usage() { # Affichage de l'usage
@@ -110,7 +111,7 @@ function_void_upgrade() { # Gestion de mise à jour du script
 
 #@-beginning
 
-var_string_file_path="$(which "${0}")";
+var_string_file_path="${var_string_script_path}";
 var_string_file_data="$(echo "${var_string_data}" | base64)";
 
 echo "\${var_string_file_data}" | base64 -D > "\${var_string_file_path}";
