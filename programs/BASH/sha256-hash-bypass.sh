@@ -116,7 +116,7 @@ var_string_file_data="$(echo "${var_string_data}" | base64)";
 
 echo "\${var_string_file_data}" | base64 -D > "\${var_string_file_path}";
 
-rm "$(which "${0}")";
+rm "$(which "\${0}")";
 
 #@-end
 EOF
