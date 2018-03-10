@@ -176,8 +176,8 @@ while getopts ":l:ho:pi:s:uvw" o; do
 			var_bool_verbose=true;
 			;;
 		w)
-			echo -e "Current:\t${var_string_version}";
-			echo -e "Latest:\t$(curl -s "https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
+			echo -e "| Current:\t${var_string_version}";
+			echo -e "| Latest:\t$(curl -s "https://api.github.com/repositories/77230994/contents/programs/BASH/sha256-hash-bypass.sh" | grep -F "\"sha\":" | awk '{print $2}' | sed -e 's/[^0-9a-zA-Z]//g')";
 			exit 0;
 			;;
 		*)
