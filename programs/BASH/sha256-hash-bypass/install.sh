@@ -5,7 +5,7 @@
 #######################################################################################
 
 var_string_app_name="sha256-hash-bypass";
-var_string_file_path="${HOME}/${var_string_app_name}";
+var_string_file_path="$(pwd)/${var_string_app_name}";
 var_string_file_data="$(echo "$(curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/sha256-hash-bypass/app.sh")" | base64)";
 var_int_result=0;
 
