@@ -13,7 +13,7 @@ echo "${var_string_file_data}" | base64 -D > "${var_string_file_path}";
 {
 	chmod +x "${var_string_file_path}" && ln -s "${var_string_file_path}" "/bin";
 } || {
-	echo "You might needs root access to fully install this ";
+	echo "You might needs root access to fully install this app.";
 	sudo chmod +x "${var_string_file_path}" && sudo ln -s "${var_string_file_path}" "/bin";
 }
 
