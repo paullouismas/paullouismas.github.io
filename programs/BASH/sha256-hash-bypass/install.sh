@@ -11,7 +11,7 @@ var_string_symlink_path="/bin";
 
 echo "You will be prompted for an administrator password to proceed to the installation.";
 echo "The script will install the app in the current working directory.";
-echo "It will then create a symbolic link to the file in the current working directory (${var_string_symlink_path})";
+echo "It will then create a symbolic link to the file in the directory ${var_string_symlink_path}";
 
 sudo echo "${var_string_file_data}" | base64 -D > "${var_string_file_path}";
 sudo chmod +x "${var_string_file_path}";
