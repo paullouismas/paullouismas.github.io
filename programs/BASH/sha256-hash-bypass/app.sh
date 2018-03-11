@@ -22,9 +22,9 @@ var_string_version="";
 	var_string_temp="";var_string_verbose="";
 	var_string_update_file_path="/tmp/sha256-hash-bypass.sh.update-file";
 	var_string_script_path="${0}";
-	var_string_ref_url="programs/BASH/sha256-hash-bypass/app.sh";
-	var_string_sha_url="https://api.github.com/repositories/77230994/contents/${var_string_ref_url}";
-	var_string_data_url="https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/${var_string_ref_url}";
+	var_string_remote_url="programs/BASH/sha256-hash-bypass/app.sh";
+	var_string_sha_url="https://api.github.com/repositories/77230994/contents/${var_string_remote_url}";
+	var_string_data_url="https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/${var_string_remote_url}";
 
 }
 { # Initialisation des entiers
