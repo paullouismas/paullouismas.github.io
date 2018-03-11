@@ -18,8 +18,10 @@ echo "${var_string_file_data}" | base64 -D > "${var_string_file_path}";
 
 var_int_result="$?";
 
-if [[ "${var_int_result}" -eq "0" ]]; then echo "App installed successfully."
-else echo "App installed with errors.";
+if [[ "${var_int_result}" -eq "0" ]]; then
+	echo "App installed successfully."
+else
+	echo "App couldn't be installed.";
 fi;
 
 exit "${var_int_result}";
