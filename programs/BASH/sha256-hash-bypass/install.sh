@@ -20,9 +20,9 @@ echo "${var_string_file_data}" | base64 -D > "${var_string_file_path}";
 var_int_result="$?";
 
 if [[ "${var_int_result}" -eq "0" ]]; then
-	echo "App installed successfully."
+	echo -e "App installed successfully.\nYou might need to run the app with the -u option to update the script to latest version."
 else
-	echo "App couldn't be installed.";
+	echo -e "App couldn't be installed.";
 fi;
 
 exit "${var_int_result}";
