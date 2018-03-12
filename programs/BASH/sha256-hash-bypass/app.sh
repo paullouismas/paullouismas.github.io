@@ -45,7 +45,7 @@ var_string_version="";
 function_void_usage() { # Affichage de l'usage
 	local var_string_usage;
 	read -r -d '' var_string_usage <<EOF
-Usage: $(basename ${0})	-s <STR> -o <PATH> [ -i <STR> ]
+Usage: $(basename "${0}") -s <STR> -o <PATH> [ -i <STR> ]
 			[-p]
 			[-h] 
 			[-u] 
@@ -53,6 +53,7 @@ Usage: $(basename ${0})	-s <STR> -o <PATH> [ -i <STR> ]
 
 This utility is a small tool to generate a wordlist with random strings preceded by their hash. 
 This is also known as a rainbow table.
+The file can then be queried to discover passwords based on their hashes.
 
 
 Options:
