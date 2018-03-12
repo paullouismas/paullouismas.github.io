@@ -56,28 +56,28 @@ This is also known as a rainbow table.
 
 
 Options:
-	-h			Display this help and exit
-	
-	-l	<S>		Specify a sleep duration (in seconds) between each items calculation. 
-				Default is 0
-	
-	-o	<P>		The output file
-	
-	-p			Print the current data being processed on-screen, disable progress bar
-	
-	-i	<S>		String containing the characters that should be used to generate random strings
-				Default ones are: [a-zA-Z0-9_]
-			
-	-s	<S>		String containing the amount of characters that should be processed
-				/!\\WARNING/!\\: The more characters you process, the longer it will take to finish processing
-			
-	-u			Upgrade script to latest available version
-	
-	-v			Verbose mode
-	
-	-w			Print version between the current installed one and the latest available one
 
- 
+    -h            Display this help and exit.
+
+    -l    <S>     Specify a sleep duration (in seconds) between each items calculation.
+                  Default is 0
+
+    -o    <P>     The output file.
+
+    -p            Print the current data being processed on-screen, disable progress bar.
+
+    -i    <S>     String containing the characters that should be used to generate random strings.
+                  Default ones are: [a-zA-Z0-9_]
+
+    -s    <S>     String containing the amount of characters that should be processed.
+                  /!\\WARNING/!\\: The more characters you process, the longer it will take to finish processing
+
+    -u            Upgrade script to latest available version.
+
+    -v            Verbose mode.
+
+    -w            Print version between the current installed one and the latest available one.
+
 EOF
 	echo "${var_string_usage}"
 	exit 0;
