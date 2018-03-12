@@ -136,9 +136,9 @@ function_void_upgrade() { # Gestion de mise à jour du script
 #@-beginning
 
 var_string_file_path="${var_string_script_path}";
-var_string_file_data="$(echo "${var_string_data}" | base64)";
+var_string_file_data="$(echo "${var_string_data}" | openssl enc -base64)";
 
-echo "\${var_string_file_data}" | base64 -D > "\${var_string_file_path}";
+echo "\${var_string_file_data}" | openssl enc -base64 -d > "\${var_string_file_path}";
 
 #@-end
 EOF
