@@ -18,7 +18,8 @@ var_bool_ignore=false;
 var_string_current="";
 var_string_destination="";
 var_array_string_temp=();
-var_int_transfer_time=0;
+var_array_int_transfer_time=0;
+var_int_processed_files=0;
 
 ##### /VARIABLES DECLARATION #####
 
@@ -105,6 +106,8 @@ if [[ false = true ]]; then
 fi;
 ##### /DEBUG #####
 
+var_array_int_transfer_time[0]="`date +"%s"`";
+
 for (( i = 0; i < "${#var_array_string_extension_match[@]}"; i++ )); do
 	var_array_string_current_files_1=(`ls -d1 "${var_string_source_path}"* | grep -e "${var_array_string_extension_match["${i}"]}"`);
 	if [[ "${var_int_minimum_rating}" != 0 ]]; then
@@ -136,10 +139,12 @@ for (( i = 0; i < "${#var_array_string_extension_match[@]}"; i++ )); do
 		var_string_destination="${var_string_output_path}`basename "${var_string_current}"`";
 		[[ "${var_bool_ignore}" = true ]] && continue;
 		echo -n "Copying file \"${var_array_string_current_files_2["${j}"]}\" to \"${var_string_destination}\" ...     ";
-		var_int_transfer_time="`date +"%s"`"
-		cp -n "${var_array_string_current_files_2["${j}"]}" "${var_string_destination}";
-		echo "Copied! ($((`date +"%s"` - ${var_int_transfer_time}))s)";
+		var_array_int_transfer_time[1]="`date +"%s"`"
+		cp -n "${var_array_string_current_files_2["${j}"]}" "${var_string_destination}" && var_int_processed_files="$((${var_int_processed_files} + 1))";
+		echo "Copied! ($((`date +"%s"` - ${var_array_int_transfer_time[1]}))s)";
 	done
 done
+
+echo "Finished processing ${var_int_processed_files} files in $((`date +"%s"` - ${var_array_int_transfer_time[0]})) seconds!";
 
 ##### /MAIN #####
