@@ -20,6 +20,7 @@ var_string_destination="";
 var_array_string_temp=();
 var_array_int_transfer_time=0;
 var_int_processed_files=0;
+var_array_string_encoded_arguments=();
 
 ##### /VARIABLES DECLARATION #####
 
@@ -59,15 +60,39 @@ function_string_query_arguments() {
 [[ "${#@}" -eq 0 ]] && function_void_usage;
 
 # Parameters parsing
-while getopts ":r:e:o:s:h" o; do
-	case "${o}" in
-		r) var_int_minimum_rating="${OPTARG}";;
-		e) var_array_string_extension_match="${OPTARG}";;
-		o) var_string_output_path="${OPTARG}";;
-		s) var_string_source_path="${OPTARG}";;
-		h) function_void_usage;;
-	esac;
-done;
+{
+	var_array_string_encoded_arguments=(); for i in "${@}"; do var_array_string_encoded_arguments+=(`openssl enc -A -a <<< "${i}"`); done;
+	
+	# Rating
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-r"`";
+	[[ -n "${OPTARG}" ]] && var_int_minimum_rating="${OPTARG}";
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "--rating"`";
+	[[ -n "${OPTARG}" ]] && var_int_minimum_rating="${OPTARG}";
+
+	# Extension
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-e"`";
+	[[ -n "${OPTARG}" ]] && var_array_string_extension_match="${OPTARG}";
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "--extension"`";
+	[[ -n "${OPTARG}" ]] && var_array_string_extension_match="${OPTARG}";
+
+	# Output
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-o"`";
+	[[ -n "${OPTARG}" ]] && var_string_output_path="${OPTARG}";
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "--output"`";
+	[[ -n "${OPTARG}" ]] && var_string_output_path="${OPTARG}";
+
+	# Source
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-s"`";
+	[[ -n "${OPTARG}" ]] && var_string_source_path="${OPTARG}";
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "--source"`";
+	[[ -n "${OPTARG}" ]] && var_string_source_path="${OPTARG}";
+
+	# Help
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-h"`";
+	[[ -n "${OPTARG}" ]] && function_void_usage;
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "--help"`";
+	[[ -n "${OPTARG}" ]] && function_void_usage;
+}
 
 # Check that the minimum rating is a valid number between 0 and 5
 if [[ "${var_int_minimum_rating}" != [0-5] ]]; then
@@ -101,14 +126,13 @@ for (( i = 0; i < "${#var_array_string_extension_match[@]}"; i++ )); do
 	var_array_string_extension_match["${i}"]="\\.${var_array_string_extension_match["${i}"]}$";
 done
 
-##### DEBUG #####
-if [[ false = true ]]; then
-	echo -e "var_string_output_path:\t${var_string_output_path}";
-	echo -e "var_string_source_path:\t${var_string_source_path}";
-	echo -e "var_int_minimum_rating:\t${var_int_minimum_rating}";
-	echo -e "var_array_string_extension_match:\t( ${var_array_string_extension_match[@]} )";
-fi;
-##### /DEBUG #####
+# Task presentation
+clear;
+echo -e "Source path:            \t${var_string_source_path}";
+echo -e "Output path:            \t${var_string_output_path}";
+echo -e "Minimum rating required:\t${var_int_minimum_rating}";
+echo -e "Regex extensions match: \t${var_array_string_extension_match[@]}";
+echo -e "\n";
 
 var_array_int_transfer_time[0]="`date +"%s"`";
 
