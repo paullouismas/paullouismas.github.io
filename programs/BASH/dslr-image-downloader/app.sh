@@ -65,6 +65,7 @@ while getopts ":r:e:o:s:h" o; do
 		e) var_array_string_extension_match="${OPTARG}";;
 		o) var_string_output_path="${OPTARG}";;
 		s) var_string_source_path="${OPTARG}";;
+		h) function_void_usage;;
 	esac;
 done;
 
