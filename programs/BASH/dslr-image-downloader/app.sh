@@ -31,23 +31,26 @@ function_void_usage() {
 	read -r -d '' var_string_usage<<EOUSAGE
 Usage: `basename "${0}"` [-h] OPTIONS...
 
-Options:
-    -r VALUE        Specify the minimum rating, minimum is 0 and maximum is 5.
-                    Default is ${var_int_minimum_rating}.
-
-    -e TYPE         Specify the extension(s) to match, separate them using a blank space (" ").
-                    Default is "${var_array_string_extension_match[@]}".
-
-    -o PATH         Specify the destination of the files.
-                    Default is "${var_string_output_path}".
-
-    -s PATH         Specify the source directory to search files in.
-                    Default is current working directory.
-
-    -h              Show this help and exit.
+Options:\n
+    -r VALUE            Specify the minimum rating, minimum is 0 and maximum is 5.
+    --rating VALUE      Default is ${var_int_minimum_rating}.\n
+    -e TYPE             Specify the extension(s) to match, separate them using a blank space (" ").
+    --extension TYPE    Default is "${var_array_string_extension_match[@]}".\n
+    -o PATH             Specify the destination of the files.
+    --output PATH       Default is "${var_string_output_path}".\n
+    -s PATH             Specify the source directory to search files in.
+    --source PATH       Default is current working directory.\n
+    -h                  Show this help and exit.
+    --help
 EOUSAGE
 	echo -e "${var_string_usage}\n";
 	exit 0;
+}
+
+# Function to parse arguments
+function_string_query_arguments() {
+	local var_array_string_parameters=(${@}); local var_string_query_param="`cat /dev/stdin`"; local var_string_temp="";
+	for (( i = 0; i < "${#var_array_string_parameters[@]}"; i++ )); do var_string_temp="`openssl enc -A -a -d <<< "${var_array_string_parameters["${i}"]}"`"; [[ "${var_string_temp:0:2}" = "--" && "${var_string_temp}" = "${var_string_query_param}" && "$((${i} + 1))" != "${#var_array_string_parameters[@]}" ]] && echo "`openssl enc -A -a -d <<< "${var_array_string_parameters["$((${i} + 1))"]}"`" && return; done;
 }
 
 ##### /FUNCTIONS DECLARATION #####
