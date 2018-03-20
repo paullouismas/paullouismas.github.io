@@ -50,8 +50,18 @@ EOUSAGE
 
 # Function to parse arguments
 function_string_query_arguments() {
-	local var_array_string_parameters=(${@}); local var_string_query_param="`cat /dev/stdin`"; local var_string_temp="";
-	for (( i = 0; i < "${#var_array_string_parameters[@]}"; i++ )); do var_string_temp="`openssl enc -A -a -d <<< "${var_array_string_parameters["${i}"]}"`"; [[ "${var_string_temp:0:2}" = "--" && "${var_string_temp}" = "${var_string_query_param}" && "$((${i} + 1))" != "${#var_array_string_parameters[@]}" ]] && echo "`openssl enc -A -a -d <<< "${var_array_string_parameters["$((${i} + 1))"]}"`" && return; done;
+	local var_array_string_parameters=(${@});
+	local var_array_string_query_param=(`cat /dev/stdin`);
+	local var_string_temp="";
+	for (( i = 0; i < "${#var_array_string_parameters[@]}"; i++ )); do
+		var_string_temp="`openssl enc -A -a -d <<< "${var_array_string_parameters["${i}"]}"`";
+		for j in "${var_array_string_query_param[@]}"; do
+			if [[ "${var_string_temp:0:2}" = "--" && "${var_string_temp}" = "${j}" && "$((${i} + 1))" != "${#var_array_string_parameters[@]}" ]]; then
+				echo "`openssl enc -A -a -d <<< "${var_array_string_parameters["$((${i} + 1))"]}"`";
+				return;
+			fi;
+		done;
+	done;
 }
 
 ##### /FUNCTIONS DECLARATION #####
@@ -61,36 +71,29 @@ function_string_query_arguments() {
 
 # Parameters parsing
 {
-	var_array_string_encoded_arguments=(); for i in "${@}"; do var_array_string_encoded_arguments+=(`openssl enc -A -a <<< "${i}"`); done;
+	var_array_string_encoded_arguments=();
+	for i in "${@}"; do
+		var_array_string_encoded_arguments+=(`openssl enc -A -a <<< "${i}"`);
+	done;
 	
 	# Rating
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-r"`";
-	[[ -n "${OPTARG}" ]] && var_int_minimum_rating="${OPTARG}";
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "--rating"`";
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-r --rating"`";
 	[[ -n "${OPTARG}" ]] && var_int_minimum_rating="${OPTARG}";
 
 	# Extension
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-e"`";
-	[[ -n "${OPTARG}" ]] && var_array_string_extension_match="${OPTARG}";
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "--extension"`";
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-e --extension"`";
 	[[ -n "${OPTARG}" ]] && var_array_string_extension_match="${OPTARG}";
 
 	# Output
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-o"`";
-	[[ -n "${OPTARG}" ]] && var_string_output_path="${OPTARG}";
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "--output"`";
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-o --output"`";
 	[[ -n "${OPTARG}" ]] && var_string_output_path="${OPTARG}";
 
 	# Source
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-s"`";
-	[[ -n "${OPTARG}" ]] && var_string_source_path="${OPTARG}";
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "--source"`";
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-s --source"`";
 	[[ -n "${OPTARG}" ]] && var_string_source_path="${OPTARG}";
 
 	# Help
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-h"`";
-	[[ -n "${OPTARG}" ]] && function_void_usage;
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "--help"`";
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-h --help"`";
 	[[ -n "${OPTARG}" ]] && function_void_usage;
 }
 
