@@ -21,6 +21,7 @@ var_array_string_temp=();
 var_array_int_transfer_time=0;
 var_int_processed_files=0;
 var_array_string_encoded_arguments=();
+var_string_rename_format=""; # Blank means no renaming
 
 ##### /VARIABLES DECLARATION #####
 
@@ -41,6 +42,10 @@ Options:\n
     --output PATH       Default is "${var_string_output_path}".\n
     -s PATH             Specify the source directory to search files in.
     --source PATH       Default is current working directory.\n
+    -i FORMAT           Rename the files using FORMAT.
+    --rename FORMAT     Format is "<NAME_OF_FILE>:<EXTENSION_OF_FILE>:<INCREMENT_START_VALUE>:<INCREMENT_STEPS>".
+                        <INCREMENT_START_VALUE> and <INCREMENT_STEPS> must be positive integers.
+                        Ex: "--rename (dog_:jpg:1:1)"\n
     -h                  Show this help and exit.
     --help
 EOUSAGE
@@ -62,6 +67,17 @@ function_string_query_arguments() {
 			fi;
 		done;
 	done;
+}
+
+# Function to parse renaming format
+function_string_renaming() {
+	local var_array_string_format=(`echo ${1//:/ }`);
+	local var_string_prefix="${var_array_string_format[0]}";
+	local var_string_extension="${var_array_string_format[1]}";
+	local var_int_increment_start="${var_array_string_format[2]}";
+	local var_int_increment_steps="${var_array_string_format[3]}";
+	[[ "${var_int_increment_start}" == "" || "${var_int_increment_steps}" == "" ]] && echo "" && return;
+	echo "`openssl enc -a -A <<< "${var_string_prefix}"` `openssl enc -a -A <<< "${var_string_extension}"` `echo "${var_int_increment_start}" | sed -e 's/[^0-9]//g'` `echo "${var_int_increment_steps}" | sed -e 's/[^0-9]//g'`";
 }
 
 ##### /FUNCTIONS DECLARATION #####
@@ -95,6 +111,10 @@ function_string_query_arguments() {
 	# Help
 	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-h --help"`";
 	[[ -n "${OPTARG}" ]] && function_void_usage;
+
+	# Rename
+	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-i --rename"`";
+	[[ -n "${OPTARG}" ]] && var_string_rename_format="`function_string_renaming ${OPTARG}`";
 }
 
 # Check that the minimum rating is a valid number between 0 and 5
@@ -138,6 +158,7 @@ echo -e "Regex extensions match: \t${var_array_string_extension_match[@]}";
 echo -e "\n";
 
 var_array_int_transfer_time[0]="`date +"%s"`";
+var_int_increment_value="`echo "${var_string_rename_format}" | awk '{ print $3 }'`";
 
 for (( i = 0; i < "${#var_array_string_extension_match[@]}"; i++ )); do
 	var_array_string_current_files_1=(`ls -d1 "${var_string_source_path}"* | grep -e "${var_array_string_extension_match["${i}"]}"`);
@@ -168,10 +189,15 @@ for (( i = 0; i < "${#var_array_string_extension_match[@]}"; i++ )); do
 			var_int_current_index="$((${var_int_current_index} + 1))";
 		done
 		var_string_destination="${var_string_output_path}`basename "${var_string_current}"`";
+		[[ "${var_string_rename_format}" != "" ]] && var_string_destination="`dirname "${var_string_destination}"`/`echo "${var_string_rename_format}" | awk '{ print $1 }' | openssl enc -a -A -d`${var_int_increment_value}.`echo "${var_string_rename_format}" | awk '{ print $2 }' | openssl enc -a -A -d`";
 		[[ "${var_bool_ignore}" = true ]] && continue;
 		echo -n "Copying file \"${var_array_string_current_files_2["${j}"]}\" to \"${var_string_destination}\" ...     ";
 		var_array_int_transfer_time[1]="`date +"%s"`"
-		cp -n "${var_array_string_current_files_2["${j}"]}" "${var_string_destination}" && var_int_processed_files="$((${var_int_processed_files} + 1))";
+		if [[ "${var_string_rename_format}" == "" ]]; then
+			cp -n "${var_array_string_current_files_2["${j}"]}" "${var_string_destination}" && var_int_processed_files="$((${var_int_processed_files} + 1))";
+		else
+			cp -n "${var_array_string_current_files_2["${j}"]}" "${var_string_destination}" && var_int_increment_value="$(( ${var_int_increment_value} + `echo "${var_string_rename_format}" | awk '{ print $4 }'` ))" && var_int_processed_files="$((${var_int_processed_files} + 1))";
+		fi;
 		echo "Copied! ($((`date +"%s"` - ${var_array_int_transfer_time[1]}))s)";
 	done
 done
