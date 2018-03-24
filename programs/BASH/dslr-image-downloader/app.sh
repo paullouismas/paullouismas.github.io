@@ -22,6 +22,7 @@ var_array_int_transfer_time=0;
 var_int_processed_files=0;
 var_array_string_encoded_arguments=();
 var_string_rename_format=""; # Blank means no renaming
+var_bool_directory_hierarchy=false;
 
 ##### /VARIABLES DECLARATION #####
 
@@ -31,25 +32,27 @@ var_string_rename_format=""; # Blank means no renaming
 function_void_usage() {
 	local var_string_usage="";
 	read -r -d '' var_string_usage<<EOUSAGE
-Usage: `basename "${0}"` [-h] OPTIONS...
+Usage: `basename "${0}"` OPTIONS...
 
 Options:\n
-    -r VALUE            Specify the minimum rating, minimum is 0 and maximum is 5.
-    --rating VALUE      Default is ${var_int_minimum_rating}.\n
-    -e TYPE             Specify the extension(s) to match, separate them using a blank space (" ").
-    --extension TYPE    Default is "${var_array_string_extension_match[@]}".\n
-    -o PATH             Specify the destination of the files.
-    --output PATH       Default is "${var_string_output_path}".\n
-    -s PATH             Specify the source directory to search files in.
-    --source PATH       Default is current working directory.\n
-    -i FORMAT           Rename the files using FORMAT.
-    --rename FORMAT     Format is "<NAME_OF_FILE>:<EXTENSION_OF_FILE>:<INCREMENT_START_VALUE>:<INCREMENT_STEPS>".
-                        <INCREMENT_START_VALUE> and <INCREMENT_STEPS> must be positive integers.
-                        Ex: "--rename (dog_:jpg:1:1)"\n
-    -h                  Show this help and exit.
-    --help
+    -r VALUE                               Specify the minimum rating, minimum is 0 and maximum is 5.
+                                           Default is ${var_int_minimum_rating}.\n
+    -e TYPE                                Specify the extension(s) to match, separate them using a blank space (" ").
+                                           Default is "${var_array_string_extension_match[@]}".\n
+    -o PATH                                Specify the destination of the files.
+                                           Default is "${var_string_output_path}".\n
+    -s PATH                                Specify the source directory to search files in.
+                                           Default is current working directory.\n
+    -i FORMAT                              Rename the files using FORMAT.
+                                           Format is "<NAME_OF_FILE>:<EXTENSION_OF_FILE>:<INCREMENT_START_VALUE>:<INCREMENT_STEPS>".
+                                           <INCREMENT_START_VALUE> and <INCREMENT_STEPS> must be positive integers.
+                                           Ex: "--rename (dog_:jpg:1:1)"\n
+    -c BOOLEAN                             Create directory using this format ("YYYY/MM/YYYY_MM_DD") to transfer files.
+                                           Default is false.\n
+    -h                                     Show this help and exit.
+                                           \n
 EOUSAGE
-	echo -e "${var_string_usage}\n";
+	echo -e "${var_string_usage}";
 	exit 0;
 }
 
@@ -80,6 +83,19 @@ function_string_renaming() {
 	echo "`openssl enc -a -A <<< "${var_string_prefix}"` `openssl enc -a -A <<< "${var_string_extension}"` `echo "${var_int_increment_start}" | sed -e 's/[^0-9]//g'` `echo "${var_int_increment_steps}" | sed -e 's/[^0-9]//g'`";
 }
 
+# Function for assembling directories hierarchy
+function_string_hierarchy() {
+	local var_string_file="${1}";
+	local var_string_destination="${2}";
+	local var_array_int_file_exif=(`exiftool "${var_string_file}" | grep "Create Date" | head -n 1 | awk '{ print $4 }' | sed -e 's/:/ /g'`);
+	local var_int_file_year="${var_array_int_file_exif[0]}";
+	local var_int_file_month="${var_array_int_file_exif[1]}";
+	local var_int_file_day="${var_array_int_file_exif[2]}";
+	local var_string_path="`dirname "${var_string_destination}"`/${var_int_file_year}/${var_int_file_month}/${var_int_file_year}_${var_int_file_month}_${var_int_file_day}/";
+	mkdir -p "${var_string_path}";
+	echo "${var_string_path}`basename "${var_string_destination}"`";
+}
+
 ##### /FUNCTIONS DECLARATION #####
 
 # Check if nothing is passed as arguments or parameters
@@ -87,39 +103,49 @@ function_string_renaming() {
 
 # Parameters parsing
 {
-	var_array_string_encoded_arguments=();
-	for i in "${@}"; do
-		var_array_string_encoded_arguments+=(`openssl enc -A -a <<< "${i}"`);
+	#var_array_string_encoded_arguments=();
+	#for i in "${@}"; do
+	#	var_array_string_encoded_arguments+=(`openssl enc -A -a <<< "${i}"`);
+	#done;
+	## Rating
+	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-r --rating"`";
+	#[[ -n "${OPTARG}" ]] && var_int_minimum_rating="${OPTARG}";
+	## Extension
+	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-e --extension"`";
+	#[[ -n "${OPTARG}" ]] && var_array_string_extension_match="${OPTARG}";
+	## Output
+	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-o --output"`";
+	#[[ -n "${OPTARG}" ]] && var_string_output_path="${OPTARG}";
+	## Source
+	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-s --source"`";
+	#[[ -n "${OPTARG}" ]] && var_string_source_path="${OPTARG}";
+	## Help
+	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-h --help"`";
+	#[[ -n "${OPTARG}" ]] && function_void_usage;
+	## Rename
+	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-i --rename"`";
+	#[[ -n "${OPTARG}" ]] && var_string_rename_format="`function_string_renaming ${OPTARG}`";
+	## Calendar hierarchy
+	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-c --create-hierarchy"`";
+	#[[ -n "${OPTARG}" ]] && var_bool_directory_hierarchy=true;
+
+	while getopts ":r:e:o:s:i:c:h" o; do
+		case "${o}" in
+		 	r) var_int_minimum_rating="${OPTARG}" ;;
+			e) var_array_string_extension_match="${OPTARG}" ;;
+			o) var_string_output_path="${OPTARG}" ;;
+			s) var_string_source_path="${OPTARG}" ;;
+			i) var_string_rename_format="`function_string_renaming ${OPTARG}`" ;;
+			c) var_bool_directory_hierarchy=true ;;
+			h) function_void_usage ;;
+		 esac
 	done;
-	
-	# Rating
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-r --rating"`";
-	[[ -n "${OPTARG}" ]] && var_int_minimum_rating="${OPTARG}";
-
-	# Extension
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-e --extension"`";
-	[[ -n "${OPTARG}" ]] && var_array_string_extension_match="${OPTARG}";
-
-	# Output
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-o --output"`";
-	[[ -n "${OPTARG}" ]] && var_string_output_path="${OPTARG}";
-
-	# Source
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-s --source"`";
-	[[ -n "${OPTARG}" ]] && var_string_source_path="${OPTARG}";
-
-	# Help
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-h --help"`";
-	[[ -n "${OPTARG}" ]] && function_void_usage;
-
-	# Rename
-	OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-i --rename"`";
-	[[ -n "${OPTARG}" ]] && var_string_rename_format="`function_string_renaming ${OPTARG}`";
 }
 
 # Check that the minimum rating is a valid number between 0 and 5
 if [[ "${var_int_minimum_rating}" != [0-5] ]]; then
 	echo "The minimum rating value is not a valid number between 0 and 5.";
+	echo "Specified value is \"${var_int_minimum_rating}\"";
 	echo "Aborting.";
 	exit 1;
 fi;
@@ -155,6 +181,8 @@ echo -e "Source path:            \t${var_string_source_path}";
 echo -e "Output path:            \t${var_string_output_path}";
 echo -e "Minimum rating required:\t${var_int_minimum_rating}";
 echo -e "Regex extensions match: \t${var_array_string_extension_match[@]}";
+echo -e "Renaming format:        \t`echo "${var_string_rename_format}" | awk '{ print $1 }' | openssl enc -a -A -d`*.`echo "${var_string_rename_format}" | awk '{ print $2 }' | openssl enc -a -A -d` from `echo "${var_string_rename_format}" | awk '{ print $3 }'` increment `echo "${var_string_rename_format}" | awk '{ print $4 }'`";
+echo -e "Directories reparsing:  \t${var_bool_directory_hierarchy}";
 echo -e "\n";
 
 var_array_int_transfer_time[0]="`date +"%s"`";
@@ -191,17 +219,15 @@ for (( i = 0; i < "${#var_array_string_extension_match[@]}"; i++ )); do
 		var_string_destination="${var_string_output_path}`basename "${var_string_current}"`";
 		[[ "${var_string_rename_format}" != "" ]] && var_string_destination="`dirname "${var_string_destination}"`/`echo "${var_string_rename_format}" | awk '{ print $1 }' | openssl enc -a -A -d`${var_int_increment_value}.`echo "${var_string_rename_format}" | awk '{ print $2 }' | openssl enc -a -A -d`";
 		[[ "${var_bool_ignore}" = true ]] && continue;
-		echo -n "Copying file \"${var_array_string_current_files_2["${j}"]}\" to \"${var_string_destination}\" ...     ";
+		[[ "${var_bool_directory_hierarchy}" = true ]] && var_string_destination="`function_string_hierarchy "${var_array_string_current_files_2["${j}"]}" "${var_string_destination}"`";
+		echo -e -n "Copying file \"${var_array_string_current_files_2["${j}"]}\" to \"${var_string_destination}\"... \t";
 		var_array_int_transfer_time[1]="`date +"%s"`"
-		if [[ "${var_string_rename_format}" == "" ]]; then
-			cp -n "${var_array_string_current_files_2["${j}"]}" "${var_string_destination}" && var_int_processed_files="$((${var_int_processed_files} + 1))";
-		else
-			cp -n "${var_array_string_current_files_2["${j}"]}" "${var_string_destination}" && var_int_increment_value="$(( ${var_int_increment_value} + `echo "${var_string_rename_format}" | awk '{ print $4 }'` ))" && var_int_processed_files="$((${var_int_processed_files} + 1))";
-		fi;
+		cp -n "${var_array_string_current_files_2["${j}"]}" "${var_string_destination}" && var_int_processed_files="$((${var_int_processed_files} + 1))";
+		[[ "${var_string_rename_format}" != "" ]] && var_int_increment_value="$(( ${var_int_increment_value} + `echo "${var_string_rename_format}" | awk '{ print $4 }'` ))"
 		echo "Copied! ($((`date +"%s"` - ${var_array_int_transfer_time[1]}))s)";
 	done
 done
 
-echo "Finished processing ${var_int_processed_files} files in $((`date +"%s"` - ${var_array_int_transfer_time[0]})) seconds!";
+echo -e "\nFinished processing ${var_int_processed_files} files in $((`date +"%s"` - ${var_array_int_transfer_time[0]})) seconds!";
 
 ##### /MAIN #####
