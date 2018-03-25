@@ -86,45 +86,17 @@ function_string_hierarchy() {
 [[ "${#@}" -eq 0 ]] && function_void_usage;
 
 # Parameters parsing
-{
-	#var_array_string_encoded_arguments=();
-	#for i in "${@}"; do
-	#	var_array_string_encoded_arguments+=(`openssl enc -A -a <<< "${i}"`);
-	#done;
-	## Rating
-	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-r --rating"`";
-	#[[ -n "${OPTARG}" ]] && var_int_minimum_rating="${OPTARG}";
-	## Extension
-	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-e --extension"`";
-	#[[ -n "${OPTARG}" ]] && var_array_string_extension_match="${OPTARG}";
-	## Output
-	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-o --output"`";
-	#[[ -n "${OPTARG}" ]] && var_string_output_path="${OPTARG}";
-	## Source
-	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-s --source"`";
-	#[[ -n "${OPTARG}" ]] && var_string_source_path="${OPTARG}";
-	## Help
-	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-h --help"`";
-	#[[ -n "${OPTARG}" ]] && function_void_usage;
-	## Rename
-	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-i --rename"`";
-	#[[ -n "${OPTARG}" ]] && var_string_rename_format="`function_string_renaming ${OPTARG}`";
-	## Calendar hierarchy
-	#OPTARG="`function_string_query_arguments ${var_array_string_encoded_arguments[@]} <<< "-c --create-hierarchy"`";
-	#[[ -n "${OPTARG}" ]] && var_bool_directory_hierarchy=true;
-
-	while getopts ":r:e:o:s:i:c:h" o; do
-		case "${o}" in
-		 	r) var_int_minimum_rating="${OPTARG}" ;;
-			e) var_array_string_extension_match="${OPTARG}" ;;
-			o) var_string_output_path="${OPTARG}" ;;
-			s) var_string_source_path="${OPTARG}" ;;
-			i) var_string_rename_format="`function_string_renaming ${OPTARG}`" ;;
-			c) var_bool_directory_hierarchy=true ;;
-			h) function_void_usage ;;
-		 esac
-	done;
-}
+while getopts ":r:e:o:s:i:c:h" o; do
+	case "${o}" in
+	 	r) var_int_minimum_rating="${OPTARG}" ;;
+		e) var_array_string_extension_match="${OPTARG}" ;;
+		o) var_string_output_path="${OPTARG}" ;;
+		s) var_string_source_path="${OPTARG}" ;;
+		i) var_string_rename_format="`function_string_renaming ${OPTARG}`" ;;
+		c) var_bool_directory_hierarchy=true ;;
+		h) function_void_usage ;;
+	 esac
+done;
 
 # Check that the minimum rating is a valid number between 0 and 5
 if [[ "${var_int_minimum_rating}" != [0-5] ]]; then
