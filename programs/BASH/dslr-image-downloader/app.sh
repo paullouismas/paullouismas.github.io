@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "`exiftool -ver 2> /dev/null; echo "$?"`" != 0 ]]; then
+if [[ "`exiftool -ver > /dev/null; echo "$?"`" != 0 ]]; then
 	echo "This software require the exiftool software.";
 	echo "Get it there: https://sno.phy.queensu.ca/~phil/exiftool/";
 	exit 1;
