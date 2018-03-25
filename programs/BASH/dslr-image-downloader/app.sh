@@ -35,22 +35,22 @@ function_void_usage() {
 Usage: `basename "${0}"` OPTIONS...
 
 Options:\n
-    -r VALUE                               Specify the minimum rating, minimum is 0 and maximum is 5.
-                                           Default is ${var_int_minimum_rating}.\n
-    -e TYPE                                Specify the extension(s) to match, separate them using a blank space (" ").
-                                           Default is "${var_array_string_extension_match[@]}".\n
-    -o PATH                                Specify the destination of the files.
-                                           Default is "${var_string_output_path}".\n
-    -s PATH                                Specify the source directory to search files in.
-                                           Default is current working directory.\n
-    -i FORMAT                              Rename the files using FORMAT.
-                                           Format is "<NAME_OF_FILE>:<EXTENSION_OF_FILE>:<INCREMENT_START_VALUE>:<INCREMENT_STEPS>".
-                                           <INCREMENT_START_VALUE> and <INCREMENT_STEPS> must be positive integers.
-                                           Ex: "--rename (dog_:jpg:1:1)"\n
-    -c BOOLEAN                             Create directory using this format ("YYYY/MM/YYYY_MM_DD") to transfer files.
-                                           Default is false.\n
-    -h                                     Show this help and exit.
-                                           \n
+    -r VALUE        Specify the minimum rating, minimum is 0 and maximum is 5.
+                    Default is ${var_int_minimum_rating}.\n
+    -e TYPE         Specify the extension(s) to match, separate them using a blank space (" ").
+                    Default is "${var_array_string_extension_match[@]}".\n
+    -o PATH         Specify the destination of the files.
+                    Default is "${var_string_output_path}".\n
+    -s PATH         Specify the source directory to search files in.
+                    Default is current working directory.\n
+    -i FORMAT       Rename the files using FORMAT.
+                    Format is "<NAME_OF_FILE>:<EXTENSION_OF_FILE>:<INCREMENT_START_VALUE>:<INCREMENT_STEPS>".
+                    <INCREMENT_START_VALUE> and <INCREMENT_STEPS> must be positive integers.
+                    Ex: "--rename (dog_:jpg:1:1)"\n
+    -c BOOLEAN      Create directory using this format ("YYYY/MM/YYYY_MM_DD") to transfer files.
+                    Default is false.\n
+    -h              Show this help and exit.
+                    \n
 EOUSAGE
 	echo -e "${var_string_usage}";
 	exit 0;
@@ -201,29 +201,27 @@ for (( i = 0; i < "${#var_array_string_extension_match[@]}"; i++ )); do
 		var_bool_ignore=false;
 		var_int_current_index=1;
 		var_string_current="${var_array_string_current_files_2["${j}"]}";
-		while [[ -e "${var_string_output_path}`basename "${var_string_current}"`" ]]; do
-			var_array_string_temp[0]="${var_array_string_current_files_2["${j}"]}"; # Current
-			var_array_string_temp[1]="${var_string_output_path}$(basename "${var_string_current}")"; # Destination
-			if [[ "`openssl dgst -sha512 "${var_array_string_temp[0]}" | awk '{ print $2 }'`" == "`openssl dgst -sha512 "${var_array_string_temp[1]}" | awk '{ print $2 }'`" ]]; then
+		var_string_destination="${var_string_output_path}`basename "${var_string_current}"`";
+		[[ "${var_string_rename_format}" != "" ]] && var_string_destination="`dirname "${var_string_destination}"`/`echo "${var_string_rename_format}" | awk '{ print $1 }' | openssl enc -a -A -d`${var_int_increment_value}.`echo "${var_string_rename_format}" | awk '{ print $2 }' | openssl enc -a -A -d`";
+		[[ "${var_bool_directory_hierarchy}" = true ]] && var_string_destination="`function_string_hierarchy "${var_array_string_current_files_2["${j}"]}" "${var_string_destination}"`";
+		while [[ -e "${var_string_destination}" ]]; do
+			if [[ "`openssl dgst -sha512 "${var_array_string_current_files_2["${j}"]}" | awk '{ print $2 }'`" == "`openssl dgst -sha512 "${var_string_destination}" | awk '{ print $2 }'`" ]]; then
 				var_bool_ignore=true;
-				echo "Duplicate! (\"${var_array_string_temp[0]}\" and \"${var_array_string_temp[1]}\")";
+				echo "Duplicate! (\"${var_array_string_current_files_2["${j}"]}\" and \"${var_string_destination}\")";
 				break;
 			fi;
 			if [[ "${var_int_current_index}" -eq 1 ]]; then
-				var_string_current="`sed -e "s/${var_array_string_extension_match["${i}"]}/_${var_int_current_index}${var_array_string_extension_match["${i}"]//$/}/g" <<<"${var_string_current}"`";
+				var_string_destination="$(sed -e "s/\.`awk -F "." '{ print $NF }' <<< "${var_string_destination}"`$/_${var_int_current_index}\.`awk -F "." '{ print $NF }' <<< "${var_string_destination}"`/g" <<< "${var_string_destination}")";
 			else
-				var_string_current="`sed -e "s/_$((${var_int_current_index} - 1))${var_array_string_extension_match["${i}"]}/_${var_int_current_index}${var_array_string_extension_match["${i}"]//$/}/g" <<<"${var_string_current}"`";
+				var_string_destination="$(sed -e "s/_$((${var_int_current_index} - 1))\.`awk -F "." '{ print $NF }' <<< "${var_string_destination}"`$/_${var_int_current_index}\.`awk -F "." '{ print $NF }' <<< "${var_string_destination}"`/g" <<< "${var_string_destination}")";
 			fi;
 			var_int_current_index="$((${var_int_current_index} + 1))";
 		done
-		var_string_destination="${var_string_output_path}`basename "${var_string_current}"`";
-		[[ "${var_string_rename_format}" != "" ]] && var_string_destination="`dirname "${var_string_destination}"`/`echo "${var_string_rename_format}" | awk '{ print $1 }' | openssl enc -a -A -d`${var_int_increment_value}.`echo "${var_string_rename_format}" | awk '{ print $2 }' | openssl enc -a -A -d`";
+		[[ "${var_string_rename_format}" != "" ]] && var_int_increment_value="$(( ${var_int_increment_value} + `echo "${var_string_rename_format}" | awk '{ print $4 }'` ))";
 		[[ "${var_bool_ignore}" = true ]] && continue;
-		[[ "${var_bool_directory_hierarchy}" = true ]] && var_string_destination="`function_string_hierarchy "${var_array_string_current_files_2["${j}"]}" "${var_string_destination}"`";
 		echo -e -n "Copying file \"${var_array_string_current_files_2["${j}"]}\" to \"${var_string_destination}\"... \t";
 		var_array_int_transfer_time[1]="`date +"%s"`"
 		cp -n "${var_array_string_current_files_2["${j}"]}" "${var_string_destination}" && var_int_processed_files="$((${var_int_processed_files} + 1))";
-		[[ "${var_string_rename_format}" != "" ]] && var_int_increment_value="$(( ${var_int_increment_value} + `echo "${var_string_rename_format}" | awk '{ print $4 }'` ))"
 		echo "Copied! ($((`date +"%s"` - ${var_array_int_transfer_time[1]}))s)";
 	done
 done
