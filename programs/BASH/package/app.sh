@@ -78,11 +78,11 @@ function_void_upgrade_tool() {
 	function_void_setup_conf;
 	local var_local_temp_file="${global_directory}/temp.tmp";
 	local var_local_package_data="`curl -s "${global_tool_file_repository}"`";
-	echo "${var_local_package_data}" > "${var_local_temp_package_file}";
+	echo "${var_local_package_data}" > "${var_local_temp_file}";
 	if [[ "`openssl dgst -sha512 "${var_local_temp_file}" | awk '{ print $NF }'`" = "`openssl dgst -sha512 "${global_tool_file_path}" | awk '{ print $NF }'`" ]]; then
 		echo "Package tool manager is already at the latest version";
 	else
-		echo "${var_local_package_data}" > "${var_local_package_file}";
+		echo "${var_local_package_data}" > "${global_tool_file_path}";
 		echo "Package tool manager updated successfully!";
 	fi;
 	exit 0;
