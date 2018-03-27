@@ -57,15 +57,16 @@ function_void_update_package() {
 function_void_upgrade_tool() {
 	function_void_setup_conf;
 }
-function_void_remove_package() {
+function_void_remove_package() {
 	function_void_setup_conf;
 	local var_local_package_name="${1}";
 	[[ -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '$(openssl enc -a -A -d <<< "${var_local_package_name}")`" ]] && echo "Package \"${var_local_package_name}\" not installed" && exit 1;
 	local var_local_package_directory="${global_packages_directory}${var_local_package_name}/";
 	local var_local_package_file="${var_local_package_directory}${var_local_package_name}";
+	echo "`cat "${global_configuration_file_path}" | sed -e "s/PACKAGE $(openssl enc -a -A <<< "${var_local_package_name}") $(openssl enc -a -A <<< "${var_local_package_file}") $(openssl dgst -sha512 "${var_local_package_file}" | awk '{ print $NF }')//g"`" > "${global_configuration_file_path}";
 	rm -f "${global_aliases_directory}${var_local_package_name}";
 	rm -P -f "${var_local_package_file}";
-	echo "`cat "${global_configuration_file_path}" | sed -e "s/PACKAGE $(openssl enc -a -A <<< "${var_local_package_name}") $(openssl enc -a -A <<< "${var_local_package_file}") $(openssl dgst -sha512 "${var_local_package_file}" | awk '{ print $NF }')//g"`" > "${global_configuration_file_path}";
+	rmdir "${var_local_package_directory}";
 	return;
 }
 function_void_setup_conf() {
@@ -131,7 +132,7 @@ case "${1}" in
 		function_void_upgrade_tool;
 		;;
 	"remove")
-		local var_local_string_temp="";
+		var_local_string_temp="";
 		echo "Packages:"
 		for i in "$@"; do
 			[[ "${i}" != "${1}" ]] && echo -e "\t-\t${i}";
@@ -141,12 +142,12 @@ case "${1}" in
 			for i in "$@"; do
 				[[ "${i}" != "${1}" ]] && function_void_remove_package "${i}";
 			done;
-			echo "Packages removed!";
+			echo "Package(s) removed!";
 		fi;
 		exit 0;
 		;;
 	"remove-all")
-		local var_local_string_temp="";
+		var_local_string_temp="";
 		local var_local_int_count=0;
 		echo "Packages:"
 		for i in "`cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`"; do
@@ -161,7 +162,7 @@ case "${1}" in
 			for i in "`cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`"; do
 				[[ -n "${i}" ]] && function_void_remove_package "${i}";
 			done;
-			echo "Packages removed!";
+			echo "Package(s) removed!";
 		fi;
 		exit 0;
 		;;
