@@ -165,7 +165,7 @@ case "${1}" in
 		for i in "$@"; do
 			[[ "${i}" != "${1}" ]] && function_void_install_package "${i}";
 		done;
-		echo "PAckage(s) installed!";
+		echo "Package(s) installed!";
 		;;
 	"list")
 		function_void_list;
