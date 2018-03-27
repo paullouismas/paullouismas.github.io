@@ -28,14 +28,14 @@ function_void_install_package() {
 	[[ ! -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '${var_local_package_name}`" ]] && echo "Package \"${var_local_package_name}\" already installed" && exit 1;
 	local var_local_package_url="${global_packages_repository}${var_local_package_name}/app.sh";
 	local var_local_package_data="`curl -s "${var_local_package_url}"`";
-	[[ "${var_local_package_data:0:2}" -eq 40 ]] && echo "Package \"${var_local_package_name}\" doesn't exist" && exit 1
+	[[ "${var_local_package_data:0:2}" = "40" ]] && echo "Package \"${var_local_package_name}\" doesn't exist" && exit 1
 	local var_local_package_directory="${global_packages_directory}${var_local_package_name}/";
 	[[ ! -d "${var_local_package_directory}" ]] && mkdir -p "${var_local_package_directory}";
 	local var_local_package_file="${var_local_package_directory}${var_local_package_name}";
 	echo "${var_local_package_data}" > "${var_local_package_file}";
 	chmod +x "${var_local_package_file}";
 	ln -s "${var_local_package_file}" "${global_aliases_directory}";
-	echo "PACKAGE ${var_local_package_name} ${var_local_package_file} `openssl dgst -sha512 "${var_local_package_file}" | awk '{ print $NF }'`" >> "${global_configuration_file_path}";
+	echo "PACKAGE ${var_local_package_name} `openssl enc -a -A <<< "${var_local_package_file}"` `openssl dgst -sha512 "${var_local_package_file}" | awk '{ print $NF }'`" >> "${global_configuration_file_path}";
 	return;
 }
 function_void_list() {
@@ -44,7 +44,7 @@ function_void_list() {
 	echo "Installed packages:";
 	for i in `cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`; do
 		if [[ -n "${i}" ]]; then
-			echo -e "\t-\t${i}";
+			echo -e "\t-\t`openssl enc -a -A -d <<< "${i}"`";
 			var_local_int_count="$((${var_local_int_count} + 1))";
 		fi;
 	done;
@@ -95,7 +95,7 @@ function_void_setup_conf() {
 #|============================================================|#
 ################################################################
 
-# FORMAT: PACKAGE <PACKAGE_NAME> <PACKAGE_PATH> <PACKAGE_SHA512_HASH>
+# FORMAT: PACKAGE <PACKAGE_NAME> <BASE64_ENCODED_PACKAGE_PATH> <PACKAGE_SHA512_HASH>
 
 ##### INSTALLED PACKAGES: #####
 
@@ -118,6 +118,7 @@ case "${1}" in
 		for i in "$@"; do
 			[[ "${i}" != "${1}" ]] && function_void_install_package "${i}";
 		done;
+		echo "PAckage(s) installed!";
 		;;
 	"list")
 		function_void_list;
@@ -137,17 +138,10 @@ case "${1}" in
 		;;
 	"remove")
 		var_local_string_temp="";
-		echo "Packages:"
 		for i in "$@"; do
-			[[ "${i}" != "${1}" ]] && echo -e "\t-\t${i}";
+			[[ "${i}" != "${1}" ]] && function_void_remove_package "${i}";
 		done;
-		read -p "Do you relly want to remove this/those package(s)? (y/N)" var_local_string_temp;
-		if [[ "${var_local_string_temp}" = "Y" || "${var_local_string_temp}" = "y" ]]; then
-			for i in "$@"; do
-				[[ "${i}" != "${1}" ]] && function_void_remove_package "${i}";
-			done;
-			echo "Package(s) removed!";
-		fi;
+		echo "Package(s) removed!";
 		exit 0;
 		;;
 	"remove-all")
