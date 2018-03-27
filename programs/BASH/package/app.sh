@@ -1,12 +1,13 @@
 #!/bin/bash
 
-global_packages_repository="https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/packages/";
 global_directory="${HOME}/.packages";
+global_repository="https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/";
+global_packages_repository="${global_repository}packages/";
 global_packages_directory="${global_directory}/packages/";
 global_aliases_directory="${global_directory}/aliases/";
 global_configuration_file_path="${global_directory}/config.conf";
 global_tool_file_path="${0}";
-global_tool_file_repository="https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/package/app.sh";
+global_tool_file_repository="${global_repository}package/app.sh";
 
 function_void_usage() {
 	function_void_setup_conf;
