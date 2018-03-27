@@ -25,25 +25,26 @@ EOUSAGE
 function_void_install_package() {
 	function_void_setup_conf;
 	local var_local_package_name="${1}";
-	[[ ! -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '$(openssl enc -a -A -d <<< "${var_local_package_name}")`" ]] && echo "Package \"${var_local_package_name}\" already installed" && exit 1;
+	[[ ! -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '${var_local_package_name}`" ]] && echo "Package \"${var_local_package_name}\" already installed" && exit 1;
 	local var_local_package_url="${global_packages_repository}${var_local_package_name}/app.sh";
-	local var_local_package_data="`curl -s "${var_local_package_url}" | openssl enc -a -A`";
+	local var_local_package_data="`curl -s "${var_local_package_url}"`";
+	[[ "${var_local_package_data:0:2}" -eq 40 ]] && echo "Package \"${var_local_package_name}\" doesn't exist" && exit 1
 	local var_local_package_directory="${global_packages_directory}${var_local_package_name}/";
 	[[ ! -d "${var_local_package_directory}" ]] && mkdir -p "${var_local_package_directory}";
 	local var_local_package_file="${var_local_package_directory}${var_local_package_name}";
-	echo "${var_local_package_data}" | openssl enc -a -A -d > "${var_local_package_file}";
+	echo "${var_local_package_data}" > "${var_local_package_file}";
 	chmod +x "${var_local_package_file}";
 	ln -s "${var_local_package_file}" "${global_aliases_directory}";
-	echo "PACKAGE `openssl enc -a -A <<< "${var_local_package_name}"` `openssl enc -a -A <<< "${var_local_package_file}"` `openssl dgst -sha512 "${var_local_package_file}" | awk '{ print $NF }'`" >> "${global_configuration_file_path}";
+	echo "PACKAGE ${var_local_package_name} ${var_local_package_file} `openssl dgst -sha512 "${var_local_package_file}" | awk '{ print $NF }'`" >> "${global_configuration_file_path}";
 	return;
 }
 function_void_list() {
 	function_void_setup_conf;
 	local var_local_int_count=0;
 	echo "Installed packages:";
-	for i in "`cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`"; do
+	for i in `cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`; do
 		if [[ -n "${i}" ]]; then
-			echo -e "\t-\t`openssl enc -a -A -d <<< "${i}"`";
+			echo -e "\t-\t${i}";
 			var_local_int_count="$((${var_local_int_count} + 1))";
 		fi;
 	done;
@@ -60,10 +61,10 @@ function_void_upgrade_tool() {
 function_void_remove_package() {
 	function_void_setup_conf;
 	local var_local_package_name="${1}";
-	[[ -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '$(openssl enc -a -A -d <<< "${var_local_package_name}")`" ]] && echo "Package \"${var_local_package_name}\" not installed" && exit 1;
+	[[ -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '${var_local_package_name}`" ]] && echo "Package \"${var_local_package_name}\" not installed" && exit 1;
 	local var_local_package_directory="${global_packages_directory}${var_local_package_name}/";
 	local var_local_package_file="${var_local_package_directory}${var_local_package_name}";
-	echo "`cat "${global_configuration_file_path}" | sed -e "s/PACKAGE $(openssl enc -a -A <<< "${var_local_package_name}") $(openssl enc -a -A <<< "${var_local_package_file}") $(openssl dgst -sha512 "${var_local_package_file}" | awk '{ print $NF }')//g"`" > "${global_configuration_file_path}";
+	sed -i '' "/^PACKAGE ${var_local_package_name}/d" "${global_configuration_file_path}"
 	rm -f "${global_aliases_directory}${var_local_package_name}";
 	rm -P -f "${var_local_package_file}";
 	rmdir "${var_local_package_directory}";
@@ -72,27 +73,29 @@ function_void_remove_package() {
 function_void_setup_conf() {
 	local var_local_string_conf="";
 	read -r -d '' var_local_string_conf <<EOUSAGE
-|============================================================|
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-|@==========================================================@|
-|@|       ##########################################       |@|
-|@|      #                                          #      |@|
-|@|     ###         ! Configuration file !         ###     |@|
-|@|    #####                                      #####    |@|
-|@|   #######                                    #######   |@|
-|@|  ######### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #########  |@|
-|@| ########## DO NOT UPDATE THIS FILE MANUALLY ########## |@|
-|@|  ######### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #########  |@|
-|@|   #######                                    #######   |@|
-|@|    #####                                      #####    |@|
-|@|     ###         ! Configuration file !         ###     |@|
-|@|      #                                          #      |@|
-|@|       ##########################################       |@|
-|@==========================================================@|
-|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|
-|============================================================|
+################################################################
+#|============================================================|#
+#|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|#
+#|@==========================================================@|#
+#|@|       ##########################################       |@|#
+#|@|      #                                          #      |@|#
+#|@|     ###         ! Configuration file !         ###     |@|#
+#|@|    #####                                      #####    |@|#
+#|@|   #######                                    #######   |@|#
+#|@|  ######### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #########  |@|#
+#|@| ########## DO NOT UPDATE THIS FILE MANUALLY ########## |@|#
+#|@|  ######### !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #########  |@|#
+#|@|   #######                                    #######   |@|#
+#|@|    #####                                      #####    |@|#
+#|@|     ###         ! Configuration file !         ###     |@|#
+#|@|      #                                          #      |@|#
+#|@|       ##########################################       |@|#
+#|@==========================================================@|#
+#|@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@|#
+#|============================================================|#
+################################################################
 
-# FORMAT: PACKAGE <BASE64_ENCODED_PACKAGE_NAME> <BASE64_ENCODED_PACKAGE_PATH> <PACKAGE_SHA512_HASH>
+# FORMAT: PACKAGE <PACKAGE_NAME> <PACKAGE_PATH> <PACKAGE_SHA512_HASH>
 
 ##### INSTALLED PACKAGES: #####
 
@@ -105,7 +108,7 @@ EOUSAGE
 }
 
 # Check for root permissions
-[[ "`id -u`" != 0 ]] && echo "[ERROR] Please only execute this script as root." && exit 1;
+[[ "${REQUIRE_ROOT_PERMISSIONS}" = true ]] && [[ "`id -u`" != 0 ]] && echo "[ERROR] Please only execute this script as root." && exit 1;
 
 # Check if no arguments is provided
 [[ "$#" -eq 0 ]] && function_void_usage;
@@ -125,8 +128,8 @@ case "${1}" in
 		done;
 		;;
 	"update-all")
-		for i in "`cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`"; do
-			function_void_update_package "`openssl enc -a -A -d <<< "${i}"`";
+		for i in `cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`; do
+			function_void_update_package "${i}";
 		done;
 		;;
 	"upgrade-tool")
@@ -151,16 +154,16 @@ case "${1}" in
 		var_local_string_temp="";
 		var_local_int_count=0;
 		echo "Packages:"
-		for i in "`cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`"; do
+		for i in `cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`; do
 			if [[ -n "${i}" ]]; then
-				echo -e "\t-\t`openssl enc -a -A -d <<< "${i}"`";
+				echo -e "\t-\t${i}";
 				var_local_int_count="$((${var_local_int_count} + 1))";
 			fi;
 		done;
 		[[ "${var_local_int_count}" -eq 0 ]] && echo "No packages are installed" && exit 1;
 		read -p "Do you relly want to remove this/those package(s)? (y/N)" var_local_string_temp;
 		if [[ "${var_local_string_temp}" = "Y" || "${var_local_string_temp}" = "y" ]]; then
-			for i in "`cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`"; do
+			for i in `cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`; do
 				[[ -n "${i}" ]] && function_void_remove_package "${i}";
 			done;
 			echo "Package(s) removed!";
