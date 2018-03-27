@@ -10,6 +10,7 @@ global_tool_file_path="${0}";
 global_tool_file_repository="${global_repository}package/app.sh";
 
 function_void_usage() {
+	function_void_check_internet;
 	function_void_setup_conf;
 	local var_local_string_usage="";
 	read -r -d '' var_local_string_usage <<EOUSAGE
@@ -26,6 +27,7 @@ EOUSAGE
 	return;
 }
 function_void_install_package() {
+	function_void_check_internet;
 	function_void_setup_conf;
 	local var_local_package_name="${1}";
 	[[ ! -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '${var_local_package_name}`" ]] && echo "Package \"${var_local_package_name}\" already installed" && exit 1;
@@ -42,6 +44,7 @@ function_void_install_package() {
 	return;
 }
 function_void_list() {
+	function_void_check_internet;
 	function_void_setup_conf;
 	local var_local_int_count=0;
 	echo "Installed packages:";
@@ -56,6 +59,7 @@ function_void_list() {
 	return;
 }
 function_void_update_package() {
+	function_void_check_internet;
 	function_void_setup_conf;
 	local var_local_package_name="${1}";
 	local var_local_temp_package_file="${global_directory}/temp.tmp";
@@ -75,6 +79,7 @@ function_void_update_package() {
 	return;
 }
 function_void_upgrade_tool() {
+	function_void_check_internet;
 	function_void_setup_conf;
 	local var_local_temp_file="${global_directory}/temp.tmp";
 	local var_local_package_data="`curl -s "${global_tool_file_repository}"`";
@@ -90,6 +95,7 @@ function_void_upgrade_tool() {
 	return;
 }
 function_void_remove_package() {
+	function_void_check_internet;
 	function_void_setup_conf;
 	local var_local_package_name="${1}";
 	[[ -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '${var_local_package_name}`" ]] && echo "Package \"${var_local_package_name}\" not installed" && exit 1;
@@ -137,9 +143,19 @@ EOUSAGE
 	[[ -z "`cat "${HOME}/.bash_profile" | grep '^export PATH="\${PATH}:\${HOME}/.packages/aliases/"'`" ]] && echo 'export PATH="${PATH}:${HOME}/.packages/aliases/"' >> "${HOME}/.bash_profile";
 	return;
 }
+function_void_check_internet() {
+	echo -e "GET http://google.com HTTP/1.0\n\n" | nc google.com 80 > /dev/null 2>&1
+	if [[ "$?" != 0 ]]; then
+		echo "No proper internet connection";
+		exit 1;
+	fi;
+	return;
+}
 
 # Check for root permissions
 [[ "${REQUIRE_ROOT_PERMISSIONS}" = true ]] && [[ "`id -u`" != 0 ]] && echo "[ERROR] Please only execute this script as root." && exit 1;
+
+function_void_check_internet;
 
 # Check if no arguments is provided
 [[ "$#" -eq 0 ]] && function_void_usage;
