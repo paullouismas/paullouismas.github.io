@@ -11,9 +11,11 @@ function_void_usage() {
 	local var_local_string_usage="";
 	read -r -d '' var_local_string_usage <<EOUSAGE
 Usage: package [install <PACKAGE_NAME> [<PACKAGE_NAME>]...]
-               [list]
                [update <PACKAGE_NAME> [<PACKAGE_NAME>]...]
                [update-all]
+               [list]
+               [remove <PACKAGE_NAME> [<PACKAGE_NAME>]...]
+               [remove-all]
                [upgrade-tool]
 EOUSAGE
 	echo -e "${var_local_string_usage}\n";
@@ -53,6 +55,9 @@ function_void_update_package() {
 	function_void_setup_conf;
 }
 function_void_upgrade_tool() {
+	function_void_setup_conf;
+}
+function_void_remove_package() {
 	function_void_setup_conf;
 }
 function_void_setup_conf() {
@@ -116,5 +121,40 @@ case "${1}" in
 		;;
 	"upgrade-tool")
 		function_void_upgrade_tool;
+		;;
+	"remove")
+		local var_local_string_temp="";
+		echo "Packages:"
+		for i in "$@"; do
+			[[ "${i}" != "${1}" ]] && echo -e "\t-\t${i}";
+		done;
+		read -p "Do you relly want to remove this/those package(s)? (y/N)" var_local_string_temp;
+		if [[ "${var_local_string_temp}" = "Y" || "${var_local_string_temp}" = "y" ]]; then
+			for i in "$@"; do
+				[[ "${i}" != "${1}" ]] && function_void_remove_package "${i}";
+			done;
+			echo "Packages removed!";
+		fi;
+		exit 0;
+		;;
+	"remove-all")
+		local var_local_string_temp="";
+		local var_local_int_count=0;
+		echo "Packages:"
+		for i in "`cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`"; do
+			if [[ -n "${i}" ]]; then
+				echo -e "\t-\t`openssl enc -a -A -d <<< "${i}"`";
+				var_local_int_count="$((${var_local_int_count} + 1))";
+			fi;
+		done;
+		[[ "${var_local_int_count}" -eq 0 ]] && echo "No packages are installed." && exit 1;
+		read -p "Do you relly want to remove this/those package(s)? (y/N)" var_local_string_temp;
+		if [[ "${var_local_string_temp}" = "Y" || "${var_local_string_temp}" = "y" ]]; then
+			for i in "`cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`"; do
+				[[ -n "${i}" ]] && function_void_remove_package "${i}";
+			done;
+			echo "Packages removed!";
+		fi;
+		exit 0;
 		;;
 esac;
