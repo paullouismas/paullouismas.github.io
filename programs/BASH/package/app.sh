@@ -25,7 +25,7 @@ EOUSAGE
 function_void_install_package() {
 	function_void_setup_conf;
 	local var_local_package_name="${1}";
-	[[ ! -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '$(openssl enc -a -A -d <<< "${var_local_package_name}")`" ]] && echo "Package already installed." && exit 1;
+	[[ ! -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '$(openssl enc -a -A -d <<< "${var_local_package_name}")`" ]] && echo "Package \"${var_local_package_name}\" already installed" && exit 1;
 	local var_local_package_url="${global_packages_repository}${var_local_package_name}/app.sh";
 	local var_local_package_data="`curl -s "${var_local_package_url}" | openssl enc -a -A`";
 	local var_local_package_directory="${global_packages_directory}${var_local_package_name}/";
@@ -59,6 +59,14 @@ function_void_upgrade_tool() {
 }
 function_void_remove_package() {
 	function_void_setup_conf;
+	local var_local_package_name="${1}";
+	[[ -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '$(openssl enc -a -A -d <<< "${var_local_package_name}")`" ]] && echo "Package \"${var_local_package_name}\" not installed" && exit 1;
+	local var_local_package_directory="${global_packages_directory}${var_local_package_name}/";
+	local var_local_package_file="${var_local_package_directory}${var_local_package_name}";
+	rm -f "${global_aliases_directory}${var_local_package_name}";
+	rm -P -f "${var_local_package_file}";
+	echo "`cat "${global_configuration_file_path}" | sed -e "s/PACKAGE $(openssl enc -a -A <<< "${var_local_package_name}") $(openssl enc -a -A <<< "${var_local_package_file}") $(openssl dgst -sha512 "${var_local_package_file}" | awk '{ print $NF }')//g"`" > "${global_configuration_file_path}";
+	return;
 }
 function_void_setup_conf() {
 	local var_local_string_conf="";
@@ -147,7 +155,7 @@ case "${1}" in
 				var_local_int_count="$((${var_local_int_count} + 1))";
 			fi;
 		done;
-		[[ "${var_local_int_count}" -eq 0 ]] && echo "No packages are installed." && exit 1;
+		[[ "${var_local_int_count}" -eq 0 ]] && echo "No packages are installed" && exit 1;
 		read -p "Do you relly want to remove this/those package(s)? (y/N)" var_local_string_temp;
 		if [[ "${var_local_string_temp}" = "Y" || "${var_local_string_temp}" = "y" ]]; then
 			for i in "`cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`"; do
