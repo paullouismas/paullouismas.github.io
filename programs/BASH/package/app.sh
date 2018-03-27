@@ -95,6 +95,7 @@ function_void_setup_conf() {
 # FORMAT: PACKAGE <BASE64_ENCODED_PACKAGE_NAME> <BASE64_ENCODED_PACKAGE_PATH> <PACKAGE_SHA512_HASH>
 
 ##### INSTALLED PACKAGES: #####
+
 EOUSAGE
 	[[ ! -d "${global_packages_directory}" ]] && mkdir -p "${global_packages_directory}";
 	[[ ! -d "${global_aliases_directory}" ]] && mkdir -p "${global_aliases_directory}";
@@ -148,7 +149,7 @@ case "${1}" in
 		;;
 	"remove-all")
 		var_local_string_temp="";
-		local var_local_int_count=0;
+		var_local_int_count=0;
 		echo "Packages:"
 		for i in "`cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`"; do
 			if [[ -n "${i}" ]]; then
