@@ -85,6 +85,7 @@ function_void_upgrade_tool() {
 		echo "${var_local_package_data}" > "${global_tool_file_path}";
 		echo "Package tool manager updated successfully!";
 	fi;
+	rm -P -f "${var_local_temp_file}";
 	exit 0;
 	return;
 }
