@@ -4,12 +4,14 @@ var_string_destination_path="${HOME}/package";
 var_string_source_file_path="";
 var_int_result=0;
 
-# Installation file for the package manager tool
+##### Installation file for the package manager tool #####
 
 echo -e "You migh need root privileges to proceed to script installation.\n";
 
+# Check for previous installations
 [[ -e "${var_string_destination_path}" ]] && echo "Package manager is already installed." && exit 0;
 
+# Check the current OS
 case "`uname -s`" in
 	"Darwin") # Mac OS X
 		var_string_source_file_path="${HOME}/.bash_profile";
@@ -22,18 +24,23 @@ case "`uname -s`" in
 		;;
 esac;
 
+# Export the file directory to PATH
 echo 'export PATH="${PATH}:${HOME}";' > "${var_string_source_file_path}";
 var_int_result="$((${var_int_result} + $?))";
 
+# Download file
 curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/package/app.sh" > "${var_string_destination_path}";
 var_int_result="$((${var_int_result} + $?))";
 
+# Make file executable
 chmod +x "${var_string_destination_path}";
 var_int_result="$((${var_int_result} + $?))";
 
+# Source profile file
 source "${var_string_source_file_path}";
 var_int_result="$((${var_int_result} + $?))";
 
+# Inform user of success / errors
 if [[ "${var_int_result}" -eq 0 ]]; then
 	echo "Package manager successfully installed!";
 else
