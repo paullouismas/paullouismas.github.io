@@ -28,6 +28,9 @@ var_int_result="$((${var_int_result} + $?))";
 curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/package/app.sh" > "${var_string_destination_path}";
 var_int_result="$((${var_int_result} + $?))";
 
+chmod +x "${var_string_destination_path}";
+var_int_result="$((${var_int_result} + $?))";
+
 source "${var_string_source_file_path}";
 var_int_result="$((${var_int_result} + $?))";
 
