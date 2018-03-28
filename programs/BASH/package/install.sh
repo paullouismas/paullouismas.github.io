@@ -8,3 +8,11 @@ echo -e "You will be prompted for root privileges to proceed to script installat
 
 [[ -e "${var_string_destination_path}" ]] && echo "Package manager is already installed." && exit 0;
 
+case "`uname -s`" in
+	"Darwin") # Mac OS X
+		;;
+	"Linux") # General Linux
+		;;
+	*) # Other
+		;;
+esac;
