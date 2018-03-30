@@ -2,10 +2,10 @@
 
 # Usage: echo "<KEYS>" | getoptsextended <BASE64_ENCODED_ARGUMENTS>
 
-# Return:	Line 1:	<KEYS>
-#		Line 2:	<MATCHED_KEY>
-#		Line 3:	<BASE64_ENCODED_ARGUMENTS>
-#		Line 4:	<VALUE>
+# Return:    Line 1:<KEYS>
+#            Line 2:<MATCHED_KEY>
+#            Line 3:<BASE64_ENCODED_ARGUMENTS>
+#            Line 4:<VALUE>
 
 # To simply get the returned value, extract the last line using "<COMMAND> | tail -n 1"
 
