@@ -25,8 +25,10 @@ case "`uname -s`" in
 esac;
 
 # Export the file directory to PATH
-echo 'export PATH="${PATH}:${HOME}";' > "${var_string_source_file_path}";
-var_int_result="$((${var_int_result} + $?))";
+if [[ -z "`cat "${var_string_source_file_path}" | grep -F 'export PATH="${PATH}:${HOME}";'`" ]]; then
+	echo 'export PATH="${PATH}:${HOME}";' > "${var_string_source_file_path}";
+	var_int_result="$((${var_int_result} + $?))";
+fi;
 
 # Download file
 curl -s "https://raw.githubusercontent.com/paullouismas/paullouismas.github.io/master/programs/BASH/package/app.sh" > "${var_string_destination_path}";
