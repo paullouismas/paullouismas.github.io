@@ -46,7 +46,7 @@ Options:\n
     -i FORMAT       Rename the files using FORMAT.
                     Format is "<NAME_OF_FILE>:<EXTENSION_OF_FILE>:<INCREMENT_START_VALUE>:<INCREMENT_STEPS>".
                     <INCREMENT_START_VALUE> and <INCREMENT_STEPS> must be positive integers.
-                    Ex: "--rename (dog_:jpg:1:1)"\n
+                    Ex: "-i dog_:jpg:1:1"\n
     -c BOOLEAN      Create directory using this format ("YYYY/MM/YYYY_MM_DD") to transfer files.
                     Default is false.\n
     -h              Show this help and exit.
