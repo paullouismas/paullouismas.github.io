@@ -3,11 +3,11 @@
 # Usage: echo "<KEYS>" | getoptsextended <BASE64_ENCODED_ARGUMENTS>
 
 # Return:	Line 1:	<KEYS>
-#			Line 2:	<MATCHED_KEY>
-#			Line 3:	<BASE64_ENCODED_ARGUMENTS>
-#			Line 4:	<VALUE>
+#		Line 2:	<MATCHED_KEY>
+#		Line 3:	<BASE64_ENCODED_ARGUMENTS>
+#		Line 4:	<VALUE>
 
-# To simply get the returned value, extract the last line using "| tail -n 1"
+# To simply get the returned value, extract the last line using "<COMMAND> | tail -n 1"
 
 getoptsextended() {
 	local var_array_string_keys=(`cat "/dev/stdin"`);
@@ -33,4 +33,4 @@ getoptsextended() {
 	return;
 }
 
-echo "`cat /dev/stdin`" | getoptsextended `for i in $@; do echo -n "$i" | openssl enc -a -A; echo -n " "; done`;
+echo "`cat /dev/stdin`" | getoptsextended `for i in $@; do echo -n "${i}" | openssl enc -a -A; echo -n " "; done`;
