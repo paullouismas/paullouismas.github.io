@@ -19,7 +19,7 @@ case "`uname -s`" in
 		;;
 	"Linux") # General Linux
 		echo -e "[INFORMATION] Detected OS: Linux";
-		var_string_source_file_path="${HOME}/.profile";
+		var_string_source_file_path="${HOME}/.bashrc";
 		;;
 	*) # Other
 		echo -e "[INFORMATION] OS could not be detected properly";
