@@ -50,7 +50,7 @@ function_void_list() {
 	echo "Installed packages:";
 	for i in `cat "${global_configuration_file_path}" | grep '^PACKAGE ' | awk '{ print $2 }'`; do
 		if [[ -n "${i}" ]]; then
-			echo -e "\t-\t`openssl enc -a -A -d <<< "${i}"`";
+			echo -e "\t-\t${i}";
 			var_local_int_count="$((${var_local_int_count} + 1))";
 		fi;
 	done;
