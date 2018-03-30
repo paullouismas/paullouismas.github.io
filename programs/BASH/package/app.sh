@@ -15,10 +15,10 @@ function_void_usage() {
 	local var_local_string_usage="";
 	read -r -d '' var_local_string_usage <<EOUSAGE
 Usage: package [install <PACKAGE_NAME> [<PACKAGE_NAME>]...]
-               [update <PACKAGE_NAME> [<PACKAGE_NAME>]...]
-               [update-all]
+               [update  <PACKAGE_NAME> [<PACKAGE_NAME>]...]
+               [remove  <PACKAGE_NAME> [<PACKAGE_NAME>]...]
+	       [update-all]
                [list]
-               [remove <PACKAGE_NAME> [<PACKAGE_NAME>]...]
                [remove-all]
                [upgrade-tool]
 EOUSAGE
