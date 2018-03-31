@@ -44,7 +44,7 @@ function_void_install_package() {
 	local var_local_package_name="${1}";
 	[[ ! -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '${var_local_package_name}`" ]] && echo "Package \"${var_local_package_name}\" already installed" && exit 1;
 	local var_local_package_url="${global_packages_repository}${var_local_package_name}/app.sh";
-	local var_local_package_data="`curl -s "${var_local_package_url}"`";
+	local var_local_package_data="`curl -s -H 'Cache-Control: no-cache' "${var_local_package_url}"`";
 	[[ "${var_local_package_data:0:2}" = "40" ]] && echo "Package \"${var_local_package_name}\" doesn't exist" && exit 1;
 	local var_local_package_directory="${global_packages_directory}${var_local_package_name}/";
 	[[ ! -d "${var_local_package_directory}" ]] && mkdir -p "${var_local_package_directory}";
@@ -77,7 +77,7 @@ function_void_update_package() {
 	local var_local_temp_package_file="${global_directory}/temp.tmp";
 	[[ -z "`cat "${global_configuration_file_path}" | grep '^PACKAGE '${var_local_package_name}`" ]] && echo "Package \"${var_local_package_name}\" not installed" && exit 1;
 	local var_local_package_url="${global_packages_repository}${var_local_package_name}/app.sh";
-	local var_local_package_data="`curl -s "${var_local_package_url}"`";
+	local var_local_package_data="`curl -s -H 'Cache-Control: no-cache' "${var_local_package_url}"`";
 	local var_local_package_file="${global_packages_directory}${var_local_package_name}/${var_local_package_name}";
 	[[ "${var_local_package_data:0:2}" = "40" ]] && echo "Package \"${var_local_package_name}\" doesn't exist" && exit 1;
 	echo "${var_local_package_data}" > "${var_local_temp_package_file}";
@@ -94,7 +94,7 @@ function_void_upgrade_tool() {
 	function_void_check_internet;
 	function_void_setup_conf;
 	local var_local_temp_file="${global_directory}/temp.tmp";
-	local var_local_package_data="`curl -s "${global_tool_file_repository}"`";
+	local var_local_package_data="`curl -s -H 'Cache-Control: no-cache' "${global_tool_file_repository}"`";
 	echo "${var_local_package_data}" > "${var_local_temp_file}";
 	if [[ "`openssl dgst -sha512 "${var_local_temp_file}" | awk '{ print $NF }'`" = "`openssl dgst -sha512 "${global_tool_file_path}" | awk '{ print $NF }'`" ]]; then
 		echo "Package tool manager is already at the latest version";
