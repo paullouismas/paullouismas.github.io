@@ -42,7 +42,7 @@ echo -e "done";
 # Export the file directory to PATH
 if [[ -z "`cat "${var_string_source_file_path}" | grep -F 'export PATH="${PATH}:${HOME}";'`" ]]; then
 	echo -e -n "[INFORMATION] Exporting path to script to PATH... ";
-	echo 'export PATH="${PATH}:${HOME}";' > "${var_string_source_file_path}";
+	echo 'export PATH="${PATH}:${HOME}";' >> "${var_string_source_file_path}";
 	var_int_result="$((${var_int_result} + $?))";
 	echo -e "done";
 fi;
