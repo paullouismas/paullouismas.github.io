@@ -9,6 +9,18 @@ global_configuration_file_path="${global_directory}/config.conf";
 global_tool_file_path="${0}";
 global_tool_file_repository="${global_repository}package/app.sh";
 
+case "`uname -s`" in
+	"Darwin") # Mac OS X
+		global_bash_source="${HOME}/.bash_profile";
+		;;
+	"Linux") # General Linux
+		global_bash_source="${HOME}/.bashrc";
+		;;
+	*) # Other
+		global_bash_source="${HOME}/.profile";
+		;;
+esac;
+
 function_void_usage() {
 	function_void_check_internet;
 	function_void_setup_conf;
@@ -140,7 +152,7 @@ EOUSAGE
 	[[ ! -d "${global_packages_directory}" ]] && mkdir -p "${global_packages_directory}";
 	[[ ! -d "${global_aliases_directory}" ]] && mkdir -p "${global_aliases_directory}";
 	[[ ! -e "${global_configuration_file_path}" ]] && echo -e "${var_local_string_conf}\n" > "${global_configuration_file_path}";
-	[[ -z "`cat "${HOME}/.bash_profile" | grep '^export PATH="\${PATH}:\${HOME}/.packages/aliases/"'`" ]] && echo 'export PATH="${PATH}:${HOME}/.packages/aliases/"' >> "${HOME}/.bash_profile";
+	[[ -z "`cat "${global_bash_source}" | grep '^export PATH="\${PATH}:\${HOME}/.packages/aliases/"'`" ]] && echo 'export PATH="${PATH}:${HOME}/.packages/aliases/"' >> "${global_bash_source}";
 	return;
 }
 function_void_check_internet() {
