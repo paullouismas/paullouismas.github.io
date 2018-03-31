@@ -86,7 +86,7 @@ function_void_update_package() {
 	else
 		echo "${var_local_package_data}" > "${var_local_package_file}";
 	fi;
-	rm -P -f "${var_local_temp_package_file}";
+	rm -f "${var_local_temp_package_file}";
 	exit 0;
 	return;
 }
@@ -102,7 +102,7 @@ function_void_upgrade_tool() {
 		echo "${var_local_package_data}" > "${global_tool_file_path}";
 		echo "Package tool manager updated successfully!";
 	fi;
-	rm -P -f "${var_local_temp_file}";
+	rm -f "${var_local_temp_file}";
 	exit 0;
 	return;
 }
@@ -115,7 +115,7 @@ function_void_remove_package() {
 	local var_local_package_file="${var_local_package_directory}${var_local_package_name}";
 	sed -i '' "/^PACKAGE ${var_local_package_name}/d" "${global_configuration_file_path}"
 	rm -f "${global_aliases_directory}${var_local_package_name}";
-	rm -P -f "${var_local_package_file}";
+	rm -f "${var_local_package_file}";
 	rmdir "${var_local_package_directory}";
 	return;
 }
