@@ -140,7 +140,7 @@
 			// Main init function
 			function init() {
 				// Trigger the execution of <exec/> HTML elements
-				console.log("Execution complete: " + (function() { return new Array(...document.querySelectorAll("exec")).map(function(e) { try { e.innerHTML = eval(e.attributes.value.value); } catch (error) { console.log(error); return false; } return true; }).reduce((accumulator, value) => value == true); })());
+				console.log("Execution complete: " + (function() { return new Array(...document.querySelectorAll("exec")).map(function(e) { try { e.innerHTML = eval(e.attributes.value.value); } catch (error) { console.log(error); return false; } return true; }).every((value, index, array) => value === array[0]); })());
 			
 				// Deploy the click effect of the start game button
 				document.querySelector("body > section:nth-of-type(4) > button").addEventListener("click", startGame);
@@ -267,7 +267,7 @@
 				}
 
 				// Function for checking draw
-				function checkDraw() { return new Array(...document.querySelectorAll("body > section:nth-of-type(2) > table > tbody > tr > td > button")).map(e => e.innerHTML == "X" || e.innerHTML == "O").reduce((accumulator, value) => value == true); }
+				function checkDraw() { return new Array(...document.querySelectorAll("body > section:nth-of-type(2) > table > tbody > tr > td > button")).map(e => e.innerHTML == "X" || e.innerHTML == "O").every((value, index, array) => value === array[0]); }
 			}
 		</script>
 	</body>
