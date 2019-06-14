@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Shifts data saver</title>
+
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+		<link rel="stylesheet" href="./css/styles.css">
+
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+	</head>
+
+	<body>
+		<noscript>
+			<div class="center">
+				<p class="warning">Javascript execution is required for this webapp.</p>
+				<p>Please allow it and try again.</p>
+			</div>
+		</noscript>
+
+		<header>
+			<nav>
+				<ul>
+					<li>
+						<a href="#view">View shifts</a>
+					</li>
+					<li>
+						<a href="#add">Add shift</a>
+					</li>
+				</ul>
+			</nav>
+		</header>
+
+		<main>
+			<div class="tab" id="view">
+				<h1 class="tab-title">View</h1>
+
+				<div class="tab-content">
+					<table>
+						<thead>
+							<tr>
+								<th>Start</th>
+								<th>End</th>
+								<th>Rate /hour</th>
+								<th>Description</th>
+								<th>Actions</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+
+					<p style="text-align: right;"><a href="#save">Backup data</a></p>
+
+					<template id="_row">
+						<tr>
+							<td class="_start"></td>
+							<td class="_end"></td>
+							<td class="_rate"></td>
+							<td class="_description"></td>
+							<td class="_actions">
+								<button class="edit"><i class="fas fa-edit"></i></button>
+								<button class="delete"><i class="fas fa-times"></i></button>
+							</td>
+						</tr>
+					</template>
+				</div>
+			</div>
+
+			<div class="tab" id="add">
+				<h1 class="tab-title">Add</h1>
+
+				<div class="tab-content">
+					<form>
+						<div class="row">
+							<label for="_form-startDate">Shift start</label>
+
+							<div>
+								<input type="datetime-local" required id="_form-startDate" class="form-input form-input--date">
+
+								<button class="form-input--date--autofill"></button>
+							</div>
+						</div>
+
+						<div class="row">
+							<label for="_form-endDate">Shift end</label>
+
+							<div>
+								<input type="datetime-local" required id="_form-endDate" class="form-input form-input--date">
+
+								<button class="form-input--date--autofill"></button>
+							</div>
+						</div>
+
+						<div class="row">
+							<label for="_form-rate">Rate /hour</label>
+
+							<input type="number" required value="0" id="_form-rate" class="form-input form-input--rate" step=".05" min="0">
+						</div>
+
+						<div class="row">
+							<label for="_from-description">Description</label>
+
+							<input type="text" id="_form-description" class="form-input form-input--description" placeholder="(Optionnal)">
+						</div>
+
+						<div class="row">
+							<a href="#view" class="cancel">Cancel</a>
+
+							<input type="submit" value="Add shift">
+						</div>
+					</form>
+				</div>
+			</div>
+
+			<div class="tab" id="save">
+				<h1 class="tab-title">Save</h1>
+
+				<div class="tab-content">
+					<fieldset>
+						<legend>Save data</legend>
+
+						<div>
+							Select saving method:
+
+							<select>
+								<option value="text">Text save</option>
+								<option value="file">File save</option>
+							</select>
+
+							<input type="button" value="Save" class="save">
+
+							<code></code>
+						</div>
+					</fieldset>
+					<fieldset>
+						<legend>Load a save</legend>
+
+						<div></div>
+					</fieldset>
+				</div>
+			</div>
+
+			<div class="tab" id="edit">
+				<h1 class="tab-title">Edit</h1>
+
+				<div class="tab-content">
+					<form>
+						<div class="row">
+							<label for="_form-edit-startDate">Shift start</label>
+
+							<input type="datetime-local" required id="_form-edit-startDate" class="form-input form-input--date">
+						</div>
+
+						<div class="row">
+							<label for="_form-edit-endDate">Shift end</label>
+
+							<input type="datetime-local" required id="_form-edit-endDate" class="form-input form-input--date">
+						</div>
+
+						<div class="row">
+							<label for="_form-edit-rate">Rate /hour</label>
+
+							<input type="number" required value="0" id="_form-edit-rate" class="form-input form-input--rate" step=".05" min="0">
+						</div>
+
+						<div class="row">
+							<label for="_from-edit-description">Description</label>
+
+							<input type="text" id="_form-edit-description" class="form-input form-input--description" placeholder="(Optionnal)">
+						</div>
+
+						<button class="save">Save</button>
+					</form>
+				</div>
+			</div>
+		</main>
+
+		<div id="_popups-handler"></div>
+		<div id="_modals-handler"></div>
+
+		<footer>Copyright <a href="//paullouismas.com/" target="_blank">Paul-Louis Mas</a> &copy; 2019</footer>
+
+		<script type="module">
+			import { queryData, listShifts, displayPopup, displayModal, saveData, updateIntegrity, toNormalDate } from "./functions.js";
+			import Sha256 from "https://cdn.jsdelivr.net/gh/chrisveness/crypto/sha256.js";
+
+			(function(pages) {
+				"use strict";
+
+				window.addEventListener("load", function(event) {
+					// Set default load page to first tab (a.k.a pages[0])
+					if (pages.indexOf(this.location.hash) < 0)
+						location.hash = pages[0];
+
+					listShifts();
+
+					queryData().then(data => document.querySelector("#_form-rate").value = data.currentRate);
+				});
+
+				document.querySelectorAll("main > div.tab#add > .tab-content > form button.form-input--date--autofill").forEach(btn => btn.addEventListener("click", function(event) {
+					event.preventDefault();
+
+					const targetField = this.parentElement.querySelector("input.form-input--date");
+
+					targetField.value = toNormalDate(new Date());
+				}));
+
+				document.querySelector('main > div.tab#add > .tab-content > form input[type="submit"]').addEventListener("click", function(event) {
+					event.preventDefault();
+
+					const startTimeSource = document.getElementById("_form-startDate");
+					const endTimeSource = document.getElementById("_form-endDate");
+					const rateSource = document.getElementById("_form-rate");
+					const descriptionSource = document.getElementById("_form-description");
+
+					if (isNaN(Date.parse(startTimeSource.value)))
+						return displayPopup("alert", "The start time is not valid.", 5000).then(() => startTimeSource.focus());
+
+					let endTime;
+
+					if (endTimeSource.value === "")
+						endTime = null;
+					else if (isNaN(Date.parse(endTimeSource.value)))
+						return displayPopup("alert", "The end time is not valid.", 5000).then(() => endTimeSource.focus());
+					else
+						endTime = endTimeSource.value;
+
+					if (isNaN(Number.parseFloat(rateSource.value)))
+						return displayPopup("alert", "The rate is not a valid 2 decimals number.", 5000).then(() => rateSource.focus());
+
+					queryData().then(function(data) {
+						data.shifts.push({
+							startTime: startTimeSource.value, 
+							endTime, 
+							rate: rateSource.value, 
+							description: descriptionSource.value, 
+							_uid: Sha256.hash(String(Date.now()))
+						});
+
+						data.currentRate = rateSource.value;
+
+						saveData(data).then(data => {
+							listShifts();
+
+							location.hash = "#view";
+
+							displayPopup("info", "The shift has been added to the list successfully.", 5000);
+
+							if (data.lastSave === null || Date.now() - data.lastSave >= 1000 * 60 * 60 * 24)
+								displayPopup("info", "It seems you haven't saved data in while, do you want to do so? if so, click me!", 15000)
+									.then(() => location.hash = "#save");
+						});
+					});
+				});
+
+				document.querySelector('main > div.tab#save > .tab-content > fieldset > div > input[type="button"].save').addEventListener("click", function(event) {
+					const savingMethod = this.parentElement.querySelector("select").value;
+
+					switch (savingMethod) {
+						case "text":
+							queryData().then(data => {
+								data.lastSave = Date.now();
+
+								data = updateIntegrity(data);
+
+								this.parentElement.querySelector("code").innerText = JSON.stringify(data);
+
+								saveData(data);
+							});
+
+							break;
+						case "file":
+							queryData().then(data => {
+								data.lastSave = Date.now();
+
+								data = updateIntegrity(data);
+
+								const a = document.createElement("a");
+
+								a.setAttribute("href", `data:text/plain;base64,${btoa(JSON.stringify(data))}`);
+								a.setAttribute("download", `shift-backup-${Date.now()}.txt`);
+
+								a.click();
+
+								saveData(data);
+							});
+
+							break;
+						default:
+							displayPopup("error", `Unknown saving method "${savingMethod}".`, 5000);
+					}
+				});
+			})([...document.querySelectorAll("main > div.tab[id]")].map(e => `#${e.id}`));
+		</script>
+	</body>
+</html>
