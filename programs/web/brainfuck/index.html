@@ -1,9 +1,0 @@
-<script>
-	const brainfuck = s => (a => [console.log, eval].forEach(e => e(a)))(["let u=new Array(30000).fill(0),p=0;", ...(s.split("").filter(e => /[\.\,\+\-\<\>\[\]]/g.test(e)).map(e => (e == "." ? "document.write(String.fromCharCode(u[p]));" : (e == "," ? "u[p]=prompt();" : (e == "+" ? "u[p]++;" : (e == "-" ? "u[p]--;" : (e == "<" ? "p--;" : (e == ">" ? "p++;" : (e == "[" ? "while(u[p]!==0){" : "};")))))))))]);
-</script>
-<body>
-	<center>
-		<input type="textfield" class="field" />
-		<input type="button" onclick="brainfuck(document.querySelector('input[type=text].field').value)" value="Execute" />
-	</center>
-</body>
