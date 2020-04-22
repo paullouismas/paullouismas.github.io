@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>SQL Command Generator</title>
+
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+		<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+		<script defer src="https://cdn.jsdelivr.net/npm/bulma-accordion@2.0.1/dist/js/bulma-accordion.min.js"></script>
+	</head>
+	<body>
+		<noscript>
+			<section class="hero is-medium is-warning">
+				<div class="hero-body">
+					<div class="container">
+						<h1 class="title">
+							JavaScript required
+						</h1>
+						<h2 class="subtitle">
+							Javascript is required to use this website.
+						</h2>
+					</div>
+				</div>
+			</section>
+		</noscript>
+
+		<section class="hero is-light is-medium">
+			<div class="hero-body">
+				<div class="container">
+					<h1 class="is-1 title">
+						SQL Commmand Generator
+					</h1>
+
+					<p>
+						This generator allows to generate SQL insert statements from any CSV stored data.<br/>
+						It allows columns manipulations as well as data skipping.
+					</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="section">
+			<div class="container">
+				<div class="field">
+					<div class="control">
+						<label for="input_csv" class="label">
+							CSV data
+						</label>
+
+						<textarea class="textarea" placeholder="Your CSV data goes here..." id="input_csv"></textarea>
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="control">
+						<label for="input_csvHasHeaders" class="label">
+							CSV headers
+						</label>
+
+						<label class="checkbox">
+							<input type="checkbox" class="checkbox" id="input_csvHasHeaders">
+							My CSV has headers.
+						</label>
+
+						<p class="help">
+							Check if your CSV data has headers (this will skip them while parsing the data).
+						</p>
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="control">
+						<label for="input_separator" class="label">
+							Separator
+						</label>
+						
+						<div class="select">
+							<select id="input_separator">
+								<option value=",">,</option>
+								<option value=";">;</option>
+							</select>
+						</div>
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="control">
+						<label for="input_tableName" class="label">
+							Table name
+						</label>
+
+						<input type="text" class="input" id="input_tableName" placeholder="Example">
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="control">
+						<label for="input_columnsName" class="label">
+							Columns to insert to
+						</label>
+
+						<input type="text" class="input" id="input_columnsName" placeholder="column1,column2,column3">
+
+						<p class="help">
+							Place the columns in order they need to be inserted.<br/>
+							Separate the columns with a comma.
+						</p>
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="control">
+						<label for="input_valuesFormat" class="label">
+							Values command format
+						</label>
+
+						<textarea id="input_valuesFormat" class="textarea" placeholder="('?1?', 'A string', ?2?, 42, ?3?, NULL)"></textarea>
+
+						<p class="help">
+							Place placeholder value as: ?#?<br/>
+							Where # is the position of the column in the CSV
+						</p>
+					</div>
+				</div>
+
+				<div class="field">
+					<div class="control">
+						<button type="submit" class="button is-primary is-large" id="button_generateSQL">Generate SQL</button>
+					</div>
+
+					<p class="help is-danger" id="errors"></p>
+				</div>
+
+				<div class="field">
+					<div class="control">
+						<label for="output_SQL">
+							Generated SQL
+						</label>
+
+						<textarea class="textarea" id="output_SQL" readonly placeholder="Your generated SQL will appear here."></textarea>
+
+						<p class="help">
+							Always verify the generated SQL before using it in production!
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="accordions">
+			<article class="accordion is-active">
+				<div class="accordion-header toggle">
+					<p>Hello World</p>
+				</div>
+				<div class="accordion-body">
+					<div class="accordion-content">
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales, arcu et sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna, vehicula et sem eget, facilisis sodales sem.
+					</div>
+				</div>
+			</article>
+		</section>
+
+		<footer class="footer">
+			<p class="content has-text-centered">
+				<a href="https://bulma.io">
+					<img src="https://bulma.io/images/made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
+				</a>
+				<br/>
+				by <a href="//instagram.com/paullouis.mas/" target="_blank">Paul-Louis Mas</a>
+			</p>
+		</footer>
+
+		<script type="text/javascript" src="./index.js"></script>
+
+		<script>
+			window.addEventListener("load", function(event) {
+				const $accordions = bulmaAccordion.attach();
+				
+				document.getElementById("button_generateSQL").addEventListener("click", function(event) {
+					event.preventDefault();
+
+					const $csv = document.getElementById("input_csv").value;
+					const $csvHasHeaders = document.getElementById("input_csvHasHeaders").checked;
+					const $separator = document.getElementById("input_separator").value;
+					const $tableName = document.getElementById("input_tableName").value;
+					const $columnsName = document.getElementById("input_columnsName").value;
+					const $valuesFormat = document.getElementById("input_valuesFormat").value;
+
+					console.log({ $csv, $csvHasHeaders, $separator, $tableName, $columnsName });
+
+					const errors = [];
+
+					if ($csv === "") {
+						errors.push(`Your CSV data is empty.`);
+					}
+
+					if ($tableName === "") {
+						errors.push(`You must specify the name of the table to insert into.`);
+					}
+
+					if ($columnsName === "") {
+						errors.push(`You must specify the columns to insert to.`);
+					}
+
+					if ($valuesFormat === "") {
+						errors.push(`You must specify the format of the insert values.`);
+					}
+
+					if (errors.length > 0) {
+						return document.getElementById("errors").innerText = errors.join("\n");
+					}
+
+					const $codeArray = [`INSERT INTO`];
+
+					$codeArray.push(`[${$tableName}]`);
+					$codeArray.push("(", $columnsName.trim().split(",").map(column => column.trim()).join(", "), ")");
+					$codeArray.push("VALUES");
+
+					const $manager = new CsvManager($csv, $separator, $csvHasHeaders);
+
+					$manager.removeHeaders();
+
+					const $entry = $manager.entries();
+					const $values = [];
+
+					let entry;
+
+					do {
+						entry = $entry.value;
+
+						let value = $valuesFormat;
+
+						for (let iterator = 1; iterator <= entry.length; iterator += 1) {
+							value = value.replace(new RegExp(`\\?${iterator}\\?`, "g"), entry[iterator - 1] || "NULL");
+						}
+
+						$values.push(value);
+
+						$entry.next();
+					} while ($entry.done !== true);
+
+					$codeArray.push($values.join(", "));
+
+					return document.getElementById("output_SQL").value = $codeArray.join(" ");
+				});
+			});
+		</script>
+	</body>
+</html>
