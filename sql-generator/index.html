@@ -196,11 +196,7 @@
 						return document.getElementById("errors").innerText = errors.join("\n");
 					}
 
-					const $codeArray = [`INSERT INTO`];
-
-					$codeArray.push(`[${$tableName}]`);
-					$codeArray.push("(", $columnsName.trim().split(",").map(column => column.trim()).join(", "), ")");
-					$codeArray.push("VALUES");
+					let code = `INSERT INTO [${$tableName}] (${$columnsName.trim().split(",").map(column => column.trim()).join(", ")}) VALUES \n`;
 
 					const $manager = new CsvManager($csv, $separator, $csvHasHeaders);
 
@@ -225,9 +221,9 @@
 						$entry.next();
 					} while ($entry.done !== true);
 
-					$codeArray.push($values.join(", "));
+					code = `${code}${$values.join(", \n")}`;
 
-					return document.getElementById("output_SQL").value = $codeArray.join(" ");
+					return document.getElementById("output_SQL").value = code;
 				});
 			});
 		</script>
