@@ -169,6 +169,7 @@
 
 				const $elements = $("#input_csv", "#input_csvHasHeaders", "#input_separator", "#input_tableName", "#input_columnsName", "#input_valuesFormat");
 				const [ $csv, $csvHasHeaders, $separator, $tableName, $columnsName, $valuesFormat ] = $elements;
+				const $output = $("#output_SQL")[0];
 
 				$elements.forEach(element => element.addEventListener("input", () => updateURL()));
 
@@ -249,7 +250,7 @@
 
 					code = `${code}${$values.join(", \n")}`;
 
-					return document.getElementById("output_SQL").value = code;
+					return $output.value = code;
 				}
 
 				function clearFields() {
@@ -259,6 +260,7 @@
 					$tableName.value = "";
 					$columnsName.value = "";
 					$valuesFormat.value = "";
+					$output.value = "";
 
 					updateURL();
 				}
