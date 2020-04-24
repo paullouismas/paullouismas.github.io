@@ -7,7 +7,9 @@
 		<title>SQL Command Generator</title>
 
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
+		
 		<script defer="true" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+		<script defer="true" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
 	</head>
 	<body>
 		<noscript>
@@ -48,7 +50,7 @@
 							CSV data
 						</label>
 
-						<textarea class="textarea" placeholder="Your CSV data goes here..." id="input_csv"></textarea>
+						<textarea class="textarea" placeholder="Your CSV data goes here..." id="input_csv" spellcheck="false"></textarea>
 					</div>
 				</div>
 
@@ -90,7 +92,7 @@
 							Table name
 						</label>
 
-						<input type="text" class="input" id="input_tableName" placeholder="Example">
+						<input type="text" class="input" id="input_tableName" placeholder="Example" spellcheck="false">
 					</div>
 				</div>
 
@@ -100,7 +102,7 @@
 							Columns to insert to
 						</label>
 
-						<input type="text" class="input" id="input_columnsName" placeholder="column1,column2,column3">
+						<input type="text" class="input" id="input_columnsName" placeholder="column1,column2,column3" spellcheck="false">
 
 						<p class="help">
 							Place the columns in order they need to be inserted.<br/>
@@ -115,7 +117,7 @@
 							Values command format
 						</label>
 
-						<textarea id="input_valuesFormat" class="textarea" placeholder="('?1?', 'A string', ?2?, 42, ?3?, NULL)"></textarea>
+						<textarea id="input_valuesFormat" class="textarea" placeholder="('?1?', 'A string', ?2?, 42, ?3?, NULL)" spellcheck="false"></textarea>
 
 						<p class="help">
 							Place placeholder value as: ?#?<br/>
@@ -138,7 +140,7 @@
 							Generated SQL
 						</label>
 
-						<textarea class="textarea" id="output_SQL" readonly placeholder="Your generated SQL will appear here."></textarea>
+						<textarea class="textarea" id="output_SQL" readonly placeholder="Your generated SQL will appear here." spellcheck="false"></textarea>
 
 						<p class="help">
 							Always verify the generated SQL before using it in production!
@@ -161,44 +163,61 @@
 		<script type="text/javascript" src="./csv-tool.js"></script>
 
 		<script>
-			window.addEventListener("load", function(event) {
-				document.getElementById("button_generateSQL").addEventListener("click", function(event) {
+			window.addEventListener("load", () => {
+				const $ = (...selectors) => selectors.reduce((accumulator, value) => accumulator.concat(document.querySelector(value)), []);
+
+				const $elements = $("#input_csv", "#input_csvHasHeaders", "#input_separator", "#input_tableName", "#input_columnsName", "#input_valuesFormat");
+				const [ $csv, $csvHasHeaders, $separator, $tableName, $columnsName, $valuesFormat ] = $elements;
+
+				$elements.forEach(element => element.addEventListener("input", () => updateURL()));
+
+				prefill();
+
+				$("#button_generateSQL")[0].addEventListener("click", function(event) {
 					event.preventDefault();
+					
+					generateStatement();
+				});
 
-					const $csv = document.getElementById("input_csv").value;
-					const $csvHasHeaders = document.getElementById("input_csvHasHeaders").checked;
-					const $separator = document.getElementById("input_separator").value;
-					const $tableName = document.getElementById("input_tableName").value;
-					const $columnsName = document.getElementById("input_columnsName").value;
-					const $valuesFormat = document.getElementById("input_valuesFormat").value;
+				function updateURL() {
+					const $url = new URL(location.href);
 
-					console.log({ $csv, $csvHasHeaders, $separator, $tableName, $columnsName });
+					$url.searchParams.set("csv", encodeURIComponent($csv.value));
+					$url.searchParams.set("csvHasHeaders", encodeURIComponent($csvHasHeaders.checked));
+					$url.searchParams.set("separator", encodeURIComponent($separator.value));
+					$url.searchParams.set("tableName", encodeURIComponent($tableName.value));
+					$url.searchParams.set("columnsName", encodeURIComponent($columnsName.value));
+					$url.searchParams.set("valuesFormat", encodeURIComponent($valuesFormat.value));
 
+					history.pushState({ path: $url.href }, "", $url.href);
+				}
+
+				function prefill() {
+					const $params = new URL(location).searchParams;
+
+					$csv.value = decodeURIComponent($params.get("csv") || "");
+					$csvHasHeaders.checked = decodeURIComponent($params.get("csvHasHeaders") || "") === "true";
+					$separator.selectedIndex = decodeURIComponent($params.get("separator") || "") === ";" ? 1 : 0;
+					$tableName.value = decodeURIComponent($params.get("tableName") || "");
+					$columnsName.value = decodeURIComponent($params.get("columnsName") || "");
+					$valuesFormat.value = decodeURIComponent($params.get("valuesFormat") || "");
+				}
+
+				function generateStatement() {
 					const errors = [];
 
-					if ($csv === "") {
-						errors.push(`Your CSV data is empty.`);
-					}
-
-					if ($tableName === "") {
-						errors.push(`You must specify the name of the table to insert into.`);
-					}
-
-					if ($columnsName === "") {
-						errors.push(`You must specify the columns to insert to.`);
-					}
-
-					if ($valuesFormat === "") {
-						errors.push(`You must specify the format of the insert values.`);
-					}
+					if ($csv.value === "") { errors.push(`Your CSV data is empty.`); }
+					if ($tableName.value === "") { errors.push(`You must specify the name of the table to insert into.`); }
+					if ($columnsName.value === "") { errors.push(`You must specify the columns to insert to.`); }
+					if ($valuesFormat.value === "") { errors.push(`You must specify the format of the insert values.`); }
 
 					if (errors.length > 0) {
 						return document.getElementById("errors").innerText = errors.join("\n");
 					}
 
-					let code = `INSERT INTO [${$tableName}] (${$columnsName.trim().split(",").map(column => column.trim()).join(", ")}) VALUES \n`;
+					let code = `INSERT INTO [${$tableName.value}] (${$columnsName.value.trim().split(",").map(column => column.trim()).join(", ")}) VALUES \n`;
 
-					const $manager = new CsvManager($csv, $separator, $csvHasHeaders);
+					const $manager = new CsvManager($csv.value, $separator.value, $csvHasHeaders.checked);
 
 					$manager.removeHeaders();
 
@@ -210,7 +229,7 @@
 					do {
 						entry = $entry.value;
 
-						let value = $valuesFormat;
+						let value = $valuesFormat.value;
 
 						for (let iterator = 1; iterator <= entry.length; iterator += 1) {
 							value = value.replace(new RegExp(`\\?${iterator}\\?`, "g"), entry[iterator - 1] || "NULL");
@@ -224,7 +243,7 @@
 					code = `${code}${$values.join(", \n")}`;
 
 					return document.getElementById("output_SQL").value = code;
-				});
+				}
 			});
 		</script>
 
