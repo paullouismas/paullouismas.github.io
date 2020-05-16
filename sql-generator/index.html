@@ -10,8 +10,14 @@
 		
 		<script defer="true" src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
 		<script defer="true" src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
+		<!-- <script defer="true" src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script> -->
+		<script src="./url-search-manager.js"></script>
 	</head>
-	<body>
+	<body x-data="{
+			navbarOpen: false, 
+			shareModalOpen: false, 
+			$params: new URLSearchManager(location.search, true)
+		}" x-bind:class="{ 'is-clipped': shareModalOpen }">
 		<noscript>
 			<section class="hero is-medium is-warning">
 				<div class="hero-body">
@@ -27,6 +33,38 @@
 			</section>
 		</noscript>
 
+		<nav class="navbar is-transparent" role="navigation" aria-label="main navigation">
+			<div class="navbar-brand">
+				<a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" @click="navbarOpen = !navbarOpen" :class="{ 'is-active': !!navbarOpen }">
+					<span aria-hidden="true"></span>
+					<span aria-hidden="true"></span>
+					<span aria-hidden="true"></span>
+				</a>
+			</div>
+		  
+			<div class="navbar-menu" :class="{ 'is-active': !!navbarOpen }">
+				<div class="navbar-start">
+					<a href="/" class="navbar-item">
+						Home
+					</a>
+
+					<div class="navbar-item has-dropdown is-hoverable">
+						<a class="navbar-link">
+							Tools
+						</a>
+
+						<div class="navbar-dropdown is-boxed">
+							<a href="/sql-generator/" class="navbar-item">
+								SQL Command Generator
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="navbar-end"></div>
+			</div>
+		</nav>
+
 		<section class="hero is-light is-medium">
 			<div class="hero-body">
 				<div class="container">
@@ -37,6 +75,17 @@
 					<p>
 						This generator allows to generate SQL insert statements from any CSV stored data.<br/>
 						It allows columns manipulations as well as data skipping.
+					</p>
+
+					<p>
+						<a href="./documentation/" class="button" type="button">
+							<span>
+								View to the documentation
+							</span>
+							<span class="icon">
+								<i class="fas fa-angle-double-right"></i>
+							</span>
+						</a>
 					</p>
 				</div>
 			</div>
@@ -50,23 +99,35 @@
 							CSV data
 						</label>
 
-						<textarea class="textarea" placeholder="Your CSV data goes here..." id="input_csv" spellcheck="false"></textarea>
+						<textarea 
+							class="textarea" 
+							placeholder="Your CSV data goes here..." 
+							id="input_csv" 
+							spellcheck="false"
+							x-html="$params.get('csv')"
+							@input="$params.set('csv', $('#input_csv')[0].value)">
+						</textarea>
 					</div>
 				</div>
 
 				<div class="field">
 					<div class="control">
-						<label for="input_csvHasHeaders" class="label">
+						<label class="label">
 							CSV headers
 						</label>
 
 						<label class="checkbox">
-							<input type="checkbox" class="checkbox" id="input_csvHasHeaders">
+							<input 
+								type="checkbox" 
+								class="checkbox" 
+								id="input_csvHasHeaders"
+								x-bind:checked="$params.get('csvHasHeaders') === 'true'"
+								@input="$params.set('csvHasHeaders', $('#input_csvHasHeaders')[0].checked)" />
 							My CSV has headers.
 						</label>
 
 						<p class="help">
-							Check if your CSV data has headers (this will skip them while parsing the data).
+							Check if your CSV data has headers (this will ignore them while parsing the data).
 						</p>
 					</div>
 				</div>
@@ -78,9 +139,16 @@
 						</label>
 						
 						<div class="select">
-							<select id="input_separator">
-								<option value=",">,</option>
-								<option value=";">;</option>
+							<select
+								id="input_separator"
+								x-bind:value="$params.get('separator')"
+								@input="$params.set('separator', $('#input_separator')[0].value)">
+								<option value=",">
+									,
+								</option>
+								<option value=";">
+									;
+								</option>
 							</select>
 						</div>
 					</div>
@@ -92,7 +160,14 @@
 							Table name
 						</label>
 
-						<input type="text" class="input" id="input_tableName" placeholder="Example" spellcheck="false">
+						<input 
+							type="text" 
+							class="input" 
+							id="input_tableName" 
+							placeholder="Example" 
+							spellcheck="false"
+							x-bind:value="$params.get('tableName')"
+							@input="$params.set('tableName', $('#input_tableName')[0].value)" />
 					</div>
 				</div>
 
@@ -102,7 +177,14 @@
 							Columns to insert to
 						</label>
 
-						<input type="text" class="input" id="input_columnsName" placeholder="column1,column2,column3" spellcheck="false">
+						<input 
+							type="text" 
+							class="input" 
+							id="input_columnsName" 
+							placeholder="column1,column2,column3" 
+							spellcheck="false"
+							x-bind:value="$params.get('columnsName')"
+							@input="$params.set('columnsName', $('#input_columnsName')[0].value)" />
 
 						<p class="help">
 							Place the columns in order they need to be inserted.<br/>
@@ -117,7 +199,14 @@
 							Values command format
 						</label>
 
-						<textarea id="input_valuesFormat" class="textarea" placeholder="('?1?', 'A string', ?2?, 42, ?3?, NULL)" spellcheck="false"></textarea>
+						<textarea 
+							id="input_valuesFormat" 
+							class="textarea" 
+							placeholder="('?1?', 'A string', ?2?, 42, ?3?, NULL)" 
+							spellcheck="false"
+							x-html="$params.get('valuesFormat')"
+							@input="$params.set('valuesFormat', $('#input_valuesFormat')[0].value)">
+						</textarea>
 
 						<p class="help">
 							Place placeholder value as: ?#?<br/>
@@ -127,9 +216,10 @@
 				</div>
 
 				<div class="field">
-					<div class="control">
-						<button type="submit" class="button is-primary is-medium" id="button_generateSQL">Generate SQL</button>
-						<button type="button" class="button is-light is-medium" id="button_clear">Clear fields</button>
+					<div class="control buttons">
+						<button type="submit" class="button is-primary is-medium" id="button_generateSQL" @click.prevent="generateStatement()">Generate SQL</button>
+						<!-- <button type="button" class="button is-light is-medium" id="button_clear" @click.prevent="clearFields(); $params.empty()">Clear fields</button> -->
+						<!-- <button type="button" class="button is-info is-medium" id="button_share" title="Share this config" @click="shareModalOpen = true">Share</button> -->
 					</div>
 
 					<p class="help is-danger" id="errors"></p>
@@ -148,12 +238,26 @@
 						</p>
 					</div>
 				</div>
+
+				<!-- <div class="modal" :class="{ 'is-active': !!shareModalOpen }">
+					<div class="modal-background" @click="shareModalOpen = false"></div>
+
+					<div class="modal-content">
+						<div class="box">
+							<textarea class="textarea" x-text="location.href" readonly spellcheck="false"></textarea>
+
+							<button class="button is-light copy" :data-clipboard-text="location.href">Copy to clipboard</button>
+						</div>
+					</div>
+
+					<button class="modal-close is-large" aria-label="close" @click="shareModalOpen = false"></button>
+				</div> -->
 			</div>
 		</section>
 
 		<footer class="footer">
 			<p class="content has-text-centered">
-				<a href="https://bulma.io">
+				<a href="https://bulma.io" target="_blank">
 					<img src="https://bulma.io/images/made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
 				</a>
 				<br/>
@@ -164,109 +268,81 @@
 		<script type="text/javascript" src="./csv-tool.js"></script>
 
 		<script>
-			window.addEventListener("load", () => {
-				const $ = (...selectors) => selectors.reduce((accumulator, value) => accumulator.concat(document.querySelector(value)), []);
+			const $ = (...selectors) => 
+				selectors.reduce((accumulator, value) => 
+					accumulator.concat(document.querySelector(value)), []);
 
-				const $elements = $("#input_csv", "#input_csvHasHeaders", "#input_separator", "#input_tableName", "#input_columnsName", "#input_valuesFormat");
-				const [ $csv, $csvHasHeaders, $separator, $tableName, $columnsName, $valuesFormat ] = $elements;
-				const $output = $("#output_SQL")[0];
+			const $elements = $("#input_csv", "#input_csvHasHeaders", "#input_separator", "#input_tableName", "#input_columnsName", "#input_valuesFormat");
+			const [ $csv, $csvHasHeaders, $separator, $tableName, $columnsName, $valuesFormat ] = $elements;
+			const $output = $("#output_SQL")[0];
 
-				$elements.forEach(element => element.addEventListener("input", () => updateURL()));
+			function clearFields() {
+				$csv.value = "";
+				$csvHasHeaders.checked = false;
+				$separator.selectedIndex = 0;
+				$tableName.value = "";
+				$columnsName.value = "";
+				$valuesFormat.value = "";
+				$output.value = "";
+			}
 
-				prefill();
+			function generateStatement() {
+				const errors = [];
 
-				$("#button_generateSQL")[0].addEventListener("click", function(event) {
-					event.preventDefault();
+				if ($csv.value === "") {
+					errors.push(`Your CSV data is empty.`);
+				}
+				if ($tableName.value === "") {
+					errors.push(`You must specify the name of the table to insert into.`);
+				}
+				if ($columnsName.value === "" && !$csvHasHeaders.checked) {
+					errors.push(`You must specify the columns to insert to.`);
+				}
+				if ($valuesFormat.value === "") {
+					errors.push(`You must specify the format of the insert values.`);
+				}
+
+				if (errors.length > 0) {
+					document.getElementById("errors").innerText = errors.join("\n");
+
+					return;
+				}
+
+				const $manager = new CsvManager($csv.value, $separator.value, $csvHasHeaders.checked);
+
+				let code = `INSERT INTO [${$tableName.value}] (${($csvHasHeaders.checked && $columnsName.value === "" ? $manager.getHeaders().join(", ") : $columnsName.value).trim().split(",").map(column => column.trim()).join(", ")}) VALUES \n`;
+
+				$manager.removeHeaders();
 					
-					generateStatement();
-				});
+				const $entry = $manager.entries();
+				const $values = [];
 
-				$("#button_clear")[0].addEventListener("click", function(event) {
-					event.preventDefault();
+				let entry;
 
-					clearFields();
-				});
+				do {
+					entry = $entry.value;
 
-				function updateURL() {
-					const $url = new URL(location.href);
+					let value = $valuesFormat.value.replace(/\/\/.{0,}$/gm, "");
 
-					$url.searchParams.set("csv", encodeURIComponent($csv.value));
-					$url.searchParams.set("csvHasHeaders", encodeURIComponent($csvHasHeaders.checked));
-					$url.searchParams.set("separator", encodeURIComponent($separator.value));
-					$url.searchParams.set("tableName", encodeURIComponent($tableName.value));
-					$url.searchParams.set("columnsName", encodeURIComponent($columnsName.value));
-					$url.searchParams.set("valuesFormat", encodeURIComponent($valuesFormat.value));
-
-					history.pushState({ path: $url.href }, "", $url.href);
-				}
-
-				function prefill() {
-					const $params = new URL(location).searchParams;
-
-					$csv.value = decodeURIComponent($params.get("csv") || "");
-					$csvHasHeaders.checked = decodeURIComponent($params.get("csvHasHeaders") || "") === "true";
-					$separator.selectedIndex = decodeURIComponent($params.get("separator") || "") === ";" ? 1 : 0;
-					$tableName.value = decodeURIComponent($params.get("tableName") || "");
-					$columnsName.value = decodeURIComponent($params.get("columnsName") || "");
-					$valuesFormat.value = decodeURIComponent($params.get("valuesFormat") || "");
-				}
-
-				function generateStatement() {
-					const errors = [];
-
-					if ($csv.value === "") { errors.push(`Your CSV data is empty.`); }
-					if ($tableName.value === "") { errors.push(`You must specify the name of the table to insert into.`); }
-					if ($columnsName.value === "") { errors.push(`You must specify the columns to insert to.`); }
-					if ($valuesFormat.value === "") { errors.push(`You must specify the format of the insert values.`); }
-
-					if (errors.length > 0) {
-						return document.getElementById("errors").innerText = errors.join("\n");
+					for (let iterator = 1; iterator <= entry.length; iterator += 1) {
+						value = value.replace(new RegExp(`\\?${iterator}\\?`, "g"), entry[iterator - 1] || "NULL");
 					}
 
-					let code = `INSERT INTO [${$tableName.value}] (${$columnsName.value.trim().split(",").map(column => column.trim()).join(", ")}) VALUES \n`;
+					$values.push(value.trim());
 
-					const $manager = new CsvManager($csv.value, $separator.value, $csvHasHeaders.checked);
+					$entry.next();
+				} while ($entry.done !== true);
 
-					$manager.removeHeaders();
+				code = `${code}${$values.join(", \n")}`;
 
-					const $entry = $manager.entries();
-					const $values = [];
+				return $output.value = code;
+			}
 
-					let entry;
-
-					do {
-						entry = $entry.value;
-
-						let value = $valuesFormat.value;
-
-						for (let iterator = 1; iterator <= entry.length; iterator += 1) {
-							value = value.replace(new RegExp(`\\?${iterator}\\?`, "g"), entry[iterator - 1] || "NULL");
-						}
-
-						$values.push(value);
-
-						$entry.next();
-					} while ($entry.done !== true);
-
-					code = `${code}${$values.join(", \n")}`;
-
-					return $output.value = code;
-				}
-
-				function clearFields() {
-					$csv.value = "";
-					$csvHasHeaders.checked = false;
-					$separator.selectedIndex = 0;
-					$tableName.value = "";
-					$columnsName.value = "";
-					$valuesFormat.value = "";
-					$output.value = "";
-
-					updateURL();
-				}
+			window.addEventListener("load", () => {
+				/* new ClipboardJS(".copy"); */
 			});
 		</script>
 
-		<script type="module" src="../ga.js"></script>
+		<script type="module" src="/ga.js"></script>
 	</body>
 </html>
