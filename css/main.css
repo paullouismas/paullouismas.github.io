@@ -1,0 +1,20 @@
+a[href][target="_blank"]:not(.no-anchor)::after,
+.anchor[id]::after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  transition: 0.1s;
+  opacity: 0 !important;
+}
+a[href][target="_blank"]:not(.no-anchor):hover::after,
+.anchor[id]:hover::after {
+  opacity: 1 !important;
+}
+a[href][target="_blank"]:not(.no-anchor) {
+  cursor: alias;
+}
+a[href][target="_blank"]:not(.no-anchor)::after {
+  content: "\f35d";
+}
+.anchor[id]:hover::after {
+  content: "\f0c1";
+}
