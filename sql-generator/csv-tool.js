@@ -41,6 +41,9 @@ class CsvManager {
             }
         });
     }
+    getHeaders() {
+        return this._headers.map(header => header.name);
+    }
     removeHeaders() {
         this._headers = [];
     }
