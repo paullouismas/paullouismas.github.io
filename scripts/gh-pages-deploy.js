@@ -1,5 +1,7 @@
-import execa from 'execa'
-import fs from 'fs'
+/* eslint-disable */
+const execa = require('execa')
+const fs = require('fs');
+/* eslint-enable */
 
 (async () => {
   try {
