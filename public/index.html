@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	
+		<title>
+			<%= htmlWebpackPlugin.options.title %>
+		</title>
+	</head>
+	<body>
+		<noscript>
+			<section class="hero is-medium is-warning">
+				<div class="hero-body">
+					<div class="container">
+						<h1 class="title">
+							Javascript required
+						</h1>
+						<h2 class="subtitle">
+							Javascript is required to use this website.
+						</h2>
+					</div>
+				</div>
+			</section>
+		</noscript>
+	
+		<div id="app"></div>
+
+		<script type="module">
+			import "https://www.googletagmanager.com/gtag/js?id=UA-89934703-1";
+
+			window.dataLayer = window.dataLayer || [];
+		
+			function gtag() {
+				dataLayer.push(arguments);
+			}
+
+			gtag('js', new Date());
+			gtag('config', 'UA-89934703-1');
+		</script>
+	</body>
+</html>
