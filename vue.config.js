@@ -1,8 +1,9 @@
 module.exports = {
   css: {
-    // modules: true,
-    sourceMap: true,
-    requireModuleExtension: true
+    requireModuleExtension: true,
+    modules: true
   },
-  productionSourceMap: false
+
+  productionSourceMap: false,
+  assetsDir: 'assets'
 }
