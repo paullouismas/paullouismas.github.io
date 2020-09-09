@@ -1,7 +1,7 @@
 module.exports = {
   css: {
-    requireModuleExtension: true,
-    modules: true
+    // modules: true,
+    requireModuleExtension: true
   },
 
   productionSourceMap: false,

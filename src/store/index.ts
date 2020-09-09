@@ -16,7 +16,7 @@ const WASHERDASHBOARD_DEFAULT_STATE = {
     started: false,
     startTime: null
   },
-  history: [
+  history: process.env.NODE_ENV === 'production' ? [] : [
     { // Sample game test
       _id: 0,
       startTime: new Date(Date.now() - 60 * 60 * 24),
