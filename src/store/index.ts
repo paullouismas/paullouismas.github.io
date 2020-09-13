@@ -2,111 +2,42 @@ import Vuex from 'vuex'
 import Vue from 'vue'
 import VuexPersistence from 'vuex-persist'
 
-import { /* getIndexFromObjectValue, */ deepCloneUncircularObject } from '@/helpers'
-import { IdashboardState } from '@/views/tools/washer-dashboard/DashboardState'
+import { deepCloneUncircularObject } from '@/helpers'
+
+import { Istate as IwasherDashboardState } from '@/views/tools/washer-dashboard/State'
 import { Iplayer } from '@/views/tools/washer-dashboard/Player'
 import { Iteam } from '@/views/tools/washer-dashboard/Team'
 import { Igame } from '@/views/tools/washer-dashboard/Game'
 
+import { Istate as IshiftsManagerState, Itab as IshiftsManagerTabs } from '@/views/tools/shifts-manager/State'
+
 Vue.use(Vuex)
 
-const WASHERDASHBOARD_DEFAULT_STATE = {
-  teams: [],
-  game: {
-    started: false,
-    startTime: null
+const DEFAULT_STATES = {
+  WasherDashboard: {
+    teams: [],
+    game: {
+      started: false,
+      startTime: null
+    },
+    history: []
   },
-  history: process.env.NODE_ENV === 'production' ? [] : [
-    { // Sample game test
-      _id: 0,
-      startTime: new Date(Date.now() - 60 * 60 * 24),
-      winningTeam: {
-        _id: 0,
-        name: 'Team A',
-        mainMember: {
-          _id: 0,
-          name: 'Player A'
-        },
-        additionalMembers: [
-          {
-            _id: 1,
-            name: 'Player B'
-          },
-          {
-            _id: 2,
-            name: 'Player C'
-          }
-        ],
-        score: 0
-      },
-      teams: [
-        {
-          _id: 0,
-          name: 'Team A',
-          mainMember: {
-            _id: 0,
-            name: 'Player A'
-          },
-          additionalMembers: [
-            {
-              _id: 1,
-              name: 'Player B'
-            },
-            {
-              _id: 2,
-              name: 'Player C'
-            }
-          ],
-          score: 0
-        },
-        {
-          _id: 1,
-          name: 'Team B',
-          mainMember: {
-            _id: 3,
-            name: 'Player D'
-          },
-          additionalMembers: [
-            {
-              _id: 4,
-              name: 'Player E'
-            }
-          ],
-          score: 0
-        },
-        {
-          _id: 2,
-          name: 'Team C',
-          mainMember: {
-            _id: 5,
-            name: 'Player F'
-          },
-          additionalMembers: [],
-          score: 0
-        }
-      ]
-    }
-  ],
-  tabs: {
-    activeTab: 'Teams'
+  ShiftsManager: {
+    //
   }
-} as IdashboardState
+} as {
+  WasherDashboard: IwasherDashboardState;
+  ShiftsManager: IshiftsManagerState;
+}
 
 const store = new Vuex.Store({
   modules: {
     WasherDashboard: {
       namespaced: true,
-      state: deepCloneUncircularObject(Object.assign({}, WASHERDASHBOARD_DEFAULT_STATE)) as IdashboardState,
+      state: deepCloneUncircularObject(Object.assign({}, DEFAULT_STATES.WasherDashboard)) as IwasherDashboardState,
       mutations: {
-        // Tabs
-        setActiveTab(state: IdashboardState, tab: string) {
-          state.tabs.activeTab = tab
-
-          // console.info('[WasherDashboard/setActiveTab] Set active tab to', tab)
-        },
-
         // Teams management
-        createTeam(state: IdashboardState, { name, mainMember, additionalMembers }: { name: string; mainMember: Iplayer; additionalMembers: Iplayer[] }) {
+        createTeam(state: IwasherDashboardState, { name, mainMember, additionalMembers }: { name: string; mainMember: Iplayer; additionalMembers: Iplayer[] }) {
           const team: Iteam = {
             _id: Date.now(),
             name,
@@ -116,42 +47,29 @@ const store = new Vuex.Store({
           }
 
           state.teams.push(team)
-
-          // console.info('[WasherDashboard/createTeam] New team succesfully created', team)
         },
-        deleteTeam(state: IdashboardState, team: Iteam) {
+        deleteTeam(state: IwasherDashboardState, team: Iteam) {
           const { _id: teamId } = team
-          // const teamIndex = getIndexFromObjectValue(state.teams, '_id', teamId)
           const teamIndex = state.teams.reduce<number | undefined>((accumulator, value, index) => value._id === teamId ? index : accumulator, undefined)
 
           if (teamIndex === undefined) {
-            // console.error('[WasherDashboard/deleteTeam] Team could not be found in store', team)
-
             return
           }
 
           state.teams.splice(teamIndex, 1)
-
-          // console.info('[WasherDashboard/deleteTeam] Team deleted from store', team)
         },
 
         // Game management
-        startGame(state: IdashboardState) {
+        startGame(state: IwasherDashboardState) {
           if (state.game.started) {
-            // console.error('[WasherDashboard/startGame] Game as already started')
-
             return
           }
 
           state.game.started = true
           state.game.startTime = new Date()
-
-          // console.info('[WasherDashboard/startGame] Game successfully started')
         },
-        finishGame(state: IdashboardState) {
+        finishGame(state: IwasherDashboardState) {
           if (!state.game.started) {
-            // console.error('[WasherDashboard/finishGame] Game could not be finished, game has not started yet')
-
             return
           }
 
@@ -168,20 +86,22 @@ const store = new Vuex.Store({
           state.teams.forEach(team => {
             team.score = 0
           })
-
-          // console.info('[WasherDashboard/finishGame] Game finished successfully')
         },
 
         // Score management
-        setTeamScore(state: IdashboardState, { team, score }: { team: Iteam; score: number}) {
-          // const teamIndex = getIndexFromObjectValue(state.teams, '_id', team._id) as number
+        setTeamScore(state: IwasherDashboardState, { team, score }: { team: Iteam; score: number}) {
           const teamIndex = state.teams.reduce<number | undefined>((accumulator, value, index) => value._id === team._id ? index : accumulator, undefined) as number
           const targetScore: number = score > 0 ? score : 0
 
           state.teams[teamIndex].score = targetScore
-
-          // console.info(`[WasherDashboard/setTeamScore] Set score to ${targetScore} for team`, team)
         }
+      }
+    },
+    ShiftsManager: {
+      namespaced: true,
+      state: deepCloneUncircularObject(Object.assign({}, DEFAULT_STATES.ShiftsManager)),
+      mutations: {
+        //
       }
     }
   },

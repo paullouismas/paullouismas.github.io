@@ -20,18 +20,16 @@ export default Vue.extend({
   name: 'Portfolio',
   data() {
     return {
-      profileName: 'paullouis.mas',
       images: []
     }
   },
-  mounted() {
+  async mounted() {
     document.title = 'Portfolio'
 
-    fetch(`https://instagram.com/${this.profileName}/?__a=1`)
-      .then(r => r.json())
-      .then(d => {
-        this.images = d.graphql.user.edge_owner_to_timeline_media.edges.map((e: { node: string }) => e.node)
-      })
+    const response = await fetch('https://instagram.com/paullouis.mas/?__a=1')
+    const json = await response.json()
+
+    this.images = json.graphql.user.edge_owner_to_timeline_media.edges.map((e: { node: string }) => e.node)
   }
 })
 </script>

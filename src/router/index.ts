@@ -32,29 +32,34 @@ const router = new VueRouter({
         {
           path: 'portfolio',
           name: 'Portfolio',
-          components: defaultLayoutWithNavbarAndFooter(() => import(/* webpackChunkName: "Portfolio" */ '@/views/portfolio/Portfolio.vue'))
+          components: defaultLayoutWithNavbarAndFooter(() => import(/* webpackChunkName: 'Portfolio' */ '@/views/portfolio/Portfolio.vue'))
         },
         {
           path: 'tools',
           name: 'Tools',
-          components: defaultLayoutWithNavbarAndFooter(() => import(/* webpackChunkName: "Tools" */ '@/views/tools/Tools.vue')),
+          components: defaultLayoutWithNavbarAndFooter(() => import(/* webpackChunkName: 'Tools' */ '@/views/tools/Tools.vue')),
           children: [
             {
               path: 'sql-generator',
               name: 'SQL Generator',
-              component: () => import(/* webpackChunkName: "SQLGenerator" */ '@/views/tools/sql-generator/SQLGenerator.vue'),
+              component: () => import(/* webpackChunkName: 'SQLGenerator' */ '@/views/tools/sql-generator/SQLGenerator.vue'),
               children: [
                 {
                   path: 'documentation',
                   name: 'SQL Generator Documentation',
-                  component: () => import(/* webpackChunkName: "SQLGenerator" */ '@/views/tools/sql-generator/SQLGeneratorDocumentation.vue')
+                  component: () => import(/* webpackChunkName: 'SQLGenerator' */ '@/views/tools/sql-generator/SQLGeneratorDocumentation.vue')
                 }
               ]
             },
             {
               path: 'washer-dashboard',
               name: 'Washer Dashboard',
-              component: () => import(/* webpackChunkName: "WasherDashboard" */ '@/views/tools/washer-dashboard/WasherDashboard.vue')
+              component: () => import(/* webpackChunkName: 'WasherDashboard' */ '@/views/tools/washer-dashboard/WasherDashboard.vue')
+            },
+            {
+              path: 'shifts-manager',
+              name: 'Shifts Manager',
+              component: () => import(/* webpackChunkName: 'ShiftsManager' */ '@/views/tools/shifts-manager/ShiftsManager.vue')
             }
           ]
         }

@@ -35,6 +35,12 @@
             <router-link to="/tools/washer-dashboard/" class="navbar-item">
               Washer Dashboard
             </router-link>
+
+            <hr class="navbar-divider" />
+
+            <router-link to="/tools/shifts-manager/" class="navbar-item">
+              Shifts Manager
+            </router-link>
           </div>
         </div>
       </div>
