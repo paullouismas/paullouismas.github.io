@@ -42,18 +42,13 @@ import { IdashboardState } from './DashboardState'
 
 export default Vue.extend({
   name: 'WasherDashboard',
-  data() {
-    return {
-      //
-    }
-  },
   components: {
     WasherTeams,
     WasherScore,
     WasherGame
   },
   mounted() {
-    //
+    document.title = 'Washer Dashboard'
   },
   computed: {
     activeTab() {

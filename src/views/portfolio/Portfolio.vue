@@ -25,6 +25,8 @@ export default Vue.extend({
     }
   },
   mounted() {
+    document.title = 'Portfolio'
+
     fetch(`https://instagram.com/${this.profileName}/?__a=1`)
       .then(r => r.json())
       .then(d => {

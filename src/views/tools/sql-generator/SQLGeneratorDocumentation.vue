@@ -246,6 +246,9 @@ export default Vue.extend({
 
       document.head.appendChild(externalScript)
     })
+  },
+  mounted() {
+    document.title = 'SQL Generator - Documentation'
   }
 })
 </script>

@@ -163,6 +163,8 @@ export default Vue.extend({
     }
   },
   mounted() {
+    document.title = 'SQL Generator'
+
     const query = this.$route.query
 
     this.csv = decodeURIComponent(query.csv as string | null || '')
