@@ -7,6 +7,7 @@
                 <img :src="image.display_url" :alt="image.accessibility_caption" />
             </figure>
         </div> -->
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae consequuntur ipsam alias cupiditate doloremque in consequatur doloribus, unde qui! Eos maxime perspiciatis illum ducimus odio possimus, nam doloribus autem libero.
       </div>
     </section>
   </div>

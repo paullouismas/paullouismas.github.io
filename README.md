@@ -1,4 +1,4 @@
-# dev.paullouismas.com
+# paullouismas.github.io
 
 ## Project setup
 ```

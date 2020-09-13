@@ -21,9 +21,9 @@
 
       <div class="navbar-end">
         <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">
+          <router-link class="navbar-link" to="/tools/">
             Tools
-          </a>
+          </router-link>
 
           <div class="navbar-dropdown is-right is-boxed">
             <router-link to="/tools/sql-generator/" class="navbar-item">
@@ -47,9 +47,6 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'Navbar',
-  components: {
-    //
-  },
   data() {
     return {
       navbarOpened: false,
@@ -63,8 +60,13 @@ export default Vue.extend({
   mounted() {
     this.isFixedTop = this.$props.fixedTop
 
-    if (this.fixedTop) {
+    if (this.isFixedTop) {
       document.body.classList.add('has-navbar-fixed-top')
+    }
+  },
+  beforeDestroy() {
+    if (this.isFixedTop && document.body.classList.contains('has-navbar-fixed-top')) {
+      document.body.classList.remove('has-navbar-fixed-top')
     }
   }
 })

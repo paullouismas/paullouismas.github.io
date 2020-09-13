@@ -1,6 +1,6 @@
 <template>
   <div>
-    <section class="section hero is-light is-medium">
+    <section class="section hero is-medium">
       <div class="hero-body">
         <div class="container">
           <h1 class="is-1 title is-spaced">
@@ -14,10 +14,10 @@
       </div>
     </section>
 
-    <section class="section">
+    <!-- <section class="section">
       <div class="container">
       </div>
-    </section>
+    </section> -->
   </div>
 </template>
 
@@ -25,8 +25,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
-  name: 'Home',
-  components: {}
+  name: 'Home'
 })
 </script>
 

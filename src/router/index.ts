@@ -1,8 +1,19 @@
-import Vue from 'vue'
+import Vue, { VueConstructor } from 'vue'
 import VueRouter from 'vue-router'
+
+import Navbar from '@/components/Navbar.vue'
+import Footer from '@/components/Footer.vue'
+
+import Root from '@/views/Root.vue'
 import Home from '@/views/Home.vue'
 
 Vue.use(VueRouter)
+
+const defaultLayoutWithNavbarAndFooter = (defaultElement: VueConstructor<Vue> | (() => Promise<typeof import('*.vue')>)) => ({
+  navbar: Navbar,
+  default: defaultElement,
+  footer: Footer
+})
 
 const router = new VueRouter({
   mode: /* 'history' */'hash',
@@ -10,28 +21,44 @@ const router = new VueRouter({
   routes: [
     {
       path: '/',
-      name: 'Home',
-      component: Home
-    },
-    {
-      path: '/portfolio/',
-      name: 'Portfolio',
-      component: () => import(/* webpackChunkName: "Portofolio" */ '@/views/portfolio/Portfolio.vue')
-    },
-    {
-      path: '/tools/sql-generator/',
-      name: 'SQL Generator',
-      component: () => import(/* webpackChunkName: "SQLGenerator" */ '@/views/tools/sql-generator/SQLGenerator.vue')
-    },
-    {
-      path: '/tools/sql-generator/documentation/',
-      name: 'SQL Generator - Documentation',
-      component: () => import(/* webpackChunkName: "SQLGeneratorDocumentation" */ '@/views/tools/sql-generator/SQLGeneratorDocumentation.vue')
-    },
-    {
-      path: '/tools/washer-dashboard/',
-      name: 'Washer Dashboard',
-      component: () => import(/* webpackChunkName: "WasherDashboard" */ '@/views/tools/washer-dashboard/WasherDashboard.vue')
+      name: 'Root',
+      component: Root,
+      children: [
+        {
+          path: '',
+          name: 'Home',
+          components: defaultLayoutWithNavbarAndFooter(Home)
+        },
+        {
+          path: 'portfolio',
+          name: 'Portfolio',
+          components: defaultLayoutWithNavbarAndFooter(() => import(/* webpackChunkName: "Portfolio" */ '@/views/portfolio/Portfolio.vue'))
+        },
+        {
+          path: 'tools',
+          name: 'Tools',
+          components: defaultLayoutWithNavbarAndFooter(() => import(/* webpackChunkName: "Tools" */ '@/views/tools/Tools.vue')),
+          children: [
+            {
+              path: 'sql-generator',
+              name: 'SQL Generator',
+              component: () => import(/* webpackChunkName: "SQLGenerator" */ '@/views/tools/sql-generator/SQLGenerator.vue'),
+              children: [
+                {
+                  path: 'documentation',
+                  name: 'SQL Generator Documentation',
+                  component: () => import(/* webpackChunkName: "SQLGenerator" */ '@/views/tools/sql-generator/SQLGeneratorDocumentation.vue')
+                }
+              ]
+            },
+            {
+              path: 'washer-dashboard',
+              name: 'Washer Dashboard',
+              component: () => import(/* webpackChunkName: "WasherDashboard" */ '@/views/tools/washer-dashboard/WasherDashboard.vue')
+            }
+          ]
+        }
+      ]
     }
   ],
   linkExactActiveClass: 'is-active'

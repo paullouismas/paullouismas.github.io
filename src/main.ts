@@ -4,6 +4,9 @@ import Vue from 'vue'
 // Bulma
 import './../node_modules/bulma/css/bulma.css'
 
+// Bulma swatch
+// import './../node_modules/bulmaswatch/darkly/bulmaswatch.min.css'
+
 // Animate.css
 import './../node_modules/animate.css/animate.css'
 
@@ -34,8 +37,5 @@ new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App),
-  mixins: [
-    //
-  ]
+  render: h => h(App)
 })

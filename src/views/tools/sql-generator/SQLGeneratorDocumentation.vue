@@ -234,10 +234,7 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'SQLGeneratorDocumentation',
-  components: {
-    //
-  },
-  mounted() {
+  created() {
     [
       'https://cdn.jsdelivr.net/npm/prismjs@1.20.0/prism.min.js',
       'https://cdn.jsdelivr.net/npm/prismjs@1.20.0/plugins/line-numbers/prism-line-numbers.min.js',

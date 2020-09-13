@@ -1,142 +1,146 @@
 <template>
   <div>
-    <section class="hero is-light is-medium">
-      <div class="hero-body">
+    <div v-if="$route.name === 'SQL Generator'">
+      <section class="hero is-light is-medium">
+        <div class="hero-body">
+          <div class="container">
+            <h1 class="is-1 title">
+              SQL Commmand Generator
+            </h1>
+
+            <p>
+              This generator allows to generate SQL insert statements from any CSV stored data.<br/>
+              It allows columns manipulations as well as data skipping.
+            </p>
+
+            <p>
+              <router-link to="./documentation/" class="button" type="button">
+                <span>
+                  View the documentation
+                </span>
+                <span class="icon">
+                  <font-awesome-icon :icon="[ 'fas', 'angle-double-right' ]" />
+                </span>
+              </router-link>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
         <div class="container">
-          <h1 class="is-1 title">
-            SQL Commmand Generator
-          </h1>
+          <div class="field">
+            <div class="control">
+              <label class="label">
+                CSV data
 
-          <p>
-            This generator allows to generate SQL insert statements from any CSV stored data.<br/>
-            It allows columns manipulations as well as data skipping.
-          </p>
-
-          <p>
-            <router-link to="./documentation/" class="button" type="button">
-              <span>
-                View the documentation
-              </span>
-              <span class="icon">
-                <font-awesome-icon :icon="[ 'fas', 'angle-double-right' ]" />
-              </span>
-            </router-link>
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="field">
-          <div class="control">
-            <label class="label">
-              CSV data
-
-              <textarea class="textarea" placeholder="Your CSV data goes here..." spellcheck="false" v-model="csv"></textarea>
-            </label>
+                <textarea class="textarea" placeholder="Your CSV data goes here..." spellcheck="false" v-model="csv"></textarea>
+              </label>
+            </div>
           </div>
-        </div>
 
-        <div class="field">
-          <div class="control">
-            <label class="label">
-              CSV headers
-            </label>
+          <div class="field">
+            <div class="control">
+              <label class="label">
+                CSV headers
+              </label>
 
-            <label class="checkbox">
-              <input type="checkbox" class="checkbox" v-model="csvHasHeaders" />
+             <label class="checkbox">
+                <input type="checkbox" class="checkbox" v-model="csvHasHeaders" />
 
-              My CSV has headers.
-            </label>
+                My CSV has headers.
+              </label>
 
-            <p class="help">
-              Check if your CSV data has headers (this will ignore them while parsing the data).
+              <p class="help">
+                Check if your CSV data has headers (this will ignore them while parsing the data).
+              </p>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <label class="label">
+                Separator
+
+                <div class="select">
+                  <select v-model="separator">
+                    <option disabled>-- Select a separator --</option>
+                    <option value=",">,</option>
+                    <option value=";">;</option>
+                  </select>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <label class="label">
+                Table name
+
+                <input type="text" class="input" placeholder="Example" spellcheck="false" v-model="tableName" />
+              </label>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <label class="label">
+                Columns to insert to
+
+                <input type="text" class="input" placeholder="column1,column2,column3" spellcheck="false" v-model="columnsName" />
+              </label>
+
+              <p class="help">
+                Place the columns in order they need to be inserted.<br/>
+                Separate the columns with a comma.
+              </p>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control">
+              <label class="label">
+                Values command format
+
+                <textarea v-model="valuesFormat" class="textarea" placeholder="('?1?', 'A string', ?2?, 42, ?3?, NULL)" spellcheck="false"></textarea>
+              </label>
+
+              <p class="help">
+                Place placeholder value as: ?#?<br/>
+                Where # is the position of the column in the CSV
+              </p>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="control buttons">
+              <button type="submit" class="button is-primary is-medium" @click.prevent="generateStatement()">Generate SQL</button>
+            </div>
+
+            <p class="help is-danger">
+              {{ error }}
             </p>
           </div>
-        </div>
 
-        <div class="field">
-          <div class="control">
-            <label class="label">
-              Separator
+          <div class="field">
+            <div class="control">
+              <label for="output_SQL">
+                Generated SQL
 
-              <div class="select">
-                <select v-model="separator">
-                  <option disabled>-- Select a separator --</option>
-                  <option value=",">,</option>
-                  <option value=";">;</option>
-                </select>
-              </div>
-            </label>
+                <textarea class="textarea" readonly placeholder="Your generated SQL will appear here." spellcheck="false" v-model="output"></textarea>
+              </label>
+
+              <p class="help">
+                Always verify the generated SQL before using it in production!
+              </p>
+            </div>
           </div>
         </div>
+      </section>
+    </div>
 
-        <div class="field">
-          <div class="control">
-            <label class="label">
-              Table name
-
-              <input type="text" class="input" placeholder="Example" spellcheck="false" v-model="tableName" />
-            </label>
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="control">
-            <label class="label">
-              Columns to insert to
-
-              <input type="text" class="input" placeholder="column1,column2,column3" spellcheck="false" v-model="columnsName" />
-            </label>
-
-            <p class="help">
-              Place the columns in order they need to be inserted.<br/>
-              Separate the columns with a comma.
-            </p>
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="control">
-            <label class="label">
-              Values command format
-
-              <textarea v-model="valuesFormat" class="textarea" placeholder="('?1?', 'A string', ?2?, 42, ?3?, NULL)" spellcheck="false"></textarea>
-            </label>
-
-            <p class="help">
-              Place placeholder value as: ?#?<br/>
-              Where # is the position of the column in the CSV
-            </p>
-          </div>
-        </div>
-
-        <div class="field">
-          <div class="control buttons">
-            <button type="submit" class="button is-primary is-medium" @click.prevent="generateStatement()">Generate SQL</button>
-          </div>
-
-          <p class="help is-danger">
-            {{ error }}
-          </p>
-        </div>
-
-        <div class="field">
-          <div class="control">
-            <label for="output_SQL">
-              Generated SQL
-
-              <textarea class="textarea" readonly placeholder="Your generated SQL will appear here." spellcheck="false" v-model="output"></textarea>
-            </label>
-
-            <p class="help">
-              Always verify the generated SQL before using it in production!
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
+    <router-view v-if="$route.name !== 'SQL Generator'" />
   </div>
 </template>
 
