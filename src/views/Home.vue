@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <DefaultLayout>
     <section class="section hero is-medium">
       <div class="hero-body">
         <div class="container">
@@ -8,7 +8,8 @@
           </h1>
 
           <h3 class="is-3 subtitle">
-            Hello, I'm Paul-Louis, a french-canadian developer/photographer/cinematographer
+            Hello, I'm Paul-Louis, a french-canadian<br />
+            developer/photographer/cinematographer
           </h3>
         </div>
       </div>
@@ -18,14 +19,22 @@
       <div class="container">
       </div>
     </section> -->
-  </div>
+  </DefaultLayout>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
+
 export default Vue.extend({
-  name: 'Home'
+  name: 'Home',
+  components: {
+    DefaultLayout
+  },
+  mounted() {
+    document.title = 'Home'
+  }
 })
 </script>
 

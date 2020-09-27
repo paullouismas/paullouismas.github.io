@@ -65,7 +65,7 @@
 <script lang="ts">
 import Vue from 'vue'
 
-import { IdashboardState } from './DashboardState'
+import { Istate as IdashboardState } from './State'
 
 export default Vue.extend({
   name: 'WasherScore',

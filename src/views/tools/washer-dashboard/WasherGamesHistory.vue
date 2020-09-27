@@ -70,7 +70,7 @@ import Vue from 'vue'
 import { prettyPrintElapsedTime } from '@/helpers'
 import Modal from '@/components/Modal.vue'
 import WasherGameDetail from './WasherGameDetail.vue'
-import { IdashboardState } from './DashboardState'
+import { Istate as IdashboardState } from './State'
 
 export default Vue.extend({
   name: 'WasherGamesHistory',

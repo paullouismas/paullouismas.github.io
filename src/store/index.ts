@@ -1,5 +1,5 @@
 import Vuex from 'vuex'
-import Vue from 'vue'
+import Vue, { VueConstructor } from 'vue'
 import VuexPersistence from 'vuex-persist'
 
 import { deepCloneUncircularObject } from '@/helpers'
@@ -9,7 +9,7 @@ import { Iplayer } from '@/views/tools/washer-dashboard/Player'
 import { Iteam } from '@/views/tools/washer-dashboard/Team'
 import { Igame } from '@/views/tools/washer-dashboard/Game'
 
-import { Istate as IshiftsManagerState, Itab as IshiftsManagerTabs } from '@/views/tools/shifts-manager/State'
+import { Istate as IshiftsManagerState, DateCompatible, IcurrentShift, Tag, Settings } from '@/views/tools/shifts-manager/State'
 
 Vue.use(Vuex)
 
@@ -23,7 +23,14 @@ const DEFAULT_STATES = {
     history: []
   },
   ShiftsManager: {
-    //
+    shiftsHistory: [],
+    currentShift: undefined,
+    savedTags: [],
+    settings: {
+      defaultTags: [],
+      defaultLunchBreakDuration: 60,
+      defaultMidshiftBreakDuration: 30
+    }
   }
 } as {
   WasherDashboard: IwasherDashboardState;
@@ -101,7 +108,60 @@ const store = new Vuex.Store({
       namespaced: true,
       state: deepCloneUncircularObject(Object.assign({}, DEFAULT_STATES.ShiftsManager)),
       mutations: {
-        //
+        // Shifts management
+        startShift(state: IshiftsManagerState, { startTime, tags }: { startTime: DateCompatible; tags: string[] }) {
+          const shift = {
+            id: Date.now(),
+            startTime,
+            tags: tags.filter(tag => tag.length > 0)
+          } as IcurrentShift
+
+          state.currentShift = shift
+        },
+        finishShift(state: IshiftsManagerState) {
+          const shift = Object.assign({ endTime: new Date() }, state.currentShift)
+
+          state.shiftsHistory.push(shift)
+
+          state.currentShift = undefined
+        },
+
+        // Tags management
+        saveTags(state: IshiftsManagerState, tags: Tag[]) {
+          tags.filter(tag => tag.length > 0)
+            .forEach(tag => {
+              if (!state.savedTags.includes(tag)) {
+                state.savedTags.push(tag)
+              }
+            })
+        },
+
+        // Settings
+        saveSettings(
+          state: IshiftsManagerState,
+          {
+            defaultTags,
+            defaultLunchBreakDuration,
+            defaultMidshiftBreakDuration
+          }: Settings
+        ) {
+          // defaultTags
+          state.settings.defaultTags = []
+          defaultTags
+            .map(tag => tag.trim())
+            .filter(tag => tag.length > 0)
+            .forEach(tag => {
+              if (!state.settings.defaultTags.includes(tag)) {
+                state.settings.defaultTags.push(tag)
+              }
+            })
+
+          // defaultLunchBreakDuration
+          state.settings.defaultLunchBreakDuration = defaultLunchBreakDuration
+
+          // defaultMidshiftBreakDuration
+          state.settings.defaultMidshiftBreakDuration = defaultMidshiftBreakDuration
+        }
       }
     }
   },

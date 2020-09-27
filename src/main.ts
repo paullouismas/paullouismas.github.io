@@ -2,17 +2,18 @@
 import Vue from 'vue'
 
 // Bulma
-import './../node_modules/bulma/css/bulma.css'
+import 'bulma/css/bulma.css'
 
 // Bulma swatch
-// import './../node_modules/bulmaswatch/darkly/bulmaswatch.min.css'
+import 'bulmaswatch/lux/bulmaswatch.min.css'
 
 // Animate.css
-import './../node_modules/animate.css/animate.css'
+import 'animate.css/animate.css'
 
 // Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fas } from '@fortawesome/free-solid-svg-icons'
+import { far } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // Main app
@@ -30,12 +31,12 @@ import store from './store'
 Vue.config.productionTip = false
 
 library.add(fas)
+library.add(far)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 new Vue({
-  el: '#app',
   router,
   store,
   render: h => h(App)
-})
+}).$mount('#app')

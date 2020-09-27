@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div v-if="$route.name === 'SQL Generator'">
+  <DefaultLayout>
+    <div v-if="$route.name === 'SQLGenerator'">
       <section class="hero is-light is-medium">
         <div class="hero-body">
           <div class="container">
@@ -140,12 +140,15 @@
       </section>
     </div>
 
-    <router-view v-if="$route.name !== 'SQL Generator'" />
-  </div>
+    <router-view v-if="$route.name !== 'SQLGenerator'" />
+  </DefaultLayout>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
+
 import CsvManager, { IEntry } from './csv-tool'
 
 export default Vue.extend({
@@ -161,6 +164,9 @@ export default Vue.extend({
       output: '',
       error: ''
     }
+  },
+  components: {
+    DefaultLayout
   },
   mounted() {
     document.title = 'SQL Generator'

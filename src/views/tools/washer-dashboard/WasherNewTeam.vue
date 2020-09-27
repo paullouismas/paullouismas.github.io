@@ -80,7 +80,6 @@
 import Vue from 'vue'
 
 import Modal from '@/components/Modal.vue'
-// import { getIndexFromObjectValue } from '@/helpers'
 import { Iplayer } from './Player'
 
 export default Vue.extend({

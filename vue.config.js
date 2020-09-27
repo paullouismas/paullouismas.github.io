@@ -3,6 +3,14 @@ module.exports = {
     // modules: true,
     requireModuleExtension: true
   },
+  configureWebpack: {
+    entry: {
+      // main: './src/main.ts'
+    },
+    optimization: {
+      mergeDuplicateChunks: true
+    }
+  },
 
   productionSourceMap: false,
   assetsDir: 'assets',
@@ -14,5 +22,8 @@ module.exports = {
 
         return args
       })
+
+    /* config.entry('main').clear()
+    config.entry('main').add('./') */
   }
 }

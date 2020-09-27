@@ -1,26 +1,31 @@
 <template>
-  <footer class="footer">
-    <p class="content has-text-centered">
+  <PageFooter>
+    <p>
       <a href="https://bulma.io" target="_blank">
         <img src="https://bulma.io/images/made-with-bulma.png" alt="Made with Bulma" width="128" height="24">
       </a>
+    </p>
 
-      <br/>
-
+    <p>
       by
 
-      <a href="https://instagram.com/paullouis.mas/" target="_blank">
+      <router-link :to="{ name: 'Root' }">
         Paul-Louis Mas
-      </a>
+      </router-link>
     </p>
-  </footer>
+  </PageFooter>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 
+import PageFooter from '@/components/reusable/PageFooter.vue'
+
 export default Vue.extend({
-  name: 'Footer'
+  name: 'MainFooter',
+  components: {
+    PageFooter
+  }
 })
 </script>
 

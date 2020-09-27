@@ -231,32 +231,23 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import PrismJS from 'prismjs'
+import 'prismjs/themes/prism-solarizedlight.css'
+import 'prismjs/plugins/line-numbers/prism-line-numbers.js'
+import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
+import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace.js'
 
 export default Vue.extend({
   name: 'SQLGeneratorDocumentation',
-  created() {
-    [
-      'https://cdn.jsdelivr.net/npm/prismjs@1.20.0/prism.min.js',
-      'https://cdn.jsdelivr.net/npm/prismjs@1.20.0/plugins/line-numbers/prism-line-numbers.min.js',
-      'https://cdn.jsdelivr.net/npm/prismjs@1.20.0/plugins/normalize-whitespace/prism-normalize-whitespace.min.js'
-    ].forEach(source => {
-      const externalScript = document.createElement('script')
-
-      externalScript.setAttribute('src', source)
-
-      document.head.appendChild(externalScript)
-    })
-  },
   mounted() {
     document.title = 'SQL Generator - Documentation'
+
+    PrismJS.highlightAll()
   }
 })
 </script>
 
 <style lang="less">
-  @import "https://cdn.jsdelivr.net/npm/prismjs@1.20.0/themes/prism-solarizedlight.css";
-  @import "https://cdn.jsdelivr.net/npm/prismjs@1.20.0/plugins/line-numbers/prism-line-numbers.css";
-
   aside.menu {
     position: sticky;
     top: 0;

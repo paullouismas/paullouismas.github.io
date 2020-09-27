@@ -1,20 +1,17 @@
 <template>
-  <div>
+  <DefaultLayout>
     <section class="section">
       <div class="content">
-        <!-- <div class="columns is-centered is-multiline">
-            <figure class="image column is-3" v-for="image in images" :key="image.id">
-                <img :src="image.display_url" :alt="image.accessibility_caption" />
-            </figure>
-        </div> -->
         Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae consequuntur ipsam alias cupiditate doloremque in consequatur doloribus, unde qui! Eos maxime perspiciatis illum ducimus odio possimus, nam doloribus autem libero.
       </div>
     </section>
-  </div>
+  </DefaultLayout>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+
+import DefaultLayout from '@/layouts/DefaultLayout.vue'
 
 export default Vue.extend({
   name: 'Portfolio',
@@ -23,13 +20,11 @@ export default Vue.extend({
       images: []
     }
   },
-  async mounted() {
+  components: {
+    DefaultLayout
+  },
+  created() {
     document.title = 'Portfolio'
-
-    const response = await fetch('https://instagram.com/paullouis.mas/?__a=1')
-    const json = await response.json()
-
-    this.images = json.graphql.user.edge_owner_to_timeline_media.edges.map((e: { node: string }) => e.node)
   }
 })
 </script>

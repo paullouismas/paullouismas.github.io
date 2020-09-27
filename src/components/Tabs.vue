@@ -11,7 +11,7 @@
       'is-fullwidth': $props.isFullwidth
     }">
       <ul>
-        <li v-for="(tab, index) in tabsList" :key="index" :class="{ 'is-active': activeTab === (tab.refName || tab.displayName) }">
+        <li v-for="(tab, index) in tabsToDisplay" :key="index" :class="{ 'is-active': activeTab === (tab.refName || tab.displayName) }">
           <a @click="activeTab = (tab.refName || tab.displayName)">
             {{ tab.displayName }}
           </a>
@@ -19,7 +19,7 @@
       </ul>
     </div>
 
-    <div v-for="(tab, index) in tabsList" :key="index">
+    <div v-for="(tab, index) in tabsToDisplay" :key="index">
       <component :is="tab.component" v-bind="tab.componentProps || {}" v-if="activeTab === (tab.refName || tab.displayName)" />
     </div>
   </div>
@@ -38,6 +38,7 @@ export interface Itab {
   displayName: string;
   component: VueConstructor<Vue> | (() => Promise<typeof import('*.vue')>);
   componentProps?: object;
+  displayIf?: () => boolean;
 }
 
 export default Vue.extend({
@@ -83,6 +84,11 @@ export default Vue.extend({
   mounted() {
     this.tabsList = this.$props.tabs
     this.activeTab = this.tabsList[0]?.refName || this.tabsList[0]?.displayName
+  },
+  computed: {
+    tabsToDisplay(): Itab[] {
+      return this.tabsList.filter(tab => tab.displayIf ? tab.displayIf() : true)
+    }
   }
 })
 </script>
