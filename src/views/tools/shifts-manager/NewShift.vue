@@ -5,7 +5,9 @@
     </h3>
 
     <div class="field">
-      <label class="label">Tags</label>
+      <label class="label">
+        Tags
+      </label>
 
       <div class="control">
         <input type="text" data-type="tags" class="input" :value="$store.state.ShiftsManager.settings.defaultTags.join(',')" />
@@ -22,21 +24,15 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import '@creativebulma/bulma-tagsinput/dist/css/bulma-tagsinput.css'
+import BulmaTagsInput from '@creativebulma/bulma-tagsinput/'
 
-// import BulmaTagsInput from '@creativebulma/bulma-tagsinput/src/js/index.js'
-const BulmaTagsInput = require('@creativebulma/bulma-tagsinput/src/js/index.js').default
+import { initBulmaTagsInput } from '@/helpers'
 
 export default Vue.extend({
   name: 'NewShift',
   data() {
     return {
-      tagsElement: null as Element | null
-    }
-  },
-  computed: {
-    tagsString(): string {
-      return this.tagsElement ? (this.tagsElement as unknown as { BulmaTagsInput: Function }).BulmaTagsInput().value : ''
+      tagsInput: null as BulmaTagsInput | null
     }
   },
   beforeCreate() {
@@ -46,22 +42,12 @@ export default Vue.extend({
   },
   mounted() {
     document.title = 'Shifts Manager - New shift'
-    this.tagsElement = document.querySelector('input.input[data-type="tags"]')
 
-    new BulmaTagsInput(this.tagsElement, {
-      caseSensitive: false,
-      clearSelectionOnTyping: true,
-      freeInput: true,
-      noResultsLabel: 'No previous matching tags',
-      placeholder: 'Choose tags',
-      searchMinChars: 0,
-      selectable: false,
-      source: this.$store.state.ShiftsManager.savedTags
-    })
+    this.tagsInput = initBulmaTagsInput(document.querySelector('input.input[data-type="tags"]') as HTMLInputElement, this.$store.state.ShiftsManager.savedTags)
   },
   methods: {
     startShift() {
-      const tags = this.tagsString.split(',')
+      const tags = ((this.tagsInput as BulmaTagsInput).value as string).split(',')
 
       this.$store.commit('ShiftsManager/startShift', { startTime: new Date(), tags })
       this.$store.commit('ShiftsManager/saveTags', tags)

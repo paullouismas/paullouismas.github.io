@@ -5,7 +5,7 @@ export type DateCompatible = Date
 export type Tag = string;
 
 export interface Ishift {
-  public id: number;
+  public id: string;
   public startTime: DateCompatible;
   public endTime: DateCompatible;
   public tags: Tag[];
@@ -15,7 +15,7 @@ export interface IcurrentShift extends Ishift {
   public endTime?: DateCompatible;
 }
 
-export interface Settings {
+export interface ISettings {
   public defaultTags: Tag[];
   public defaultLunchBreakDuration: number;
   public defaultMidshiftBreakDuration: number;
@@ -25,5 +25,5 @@ export interface Istate {
   public shiftsHistory: Ishift[];
   public currentShift?: IcurrentShift;
   public savedTags: Tag[];
-  public settings: Settings;
+  public settings: ISettings;
 }

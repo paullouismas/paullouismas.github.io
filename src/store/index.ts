@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
-import Vue, { VueConstructor } from 'vue'
+import Vue from 'vue'
 import VuexPersistence from 'vuex-persist'
+import * as uuid from 'uuid'
 
 import { deepCloneUncircularObject } from '@/helpers'
 
@@ -9,7 +10,7 @@ import { Iplayer } from '@/views/tools/washer-dashboard/Player'
 import { Iteam } from '@/views/tools/washer-dashboard/Team'
 import { Igame } from '@/views/tools/washer-dashboard/Game'
 
-import { Istate as IshiftsManagerState, DateCompatible, IcurrentShift, Tag, Settings } from '@/views/tools/shifts-manager/State'
+import { Istate as IshiftsManagerState, DateCompatible, IcurrentShift, Tag, ISettings } from '@/views/tools/shifts-manager/State'
 
 Vue.use(Vuex)
 
@@ -21,20 +22,9 @@ const DEFAULT_STATES = {
       startTime: null
     },
     history: []
-  },
-  ShiftsManager: {
-    shiftsHistory: [],
-    currentShift: undefined,
-    savedTags: [],
-    settings: {
-      defaultTags: [],
-      defaultLunchBreakDuration: 60,
-      defaultMidshiftBreakDuration: 30
-    }
   }
 } as {
   WasherDashboard: IwasherDashboardState;
-  ShiftsManager: IshiftsManagerState;
 }
 
 const store = new Vuex.Store({
@@ -106,12 +96,21 @@ const store = new Vuex.Store({
     },
     ShiftsManager: {
       namespaced: true,
-      state: deepCloneUncircularObject(Object.assign({}, DEFAULT_STATES.ShiftsManager)),
+      state: {
+        shiftsHistory: [],
+        currentShift: undefined,
+        savedTags: [],
+        settings: {
+          defaultTags: [],
+          defaultLunchBreakDuration: 60,
+          defaultMidshiftBreakDuration: 30
+        }
+      } as IshiftsManagerState,
       mutations: {
         // Shifts management
         startShift(state: IshiftsManagerState, { startTime, tags }: { startTime: DateCompatible; tags: string[] }) {
           const shift = {
-            id: Date.now(),
+            id: uuid.v4(),
             startTime,
             tags: tags.filter(tag => tag.length > 0)
           } as IcurrentShift
@@ -143,7 +142,7 @@ const store = new Vuex.Store({
             defaultTags,
             defaultLunchBreakDuration,
             defaultMidshiftBreakDuration
-          }: Settings
+          }: ISettings
         ) {
           // defaultTags
           state.settings.defaultTags = []

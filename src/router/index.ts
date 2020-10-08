@@ -58,7 +58,13 @@ const router = new VueRouter({
                 {
                   path: 'history',
                   name: 'ShiftsManagerHistory',
-                  component: () => import(/* webpackChunkName: 'ShiftsManager' */ '@/views/tools/shifts-manager/History.vue')
+                  component: () => import(/* webpackChunkName: 'ShiftsManager' */ '@/views/tools/shifts-manager/History.vue'),
+                  children: [
+                    {
+                      path: ':shiftId',
+                      name: 'ShiftsManagerHistoryDetails'
+                    }
+                  ]
                 },
                 {
                   path: 'new-shift',

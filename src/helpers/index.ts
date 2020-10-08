@@ -1,38 +1,43 @@
-type RecursiveObject = { [key: string]: string | number | RecursiveObject }
+import BulmaTagsInput from '@creativebulma/bulma-tagsinput'
+import * as bulmaToast from 'bulma-toast'
 
-export const getIndexFromObjectValue = (array: RecursiveObject[], keyName: string, keyValue: string | number) => array.reduce<number | undefined>((accumulator, value, index) => value[keyName] === keyValue ? index : undefined, undefined)
-/* (array: { [key: string]: string | number | object | [] | undefined | null }[], keyName: string, keyValue: string | number) => {
-  let index = undefined as number | undefined
+export const deepCloneUncircularObject = (source: object | []): object | [] => JSON.parse(JSON.stringify(source))
 
-  array.forEach((obj, idx) => {
-    if (obj[keyName] === keyValue) {
-      index = idx
-    }
-  })
+export class Notify {
+  private static toast = bulmaToast.toast
 
-  return index
-} */
-
-export const prettyPrintElapsedTime = (secondsCount = 0) => {
-  if (secondsCount < 0) {
-    return secondsCount
-  } else if (secondsCount < 60) { // Seconds
-    const seconds = Math.round(secondsCount)
-
-    return `${seconds} second${seconds > 1 ? 's' : ''} ago`
-  } else if (secondsCount < (60 * 60)) { // Minutes
-    const minutes = Math.round(secondsCount / 60)
-
-    return `${minutes} minute${minutes > 1 ? 's' : ''} ago`
-  } else if (secondsCount < (60 * 60 * 24)) { // Hours
-    const hours = Math.round(secondsCount / (60 * 60))
-
-    return `${hours} hour${hours > 1 ? 's' : ''} ago`
-  } else { // Days and more
-    const days = Math.round(secondsCount / (60 * 60 * 24))
-
-    return `${days} day${days > 1 ? 's' : ''} ago`
+  public static success(message = ''): void {
+    this.toast({
+      message,
+      duration: 3000,
+      type: 'is-success',
+      position: 'bottom-right',
+      animate: {
+        in: 'fadeIn',
+        out: 'fadeOut'
+      }
+    })
   }
 }
 
-export const deepCloneUncircularObject = (source: object | []): object | [] => JSON.parse(JSON.stringify(source))
+export const initBulmaTagsInput = (el: HTMLInputElement, source: string[] = []) => {
+  return new BulmaTagsInput(el, {
+    caseSensitive: false,
+    clearSelectionOnTyping: true,
+    freeInput: true,
+    noResultsLabel: 'No previous matching tags',
+    placeholder: 'Choose tags',
+    selectable: false,
+    source
+  })
+}
+
+export const formatTime = (dateObject: Date) => {
+  const year = dateObject.getFullYear()
+  const month = `${dateObject.getMonth() + 1}`.padStart(2, '0')
+  const date = `${dateObject.getDate()}`.padStart(2, '0')
+  const hour = `${dateObject.getHours()}`.padStart(2, '0')
+  const minute = `${dateObject.getMinutes()}`.padStart(2, '0')
+
+  return `${year}/${month}/${date} ${hour}h${minute}`
+}

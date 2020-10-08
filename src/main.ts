@@ -7,6 +7,9 @@ import 'bulma/css/bulma.css'
 // Bulma swatch
 import 'bulmaswatch/lux/bulmaswatch.min.css'
 
+// Bulma tags input
+import '@creativebulma/bulma-tagsinput/dist/css/bulma-tagsinput.css'
+
 // Animate.css
 import 'animate.css/animate.css'
 

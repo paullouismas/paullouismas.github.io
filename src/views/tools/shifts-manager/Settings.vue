@@ -20,8 +20,12 @@
           Default lunch break duration (in minutes)
         </label>
 
-        <div class="control">
+        <div class="control has-icons-left">
           <input type="number" class="input" v-model="defaultLunchBreakDuration" />
+
+          <span class="icon is-left">
+            <font-awesome-icon :icon="['far', 'hourglass']" />
+          </span>
         </div>
       </div>
 
@@ -30,8 +34,12 @@
           Default mid-shift break duration (in minutes)
         </label>
 
-        <div class="control">
+        <div class="control has-icons-left">
           <input type="number" class="input" v-model="defaultMidshiftBreakDuration" />
+
+          <span class="icon is-left">
+            <font-awesome-icon :icon="['far', 'hourglass']" />
+          </span>
         </div>
       </div>
 
@@ -48,64 +56,34 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import '@creativebulma/bulma-tagsinput/dist/css/bulma-tagsinput.css'
-import * as bulmaToast from 'bulma-toast'
-import 'animate.css/animate.css'
+import BulmaTagsInput from '@creativebulma/bulma-tagsinput/'
 
-import { Settings } from './State'
-
-// import BulmaTagsInput from '@creativebulma/bulma-tagsinput/src/js/index.js'
-const BulmaTagsInput = require('@creativebulma/bulma-tagsinput/src/js/index.js').default
+import { initBulmaTagsInput, Notify } from '@/helpers'
+import { ISettings } from './State'
 
 export default Vue.extend({
   name: 'Settings',
   data() {
     return {
-      tagsElement: null as Element | null,
+      tagsInput: null as BulmaTagsInput | null,
       defaultLunchBreakDuration: this.$store.state.ShiftsManager.settings.defaultLunchBreakDuration,
       defaultMidshiftBreakDuration: this.$store.state.ShiftsManager.settings.defaultMidshiftBreakDuration
     }
   },
-  computed: {
-    tagsString(): string {
-      return this.tagsElement ? (this.tagsElement as unknown as { BulmaTagsInput: Function }).BulmaTagsInput().value : ''
-    }
-  },
   mounted() {
     document.title = 'Shifts Manager - Settings'
-    this.tagsElement = document.querySelector('input.input[data-type="tags"]')
 
-    new BulmaTagsInput(this.tagsElement, {
-      caseSensitive: false,
-      clearSelectionOnTyping: true,
-      freeInput: true,
-      noResultsLabel: 'No previous matching tags',
-      placeholder: 'Choose tags',
-      searchMinChars: 0,
-      selectable: false,
-      source: this.$store.state.ShiftsManager.savedTags
-    })
+    this.tagsInput = initBulmaTagsInput(document.querySelector('input.input[data-type="tags"]') as HTMLInputElement, this.$store.state.ShiftsManager.savedTags)
   },
   methods: {
     saveSettings() {
-      const settings = {
-        defaultTags: this.tagsString.split(','),
+      this.$store.commit('ShiftsManager/saveSettings', {
+        defaultTags: ((this.tagsInput as BulmaTagsInput).value as string).split(','),
         defaultLunchBreakDuration: this.defaultLunchBreakDuration,
         defaultMidshiftBreakDuration: this.defaultMidshiftBreakDuration
-      } as Settings
+      } as ISettings)
 
-      this.$store.commit('ShiftsManager/saveSettings', settings)
-
-      bulmaToast.toast({
-        message: 'Settings successfully updated',
-        duration: 3000,
-        type: 'is-success',
-        position: 'bottom-right',
-        animate: {
-          in: 'fadeIn',
-          out: 'fadeOut'
-        }
-      })
+      Notify.success('Settings successfully updated')
     }
   }
 })
