@@ -24,7 +24,7 @@
     "bulmaswatch": "^0.8.1",
     "core-js": "^3.6.5",
     "pretty-ms": "^7.0.0",
-    "prismjs": "^1.21.0",
+    "prismjs": "^1.24.0",
     "register-service-worker": "^1.7.1",
     "uuid": "^8.3.0",
     "vue": "^2.6.11",
